@@ -22,6 +22,12 @@ ktlint-library = "11.3.1"
 retrofit = "2.9.0"
 okHttp = "4.10.0"
 inject = "1"
+roomCommon = "2.6.1"
+roomCompiler = "2.6.1"
+navigationRuntimeKtx = "2.7.7"
+navigationCompose = "2.7.7"
+hiltNav = "1.0.0"
+playServicesLocation = "21.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +59,12 @@ retrofitGson = { group = "com.squareup.retrofit2", name = "converter-gson", vers
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okHttp" }
 okhttpLogging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okHttp" }
 javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "inject" }
+androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+hiltNavigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNav" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
