@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="deploymentTargetDropDown">
+    <value>
+      <entry key="app">
+        <State />
+      </entry>
+      <entry key="core.data">
+        <State />
+      </entry>
+      <entry key="core.domain">
+        <State />
+      </entry>
+      <entry key="data">
+        <State />
+      </entry>
+      <entry key="feature.battle-record">
+        <State />
+      </entry>
+      <entry key="feature.collection">
+        <State />
+      </entry>
+      <entry key="feature.flupet-history">
+        <State />
+      </entry>
+      <entry key="feature.home">
+        <State />
+      </entry>
+      <entry key="feature.mypage">
+        <State />
+      </entry>
+      <entry key="feature.ranking">
+        <State />
+      </entry>
+      <entry key="wear">
+        <State />
+      </entry>
+    </value>
+  </component>
+</project>
