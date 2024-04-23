@@ -1,9 +1,15 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ktlintLibrary)
     alias(libs.plugins.hilt)
     id("kotlin-kapt")
+}
+
+val properties = Properties().apply {
+    load(project.rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -43,6 +49,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -50,10 +57,13 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.runtime)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.runtime.rxjava2)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.wearable)
-    implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
@@ -71,6 +81,7 @@ dependencies {
     wearApp(project(":wear"))
     implementation(project(":core:domain"))
     implementation(project(":core:data"))
+    implementation(project(":feature:login"))
     implementation(project(":feature:battle-record"))
     implementation(project(":feature:collection"))
     implementation(project(":feature:flupet-history"))

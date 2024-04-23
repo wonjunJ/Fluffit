@@ -17,6 +17,9 @@
       <entry key="feature.home">
         <State />
       </entry>
+      <entry key="feature.login">
+        <State />
+      </entry>
       <entry key="feature.mypage">
         <State />
       </entry>
