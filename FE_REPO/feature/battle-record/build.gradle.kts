@@ -35,6 +35,9 @@ android {
             )
         }
     }
+    configurations.implementation {
+        exclude(group = "com.intellij", module = "annotations")
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
