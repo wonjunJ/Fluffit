@@ -1,3 +1,23 @@
 spring:
+  cloud:
+    config:
+      enabled: false
   application:
-    name: FluffitFlupet
+    name: flupet-service
+server:
+  port: 0
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+
+logging:
+  level:
+    com.ssafy.fluffitflupet.client: DEBUG
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
