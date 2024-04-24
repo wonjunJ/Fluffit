@@ -64,7 +64,7 @@ fun FluffitTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = fluffitTypography,
         content = content
     )
 }

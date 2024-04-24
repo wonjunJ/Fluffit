@@ -52,9 +52,10 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.runtime)
-    implementation(libs.androidx.runtime.livedata)
-    implementation(libs.androidx.runtime.rxjava2)
+    implementation(libs.bundles.androidx.runtime)
+//    implementation(libs.androidx.runtime)
+//    implementation(libs.androidx.runtime.livedata)
+//    implementation(libs.androidx.runtime.rxjava2)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -68,6 +69,8 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.play.services.location)
+    implementation(project(":feature:home"))
+    implementation(libs.volley)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -78,6 +81,9 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.hiltNavigation)
+
+    implementation(libs.glide)
+    kapt(libs.glide.compiler)
 
     implementation(project(":core:domain"))
 }
