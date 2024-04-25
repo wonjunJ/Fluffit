@@ -18,7 +18,6 @@ android {
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 34
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -60,6 +59,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.runtime)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.runtime.rxjava2)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
