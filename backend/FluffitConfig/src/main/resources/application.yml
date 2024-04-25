@@ -8,7 +8,7 @@ spring:
     config:
       server:
         git: #default
-          uri: https://github.com/joneconsulting/spring-cloud-config
+          uri: https://github.com/wonjunJ/fluffit_config
 #          username: [username]
 #          password: [password]
           default-label: master
@@ -24,3 +24,6 @@ management:
     web:
       exposure:
         include: health, busrefresh, refresh, metrics
+
+jasypt:
+  key: ${JASYPT_KEY}

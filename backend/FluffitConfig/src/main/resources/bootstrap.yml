@@ -1,0 +1,9 @@
+encrypt:
+  key-store:
+    # location: file://${user.home}/Desktop/git/toy-msa/config-service/apiEncryptionKey.jks
+    # Mac 또는 Linux용
+    location: file:/apiEncryptionKey.jks
+    # Window용
+    # location: file:///apiEncryptionKey.jks
+    password: ENC(m0nz9tMS2yGEmiAE9SBJxA==)
+    alias: ENC(20ZXLYABF+Soj64mI0peOIKqw+mpjyt3Nx44pGMEjwI=)
