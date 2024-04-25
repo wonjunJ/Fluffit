@@ -4,7 +4,7 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 
 @Table("flupet")
-class Flupet(
+data class Flupet(
     @Id
     val id: Long? = null,
     var name: String,

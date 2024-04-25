@@ -3,19 +3,19 @@ CREATE TABLE `member_flupet` (
 	`id`	int unsigned auto_increment
         primary key,
 	`flupet_id`	int unsigned	NOT NULL,
-	`member_id`	int unsigned	NOT NULL,
+	`member_id`	varchar(64)	NOT NULL,
 	`name`	varchar(10)     NULL,
 	`exp`	int	NOT NULL	DEFAULT 0,
 	`steps`	int unsigned	NOT NULL	DEFAULT 0,
 	`is_dead`	boolean	NOT NULL	DEFAULT false,
-	`create_time`	datetime	NOT NULL,
-	`end_time`	datetime	NULL,
+	`create_time`	datetime(6)	NOT NULL,
+	`end_time`	datetime(6)	NULL,
 	`fullness`	int	NOT NULL	DEFAULT 100,
 	`health`	int	NOT NULL	DEFAULT 100,
 	`pat_cnt`	int	NOT NULL	DEFAULT 5,
-	`acha_time`	datetime	NULL,
-	`fullness_update_time`	datetime	NULL,
-	`energy_update_time`	datetime	NULL
+	`acha_time`	datetime(6)	NULL,
+	`fullness_update_time`	datetime(6)	NULL,
+	`energy_update_time`	datetime(6)	NULL
 );
 
 drop table if exists `food_type`;

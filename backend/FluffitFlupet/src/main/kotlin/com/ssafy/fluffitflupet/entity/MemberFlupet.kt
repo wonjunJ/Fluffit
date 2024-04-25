@@ -7,11 +7,11 @@ import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
 @Table("member_flupet")
-class MemberFlupet(
+data class MemberFlupet(
     @Id
     val id: Long? = null,
     var flupetId: Long? = null,
-    var memberId: Long? = null,
+    var memberId: String? = null,
     var name: String,
     var exp: Int = 0,
     var steps: Long = 0,
