@@ -4,6 +4,9 @@ spring:
       enabled: false
   application:
     name: flupet-service
+  sql:
+    init:
+      mode: always
 server:
   port: 0
 
