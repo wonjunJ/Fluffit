@@ -1,0 +1,26 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-service
+  cloud:
+    config:
+      server:
+        git: #default
+          uri: https://github.com/joneconsulting/spring-cloud-config
+#          username: [username]
+#          password: [password]
+          default-label: master
+        bootstrap: true
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: sdasdf
+    password: asdfds
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, busrefresh, refresh, metrics
