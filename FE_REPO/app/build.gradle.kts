@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ktlintLibrary)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.googleAuth)
     id("kotlin-kapt")
 }
 
@@ -103,4 +104,9 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:mypage"))
     implementation(project(":feature:ranking"))
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.play.services.auth)
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-analytics")
 }

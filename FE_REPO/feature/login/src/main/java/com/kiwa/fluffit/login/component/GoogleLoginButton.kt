@@ -1,5 +1,6 @@
 package com.kiwa.fluffit.login.component
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -14,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.kiwa.fluffit.login.R
 
+private const val TAG = "GoogleLoginButton_싸피"
 @Composable
 internal fun GoogleLoginButton(
     onNavigationToHome: () -> Unit
@@ -29,7 +31,10 @@ internal fun GoogleLoginButton(
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null
-                ) { onNavigationToHome },
+                ) {
+                    Log.d(TAG, "GoogleLoginButton: 클릭된듯")
+                    onNavigationToHome()
+                },
             painter = painterResource(id = R.drawable.continue_with_google),
             contentDescription = "구글 로그인",
         )

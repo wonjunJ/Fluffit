@@ -29,12 +29,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.kiwa.fluffit.login.component.GoogleLoginButton
 
 @Composable
 internal fun LoginScreen(
+    navController: NavHostController = rememberNavController(),
     viewModel: LoginViewModel = hiltViewModel<LoginViewModel>(),
     onNavigationToHome: () -> Unit
 ) {
@@ -49,8 +52,7 @@ internal fun LoginScreen(
         Image(
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth()
-                .clickable { visible = visible.not() },
+                .fillMaxWidth(),
             painter = painterResource(id = R.drawable.login_background),
             contentDescription = "배경화면",
             contentScale = ContentScale.Crop
@@ -83,14 +85,14 @@ internal fun LoginScreen(
         }
 
         AnimatedVisibility(
-            visible = visible,
+            visible = !visible,
             modifier = Modifier.align(Alignment.Center),
-            enter = fadeIn(
-                initialAlpha = 0.0f
-            ),
-            exit = fadeOut(
-                animationSpec = tween(durationMillis = 250)
-            )
+            enter = slideInVertically(initialOffsetY = {
+                it
+            }, animationSpec = tween(durationMillis = 1000)),
+            exit = slideOutVertically(targetOffsetY = {
+                it
+            }, animationSpec = tween(durationMillis = 1000))
         ) {
             GoogleLoginButton(onNavigationToHome)
         }
