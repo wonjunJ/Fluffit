@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ktlintLibrary)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.googleAuth)
     id("kotlin-kapt")
 }
 
@@ -58,22 +57,17 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.runtime)
-    implementation(libs.androidx.runtime.livedata)
-    implementation(libs.androidx.runtime.rxjava2)
+    implementation(libs.bundles.androidx.runtime)
+    implementation(libs.bundles.androidx.ui)
+    implementation(libs.bundles.androidx.room)
+    implementation(libs.bundles.androidx.navigation)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.room.common)
-    implementation(libs.androidx.room.compiler)
-    implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.androidx.navigation.compose)
     implementation(libs.play.services.location)
 
     implementation(libs.androidx.appcompat)
@@ -104,9 +98,4 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:mypage"))
     implementation(project(":feature:ranking"))
-
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.play.services.auth)
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-analytics")
 }

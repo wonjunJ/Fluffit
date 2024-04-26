@@ -9,7 +9,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,7 +32,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.kiwa.fluffit.login.component.GoogleLoginButton
+import com.kiwa.fluffit.login.component.NaverLoginButton
 
 @Composable
 internal fun LoginScreen(
@@ -87,14 +86,16 @@ internal fun LoginScreen(
         AnimatedVisibility(
             visible = !visible,
             modifier = Modifier.align(Alignment.Center),
-            enter = slideInVertically(initialOffsetY = {
-                it
-            }, animationSpec = tween(durationMillis = 1000)),
-            exit = slideOutVertically(targetOffsetY = {
-                it
-            }, animationSpec = tween(durationMillis = 1000))
+            enter = fadeIn(animationSpec = tween(durationMillis = 1000)),
+            exit = fadeOut(animationSpec = tween(durationMillis = 1000))
+//            enter = slideInVertically(initialOffsetY = {
+//                it
+//            }, animationSpec = tween(durationMillis = 1000)),
+//            exit = slideOutVertically(targetOffsetY = {
+//                it
+//            }, animationSpec = tween(durationMillis = 1000))
         ) {
-            GoogleLoginButton(onNavigationToHome)
+            NaverLoginButton(onNavigationToHome)
         }
     }
 }
