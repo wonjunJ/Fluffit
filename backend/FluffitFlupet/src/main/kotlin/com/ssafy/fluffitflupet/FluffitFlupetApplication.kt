@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean
 import reactor.util.Loggers
 
 @SpringBootApplication
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 @EnableFeignClients
 class FluffitFlupetApplication
 
