@@ -10,7 +10,7 @@ data class FoodType(
     var name: String,
     var imgUrl: String,
     var fullnessEffect: Int,
-    var health_effect: Int,
+    var healthEffect: Int,
     var price: Int,
     var description: String
 ) {

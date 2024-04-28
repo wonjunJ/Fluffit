@@ -16,8 +16,10 @@ data class MemberFlupet(
     var exp: Int = 0,
     var steps: Long = 0,
     var isDead: Boolean = false,
+    //태어난 날짜
     @CreatedDate
     var createTime: LocalDateTime,
+    //죽은 날짜
     var endTime: LocalDateTime,
     var fullness: Int = 100,
     var health: Int = 100,
