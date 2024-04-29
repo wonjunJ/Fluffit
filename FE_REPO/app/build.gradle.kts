@@ -23,6 +23,29 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            "\"${properties["BASE_URL"]}\""
+        )
+
+        buildConfigField(
+            "String",
+            "NAVER_LOGIN_CLIENT_ID",
+            "\"${properties["NAVER_LOGIN_CLIENT_ID"]}\""
+        )
+        buildConfigField(
+            "String",
+            "NAVER_LOGIN_CLIENT_SECRET",
+            "\"${properties["NAVER_LOGIN_CLIENT_SECRET"]}\""
+        )
+
+        buildConfigField(
+            "String",
+            "NAVER_LOGIN_CLIENT_NAME",
+            "\"${properties["NAVER_LOGIN_CLIENT_NAME"]}\""
+        )
     }
 
     buildTypes {
@@ -83,6 +106,8 @@ dependencies {
 
     implementation(libs.okhttp)
     implementation(libs.okhttpLogging)
+
+    implementation("com.navercorp.nid:oauth:5.9.0")
 
     wearApp(project(":wear"))
     implementation(project(":core:domain"))

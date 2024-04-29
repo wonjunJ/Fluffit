@@ -1,5 +1,10 @@
 plugins {
-    alias(libs.plugins.fluffit.javalibrary)
+    alias(libs.plugins.fluffit.androidlibrary)
+    alias(libs.plugins.fluffit.hilt)
+}
+
+android {
+    namespace = "com.kiwa.fluffit.data"
 }
 
 dependencies {

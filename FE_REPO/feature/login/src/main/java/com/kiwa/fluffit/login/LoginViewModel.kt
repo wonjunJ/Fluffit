@@ -1,6 +1,7 @@
 package com.kiwa.fluffit.login
 
 import androidx.lifecycle.viewModelScope
+import com.kiwa.domain.usecase.CheckAccessTokenUseCase
 import com.kiwa.fluffit.home.composebase.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -8,7 +9,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-
+    private val checkAccessTokenUseCase: CheckAccessTokenUseCase
 ) : BaseViewModel<LoginViewState, LoginViewEvent>() {
     override fun createInitialState(): LoginViewState =
         LoginViewState.Splash()
@@ -20,13 +21,28 @@ class LoginViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            uiEvent.collect{event ->
+            uiEvent.collect { event ->
                 loginViewEvent(event)
             }
         }
     }
 
-    private suspend fun loginViewEvent(event:LoginViewEvent){
+    private suspend fun loginViewEvent(event: LoginViewEvent) {
+        when (event) {
+            is LoginViewEvent.AttemptAutoLogin -> checkAccessToken()
+            LoginViewEvent.SuccessAutoLogin -> TODO()
+            LoginViewEvent.FailedAutoLogin -> TODO()
+        }
+    }
 
+    private suspend fun checkAccessToken() {
+        checkAccessTokenUseCase().fold(
+            onSuccess = {
+                setState { LoginViewState.AutoLogin() }
+            },
+            onFailure = {
+                setState { LoginViewState.Default() }
+            }
+        )
     }
 }

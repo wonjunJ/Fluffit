@@ -43,6 +43,10 @@ internal fun LoginScreen(
     val glide = remember { Glide.with(context) }
     var visible by remember { mutableStateOf(false) }
 
+    if (viewState.isTryingAutoLogin) {
+        viewModel.onTriggerEvent(LoginViewEvent.AttemptAutoLogin)
+    }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -82,7 +86,7 @@ internal fun LoginScreen(
         }
 
         AnimatedVisibility(
-            visible = !visible,
+            visible = !viewState.isTryingAutoLogin,
             modifier = Modifier.align(Alignment.Center),
             enter = fadeIn(animationSpec = tween(durationMillis = 1000)),
             exit = fadeOut(animationSpec = tween(durationMillis = 1000))
