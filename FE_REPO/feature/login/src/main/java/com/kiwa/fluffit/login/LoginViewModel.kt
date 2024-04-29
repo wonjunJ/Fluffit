@@ -30,6 +30,7 @@ class LoginViewModel @Inject constructor(
     private suspend fun loginViewEvent(event: LoginViewEvent) {
         when (event) {
             is LoginViewEvent.AttemptAutoLogin -> checkAccessToken()
+            is LoginViewEvent.TryAutoLogin -> tryAutoLogin()
             LoginViewEvent.SuccessAutoLogin -> TODO()
             LoginViewEvent.FailedAutoLogin -> TODO()
         }
@@ -38,11 +39,15 @@ class LoginViewModel @Inject constructor(
     private suspend fun checkAccessToken() {
         checkAccessTokenUseCase().fold(
             onSuccess = {
-                setState { LoginViewState.AutoLogin() }
+                onTriggerEvent(LoginViewEvent.TryAutoLogin)
             },
             onFailure = {
                 setState { LoginViewState.Default() }
             }
         )
+    }
+
+    private suspend fun tryAutoLogin(){
+
     }
 }
