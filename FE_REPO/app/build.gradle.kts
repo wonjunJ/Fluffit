@@ -1,10 +1,9 @@
 import java.util.Properties
 
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.fluffit.application)
+    alias(libs.plugins.fluffit.hilt)
     alias(libs.plugins.ktlintLibrary)
-    alias(libs.plugins.hilt)
     id("kotlin-kapt")
 }
 
@@ -78,9 +77,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    implementation(libs.hiltNavigation)
 
     implementation(libs.retrofit)
     implementation(libs.retrofitGson)

@@ -1,6 +1,6 @@
-package com.kiwa.fluffit.convention
-
 import com.android.build.api.dsl.ApplicationExtension
+import com.kiwa.fluffit.convention.CONST_Version
+import com.kiwa.fluffit.convention.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure

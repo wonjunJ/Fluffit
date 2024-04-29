@@ -22,5 +22,21 @@ gradlePlugin{
             id = "fluffit.plugin.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
+        register("AndroidLibraryConventionPlugin"){
+            id = "fluffit.plugin.androidlibrary"
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
+        register("JavaLibraryConventionPlugin"){
+            id = "fluffit.plugin.javalibrary"
+            implementationClass = "JavaLibraryConventionPlugin"
+        }
+        register("FeatureConventionPlugin"){
+            id = "fluffit.plugin.feature"
+            implementationClass = "FeatureConventionPlugin"
+        }
+        register("AndroidHiltConventionPlugin"){
+            id = "fluffit.plugin.hilt"
+            implementationClass = "AndroidHiltConventionPlugin"
+        }
     }
 }

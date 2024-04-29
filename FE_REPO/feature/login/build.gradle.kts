@@ -1,7 +1,5 @@
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.hilt)
+    alias(libs.plugins.fluffit.feature)
     alias(libs.plugins.ktlintLibrary)
     id("kotlin-kapt")
 }
@@ -52,31 +50,5 @@ android {
 }
 
 dependencies {
-    implementation(libs.bundles.androidx.runtime)
-    implementation(libs.bundles.androidx.ui)
-    implementation(libs.bundles.androidx.room)
-    implementation(libs.bundles.androidx.navigation)
-
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.material3)
-    implementation(libs.play.services.location)
     implementation(project(":feature:home"))
-    implementation(libs.volley)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    implementation(libs.hiltNavigation)
-
-    implementation(libs.glide)
-    kapt(libs.glide.compiler)
-
-    implementation(project(":core:domain"))
 }
