@@ -1,4 +1,10 @@
 package com.kiwa.data.datasource
 
-class UserDataSourceImpl {
+import com.kiwa.data.api.AuthService
+import javax.inject.Inject
+
+class UserDataSourceImpl @Inject constructor(
+    private val authService: AuthService
+){
+
 }

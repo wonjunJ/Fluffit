@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class TryAutoLoginUseCase @Inject constructor(
     private val repository: UserRepository
-){
-    suspend fun invoke() = repository.autoLogin()
+) {
+    suspend operator fun invoke() = repository.autoLogin()
 }
