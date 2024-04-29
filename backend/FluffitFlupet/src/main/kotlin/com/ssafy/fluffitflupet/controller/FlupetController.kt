@@ -13,7 +13,7 @@ class FlupetController(
     private val flupetService: FlupetService
 ) {
     @GetMapping("/info")
-    suspend fun getMainInfo(@RequestHeader("userId") userId: String): MainInfoResponse {
+    suspend fun getMainInfo(@RequestHeader("userId") userId: String): MainInfoResponse? {
         return flupetService.getMainInfo(userId)
     }
 }

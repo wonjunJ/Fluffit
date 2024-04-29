@@ -9,7 +9,7 @@ class FlupetService {
     //lombok slf4j를 쓰기 위해
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
 
-    suspend fun getMainInfo(userId: String): MainInfoResponse {
-
+    suspend fun getMainInfo(userId: String): MainInfoResponse? {
+        return null
     }
 }
