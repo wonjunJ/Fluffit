@@ -1,15 +1,18 @@
 package com.kiwa.fluffit.home
 
 import com.kiwa.fluffit.home.composebase.ViewState
+import com.kiwa.fluffit.model.Flupet
 
-sealed class HomeViewState : ViewState{
-    abstract val isTryingAutoLogin: Boolean
+sealed class HomeViewState : ViewState {
+    abstract val coin: Int
+    abstract val flupet: Flupet?
 
     data class Default(
-        override val isTryingAutoLogin: Boolean = false
+        override val coin: Int = 0, override val flupet: Flupet? = null,
     ) : HomeViewState()
 
-    data class Ranking(
-        override val isTryingAutoLogin: Boolean = false
+    data class Loading(
+        override val coin: Int = 0, override val flupet: Flupet,
     ) : HomeViewState()
+
 }

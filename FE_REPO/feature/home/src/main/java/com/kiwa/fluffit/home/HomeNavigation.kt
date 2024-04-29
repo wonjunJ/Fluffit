@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 const val homeRoute = "home"
 fun NavGraphBuilder.homeScreen(onBackPressed: () -> Boolean) {
     composable(homeRoute) {
-        HomeScreen()
+        HomeRoute()
     }
 }
 

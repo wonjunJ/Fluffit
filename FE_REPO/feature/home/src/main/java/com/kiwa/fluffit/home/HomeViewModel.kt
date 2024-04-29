@@ -1,6 +1,7 @@
 package com.kiwa.fluffit.home
 
 import com.kiwa.fluffit.home.composebase.BaseViewModel
+import com.kiwa.fluffit.model.Flupet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

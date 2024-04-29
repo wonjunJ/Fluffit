@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<State : ViewState,
@@ -19,7 +20,7 @@ abstract class BaseViewModel<State : ViewState,
     abstract fun onTriggerEvent(event: Event)
 
     private val _uiState: MutableStateFlow<State> = MutableStateFlow(initialState)
-    val uiState: StateFlow<State> = _uiState
+    val uiState: StateFlow<State> = _uiState.asStateFlow()
 
     private val _uiEvent: MutableSharedFlow<Event> = MutableSharedFlow()
     val uiEvent = _uiEvent.asSharedFlow()

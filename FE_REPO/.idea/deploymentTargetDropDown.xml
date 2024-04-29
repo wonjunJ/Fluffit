@@ -5,28 +5,7 @@
       <entry key="app">
         <State />
       </entry>
-      <entry key="build-logic">
-        <State />
-      </entry>
-      <entry key="feature.battle-record">
-        <State />
-      </entry>
-      <entry key="feature.collection">
-        <State />
-      </entry>
-      <entry key="feature.flupet-history">
-        <State />
-      </entry>
-      <entry key="feature.home">
-        <State />
-      </entry>
-      <entry key="feature.login">
-        <State />
-      </entry>
-      <entry key="feature.mypage">
-        <State />
-      </entry>
-      <entry key="feature.ranking">
+      <entry key="core.model">
         <State />
       </entry>
       <entry key="wear">

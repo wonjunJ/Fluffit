@@ -41,6 +41,8 @@ internal class FeatureConventionPlugin : Plugin<Project> {
 //                "androidTestImplementation"(libs.findLibrary("androidx.ui.test.junit4").get())
                 "implementation"(libs.findLibrary("glide").get())
                 "ksp"(libs.findLibrary("glide.compiler").get())
+
+                "implementation"(libs.findBundle("androidx.lifecycle").get())
             }
         }
     }

@@ -94,6 +94,10 @@ volley = { group = "com.android.volley", name = "volley", version.ref = "volley"
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
 
+viewmodel-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
+compose-viewmodel-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+compose-lifecycle = {group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx"}
+
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -114,3 +118,4 @@ androidx-runtime = ["androidx-runtime", "androidx-runtime-livedata","androidx-ru
 androidx-ui = ["androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling", "androidx-ui-test-junit4", "androidx-ui-test-manifest", "androidx-ui-tooling-preview"]
 androidx-room = ["androidx-room-common", "androidx-room-compiler"]
 androidx-navigation = ["androidx-navigation-compose", "androidx-navigation-runtime-ktx"]
+androidx-lifecycle = ["viewmodel-lifecycle", "compose-viewmodel-lifecycle", "compose-lifecycle"]
