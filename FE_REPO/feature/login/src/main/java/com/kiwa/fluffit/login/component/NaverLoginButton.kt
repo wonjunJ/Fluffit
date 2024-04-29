@@ -15,9 +15,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.kiwa.fluffit.login.R
 
-private const val TAG = "GoogleLoginButton_싸피"
+private const val TAG = "NaverLoginButton_싸피"
 @Composable
-internal fun GoogleLoginButton(
+internal fun NaverLoginButton(
     onNavigationToHome: () -> Unit
 ){
     val interactionSource = remember { MutableInteractionSource() }
@@ -32,11 +32,11 @@ internal fun GoogleLoginButton(
                     interactionSource = interactionSource,
                     indication = null
                 ) {
-                    Log.d(TAG, "GoogleLoginButton: 클릭된듯")
+                    Log.d(TAG, "NaverLoginButton: 클릭된듯")
                     onNavigationToHome()
                 },
-            painter = painterResource(id = R.drawable.continue_with_google),
-            contentDescription = "구글 로그인",
+            painter = painterResource(id = R.drawable.naver_login_white),
+            contentDescription = "네이버 로그인",
         )
     }
 }
