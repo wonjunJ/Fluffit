@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.home.components
+package com.kiwa.ranking.ui.components
 
 import android.graphics.Color
 import androidx.compose.foundation.Canvas

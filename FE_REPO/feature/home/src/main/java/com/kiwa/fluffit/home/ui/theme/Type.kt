@@ -1,6 +1,7 @@
-package com.kiwa.home.ui.theme
+package com.kiwa.fluffit.home.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -17,32 +18,32 @@ val fluffitMainFontFamily = FontFamily(
 val fluffitTypography = Typography(
     titleLarge = TextStyle(
         fontFamily = fluffitMainFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 48.sp,
         lineHeight = 48.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = smooth_black
+        color = Color.Black
     ),
 
     titleMedium = TextStyle(
         fontFamily = fluffitMainFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 40.sp,
         lineHeight = 40.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = smooth_black
+        color = Color.Black
     ),
 
     titleSmall = TextStyle(
         fontFamily = fluffitMainFontFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 32.sp,
         lineHeight = 32.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = smooth_black
+        color = Color.Black
     ),
 
     bodyLarge = TextStyle(
@@ -52,7 +53,7 @@ val fluffitTypography = Typography(
         lineHeight = 28.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = smooth_black
+        color = Color.Black
     ),
 
     bodyMedium = TextStyle(
@@ -62,7 +63,7 @@ val fluffitTypography = Typography(
         lineHeight = 20.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = smooth_black
+        color = Color.Black
     ),
 
     bodySmall = TextStyle(
@@ -72,6 +73,6 @@ val fluffitTypography = Typography(
         lineHeight = 12.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = smooth_black
-    ),
+        color = Color.Black
+    )
 )

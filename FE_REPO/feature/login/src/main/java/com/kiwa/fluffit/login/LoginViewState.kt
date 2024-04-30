@@ -2,7 +2,7 @@ package com.kiwa.fluffit.login
 
 import com.kiwa.fluffit.home.composebase.ViewState
 
-sealed class LoginViewState : ViewState{
+sealed class LoginViewState : ViewState {
     abstract val isTryingAutoLogin: Boolean
 
     data class Splash(
@@ -12,5 +12,4 @@ sealed class LoginViewState : ViewState{
     data class Default(
         override val isTryingAutoLogin: Boolean = false
     ) : LoginViewState()
-
 }

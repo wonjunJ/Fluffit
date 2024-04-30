@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<State : ViewState,
-        Event : com.kiwa.fluffit.home.composebase.ViewEvent> :
+    Event : com.kiwa.fluffit.home.composebase.ViewEvent> :
     ViewModel() {
     private val initialState: State by lazy { createInitialState() }
     abstract fun createInitialState(): State

@@ -16,14 +16,15 @@ import androidx.compose.ui.unit.dp
 import com.kiwa.fluffit.login.R
 
 private const val TAG = "NaverLoginButton_싸피"
+
 @Composable
 internal fun NaverLoginButton(
     onNavigationToHome: () -> Unit
-){
+) {
     val interactionSource = remember { MutableInteractionSource() }
     Box(
         modifier = Modifier.fillMaxSize()
-    ){
+    ) {
         Image(
             modifier = Modifier
                 .padding(bottom = 90.dp)
@@ -36,7 +37,7 @@ internal fun NaverLoginButton(
                     onNavigationToHome()
                 },
             painter = painterResource(id = R.drawable.naver_login_white),
-            contentDescription = "네이버 로그인",
+            contentDescription = "네이버 로그인"
         )
     }
 }

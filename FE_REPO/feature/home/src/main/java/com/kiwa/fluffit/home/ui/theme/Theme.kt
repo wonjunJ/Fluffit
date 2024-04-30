@@ -1,4 +1,4 @@
-package com.kiwa.home.ui.theme
+package com.kiwa.fluffit.home.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -14,6 +14,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.kiwa.home.ui.theme.Pink40
+import com.kiwa.home.ui.theme.Pink80
+import com.kiwa.home.ui.theme.Purple40
+import com.kiwa.home.ui.theme.Purple80
+import com.kiwa.home.ui.theme.PurpleGrey40
+import com.kiwa.home.ui.theme.PurpleGrey80
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,

@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.home.components
+package com.kiwa.ranking.ui.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Text
@@ -13,15 +13,15 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun InlineColoredTextComponent(
-    modifier : Modifier,
+    modifier: Modifier,
     inputText: String,
     inlineTextColor: Color = Color.White,
-    fontSize : TextUnit,
+    fontSize: TextUnit,
     fontFamily: androidx.compose.ui.text.font.FontFamily
-){
+) {
     Box(
         modifier = modifier
-    ){
+    ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = inputText,
@@ -39,10 +39,10 @@ fun InlineColoredTextComponent(
             fontSize = fontSize,
             letterSpacing = (-6).sp,
             style = TextStyle.Default.copy(
-                fontSize=fontSize,
+                fontSize = fontSize,
                 drawStyle = Stroke(
                     miter = 2f,
-                    width = 20f,
+                    width = 20f
                 )
             )
         )
