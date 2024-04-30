@@ -24,28 +24,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField(
-            "String",
-            "BASE_URL",
-            "\"${properties["BASE_URL"]}\""
-        )
-
-        buildConfigField(
-            "String",
-            "NAVER_LOGIN_CLIENT_ID",
-            "\"${properties["NAVER_LOGIN_CLIENT_ID"]}\""
-        )
-        buildConfigField(
-            "String",
-            "NAVER_LOGIN_CLIENT_SECRET",
-            "\"${properties["NAVER_LOGIN_CLIENT_SECRET"]}\""
-        )
-
-        buildConfigField(
-            "String",
-            "NAVER_LOGIN_CLIENT_NAME",
-            "\"${properties["NAVER_LOGIN_CLIENT_NAME"]}\""
-        )
     }
 
     buildTypes {
@@ -112,6 +90,7 @@ dependencies {
     wearApp(project(":wear"))
     implementation(project(":core:domain"))
     implementation(project(":core:data"))
+    implementation(project(":core:model"))
     implementation(project(":feature:login"))
     implementation(project(":feature:battle-record"))
     implementation(project(":feature:collection"))

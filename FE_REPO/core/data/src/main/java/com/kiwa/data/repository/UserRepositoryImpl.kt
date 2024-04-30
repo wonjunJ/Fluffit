@@ -30,14 +30,17 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun autoLogin(): Result<Unit> {
         val accessToken = tokenManager.getAccessToken()
-        val result = runBlocking { userDataSource.autoLogin() }
+        val result = runBlocking { userDataSource.autoLogin("Bearer $accessToken") }
 
-//        return result.fold(
-//            onSuccess = {
-//                tokenManager.saveToken(it.data.)
-//            }
-//        )
-        return result
+        return result.fold(
+            onSuccess = {
+                tokenManager.saveToken(it.data.accessToken, it.data.refreshToken)
+                Result.success(Unit)
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
     }
 
     override suspend fun signIn(code: String): Result<Unit> {

@@ -2,10 +2,7 @@ import com.android.build.gradle.LibraryExtension
 import com.kiwa.fluffit.convention.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.getByType
 
 @Suppress("unused")
 internal class AndroidLibraryConventionPlugin : Plugin<Project> {
@@ -25,22 +22,44 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
                 defaultConfig {
                     testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
                     vectorDrawables.useSupportLibrary = true
+
+                    buildConfigField(
+                        "String",
+                        "BASE_URL",
+                        "\"${properties["BASE_URL"]}\""
+                    )
+
+                    buildConfigField(
+                        "String",
+                        "NAVER_LOGIN_CLIENT_ID",
+                        "\"${properties["NAVER_LOGIN_CLIENT_ID"]}\""
+                    )
+                    buildConfigField(
+                        "String",
+                        "NAVER_LOGIN_CLIENT_SECRET",
+                        "\"${properties["NAVER_LOGIN_CLIENT_SECRET"]}\""
+                    )
+
+                    buildConfigField(
+                        "String",
+                        "NAVER_LOGIN_CLIENT_NAME",
+                        "\"${properties["NAVER_LOGIN_CLIENT_NAME"]}\""
+                    )
                 }
 
                 viewBinding.enable = true
 
                 buildTypes {
-                    getByName("release") {
+                    getByName("debug") {
                         isMinifyEnabled = true
                         proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
                     }
                 }
-            }
 
-//            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-//            dependencies {
-//                "implementation"(libs.findLibrary("junit4").get())
-//            }
+                buildFeatures{
+                    buildConfig = true
+                }
+            }
         }
     }
 }

@@ -41,7 +41,7 @@ internal fun LoginScreen(
     val viewState = viewModel.uiState.collectAsState().value
     val context = LocalContext.current
     val glide = remember { Glide.with(context) }
-    var visible by remember { mutableStateOf(false) }
+//    var visible by remember { mutableStateOf(false) }
 
     if (viewState.isTryingAutoLogin) {
         viewModel.onTriggerEvent(LoginViewEvent.AttemptAutoLogin)

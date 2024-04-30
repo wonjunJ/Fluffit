@@ -14,7 +14,7 @@ import javax.inject.Singleton
 object AppModule {
     @Singleton
     @Provides
-    fun provideTokenManage(
+    fun provideTokenManager(
         sharedPreferences: SharedPreferences
     ): TokenManager = TokenManagerImpl(sharedPreferences)
 }
