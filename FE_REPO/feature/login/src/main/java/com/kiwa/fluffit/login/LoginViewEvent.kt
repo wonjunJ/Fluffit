@@ -7,8 +7,11 @@ sealed class LoginViewEvent :ViewEvent{
 
     data object TryAutoLogin : LoginViewEvent()
 
-    data object SuccessAutoLogin : LoginViewEvent()
+    data object OnClickNaverLoginButton : LoginViewEvent()
 
-    data object FailedAutoLogin : LoginViewEvent()
+    data class AttemptToFetchNaverId(val accessToken: String) : LoginViewEvent()
 
+    data class ShowToast(val message: String) : LoginViewEvent()
+
+    data object OnFinishToast : LoginViewEvent()
 }

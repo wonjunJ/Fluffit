@@ -52,9 +52,9 @@ internal class FeatureConventionPlugin : Plugin<Project> {
                 "androidTestImplementation"(libs.findLibrary("androidx.junit").get())
                 "androidTestImplementation"(libs.findLibrary("androidx.espresso.core").get())
                 "androidTestImplementation"(platform(libs.findLibrary("androidx.compose.bom").get()))
-//                "androidTestImplementation"(libs.findLibrary("androidx.ui.test.junit4").get())
                 "implementation"(libs.findLibrary("glide").get())
                 "ksp"(libs.findLibrary("glide.compiler").get())
+                "implementation"("com.navercorp.nid:oauth:5.9.0")
             }
         }
     }

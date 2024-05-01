@@ -1,5 +1,8 @@
 package com.kiwa.data.di
 
+import com.kiwa.data.api.AuthService
+import com.kiwa.data.api.NaverAuthService
+import com.kiwa.data.api.NaverLoginService
 import com.kiwa.fluffit.data.BuildConfig
 import dagger.Module
 import dagger.Provides
@@ -17,6 +20,7 @@ private const val NAVER_AUTH_URL = "https://nid.naver.com/oauth2.0/"
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
+
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class NaverRetrofit
@@ -32,6 +36,19 @@ object ApiModule {
     @Singleton
     @Provides
     @NaverRetrofit
+    fun provideNaverRetrofit(
+        @NetworkModule.SocialLoginClient
+        okHttpClient: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(NAVER_LOGIN_BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(gsonConverterFactory)
+        .build()
+
+    @Singleton
+    @Provides
+    @AuthRetrofit
     fun provideAuthRetrofit(
         @NetworkModule.AuthClient
         okHttpClient: OkHttpClient,
@@ -41,4 +58,38 @@ object ApiModule {
         .client(okHttpClient)
         .addConverterFactory(gsonConverterFactory)
         .build()
+
+    @Singleton
+    @Provides
+    @NaverAuthRetrofit
+    fun provideNaverAuthRetrofit(
+        @NetworkModule.SocialLoginClient
+        okHttpClient: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(NAVER_AUTH_URL)
+        .client(okHttpClient)
+        .addConverterFactory(gsonConverterFactory)
+        .build()
+
+    @Singleton
+    @Provides
+    fun provideAuthApi(
+        @AuthRetrofit
+        retrofit: Retrofit
+    ): AuthService = retrofit.create((AuthService::class.java))
+
+    @Singleton
+    @Provides
+    fun provideNaverLoginApi(
+        @NaverRetrofit
+        retrofit: Retrofit
+    ): NaverLoginService = retrofit.create((NaverLoginService::class.java))
+
+    @Singleton
+    @Provides
+    fun provideNaverAuthService(
+        @NaverAuthRetrofit
+        retrofit: Retrofit
+    ): NaverAuthService = retrofit.create((NaverAuthService::class.java))
 }

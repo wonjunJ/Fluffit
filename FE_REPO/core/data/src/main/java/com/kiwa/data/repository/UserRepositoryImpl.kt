@@ -1,6 +1,7 @@
 package com.kiwa.data.repository
 
 import com.kiwa.data.datasource.UserDataSource
+import com.kiwa.data.util.calculateHmac
 import com.kiwa.domain.TokenManager
 import com.kiwa.domain.repository.UserRepository
 import kotlinx.coroutines.runBlocking
@@ -43,13 +44,29 @@ class UserRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun signIn(code: String): Result<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun signInNaver(code: String): Result<Unit> {
+        val signature = calculateHmac("$code&NAVER")
+        val result = runBlocking { userDataSource.signInNaver(code, signature, "NAVER") }
+        return result.fold(
+            onSuccess = {
+                tokenManager.saveToken(it.data.accessToken, it.data.refreshToken)
+                Result.success(Unit)
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
     }
 
-    override suspend fun getNaverId(accessToken: String): Result<String> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getNaverId(accessToken: String): Result<String> =
+        userDataSource.getNaverLoginId(accessToken).fold(
+            onSuccess = {
+                Result.success(it)
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
 
     override suspend fun logout(): Result<Unit> {
         TODO("Not yet implemented")

@@ -6,4 +6,8 @@ interface UserDataSource {
 
 //    suspend fun autoLogin() : Result<Unit>
     suspend fun autoLogin(accessToken: String) : Result<TokenResponse>
+
+    suspend fun getNaverLoginId(accessToken: String): Result<String>
+
+    suspend fun signInNaver(userCode: String, signature: String, provider: String): Result<TokenResponse>
 }

@@ -2,7 +2,11 @@ import com.android.build.gradle.LibraryExtension
 import com.kiwa.fluffit.convention.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.getByType
+import java.util.Properties
 
 @Suppress("unused")
 internal class AndroidLibraryConventionPlugin : Plugin<Project> {
@@ -12,6 +16,10 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
                 apply("kotlin-parcelize")
+            }
+
+            val properties = Properties().apply {
+                load(project.rootProject.file("local.properties").inputStream())
             }
 
             extensions.configure<LibraryExtension> {
@@ -59,6 +67,13 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
                 buildFeatures{
                     buildConfig = true
                 }
+            }
+
+            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+            dependencies {
+                "testImplementation"(libs.findLibrary("junit").get())
+                "androidTestImplementation"(libs.findLibrary("androidx.junit").get())
+                "androidTestImplementation"(libs.findLibrary("androidx.espresso.core").get())
             }
         }
     }

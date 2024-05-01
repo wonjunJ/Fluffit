@@ -5,7 +5,7 @@ interface UserRepository {
 
     suspend fun autoLogin(): Result<Unit>
 
-    suspend fun signIn(code:String) : Result<Unit>
+    suspend fun signInNaver(code: String): Result<Unit>
 
     suspend fun getNaverId(accessToken:String):Result<String>
 
