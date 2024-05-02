@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Gradle build') {
+            steps {
+                dir('backend/FluffitFlupet') {
+                    sh 'chmod +x ./gradlew'
+                    sh './gradlew clean build'
+                }
+            }
+        }
+
+        stage('Docker image build') {
+            steps {
+                dir('backend/FluffitFlupet') {
+                    sh "docker stop FluffitFlupet || true && docker rm FluffitFlupet || true"
+                    sh 'docker rmi FluffitFlupet || true'
+                    sh 'docker build -t FluffitFlupet .'
+                }
+            }
+        }
+
+        stage('Docker container run') {
+            steps {
+                dir('backend/FluffitFlupet') {
+                    sh 'docker run -d -p 8082:8080 --name FluffitFlupet FluffitFlupet'
+                }
+            }
+        }
+    }
+}
+
+
