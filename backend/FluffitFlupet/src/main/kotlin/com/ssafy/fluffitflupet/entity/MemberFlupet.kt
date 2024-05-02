@@ -33,10 +33,10 @@ data class MemberFlupet(
     var patCnt: Int = 5,
     //죽기 일보 직전인 시간(예상 죽을 시간 1시간전) - user에게 push알림을 보내기 위해
     @Column("acha_time")
-    var achaTime: LocalDateTime,
+    var achaTime: LocalDateTime? = null,
     @Column("fullness_update_time")
     var fullnessUpdateTime: LocalDateTime? = null,
-    @Column("energy_update_time")
-    var energyUpdateTime: LocalDateTime? = null
+    @Column("health_update_time") //건강 업데이트 시간
+    var healthUpdateTime: LocalDateTime? = null
 ) {
 }
