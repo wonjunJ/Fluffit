@@ -51,4 +51,5 @@ android {
 
 dependencies {
     implementation(project(":feature:home"))
+    implementation(project(":core:base"))
 }

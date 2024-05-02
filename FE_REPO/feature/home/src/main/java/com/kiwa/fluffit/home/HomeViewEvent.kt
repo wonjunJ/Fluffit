@@ -1,6 +1,6 @@
 package com.kiwa.fluffit.home
 
-import com.kiwa.fluffit.home.composebase.ViewEvent
+import com.kiwa.fluffit.base.ViewEvent
 
 sealed class HomeViewEvent : ViewEvent {
     data object OnClickPencilButton : HomeViewEvent()

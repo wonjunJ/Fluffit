@@ -5,6 +5,12 @@
       <entry key="app">
         <State />
       </entry>
+      <entry key="core.base">
+        <State />
+      </entry>
+      <entry key="core.designsystem">
+        <State />
+      </entry>
       <entry key="core.model">
         <State />
       </entry>

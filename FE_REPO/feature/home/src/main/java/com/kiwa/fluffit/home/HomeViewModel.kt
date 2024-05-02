@@ -1,7 +1,7 @@
 package com.kiwa.fluffit.home
 
 import androidx.lifecycle.viewModelScope
-import com.kiwa.fluffit.home.composebase.BaseViewModel
+import com.kiwa.fluffit.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
