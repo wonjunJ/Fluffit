@@ -11,5 +11,6 @@ data class MainInfoResponse(
     var age: String,
     var isEvolutionAvailable: Boolean = false,
     var nextFullnessUpdateTime: Long,
-    var nextHealthUpdateTime: Long
+    var nextHealthUpdateTime: Long,
+    var coin: Int = 0
 )
