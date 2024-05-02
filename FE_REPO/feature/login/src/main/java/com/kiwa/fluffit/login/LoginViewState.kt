@@ -9,7 +9,7 @@ sealed class LoginViewState : ViewState {
     abstract val clickLoginButton: Boolean
     abstract val navigateToHome: Boolean
 
-    //초기 자동 로그인을 위한 accesstoken 보유 확인 상태
+    // 초기 자동 로그인을 위한 accesstoken 보유 확인 상태
     data class Splash(
         override val isTryingAutoLogin: Boolean = true,
         override val shouldDoLogin: Boolean = true,
@@ -18,7 +18,7 @@ sealed class LoginViewState : ViewState {
         override val navigateToHome: Boolean = false
     ) : LoginViewState()
 
-    //auto login 시도 상태
+    // auto login 시도 상태
     data class AutoLogin(
         override val isTryingAutoLogin: Boolean = true,
         override val shouldDoLogin: Boolean = false,
@@ -27,7 +27,7 @@ sealed class LoginViewState : ViewState {
         override val navigateToHome: Boolean = false
     ) : LoginViewState()
 
-    //auto login 실패 후 로그인 버튼 등장 상태
+    // auto login 실패 후 로그인 버튼 등장 상태
     data class Default(
         override val isTryingAutoLogin: Boolean = false,
         override val shouldDoLogin: Boolean = true,
@@ -36,7 +36,7 @@ sealed class LoginViewState : ViewState {
         override val navigateToHome: Boolean = false
     ) : LoginViewState()
 
-    //로그인 버튼 클릭 후 상태
+    // 로그인 버튼 클릭 후 상태
     data class Login(
         override val isTryingAutoLogin: Boolean = false,
         override val shouldDoLogin: Boolean = false,

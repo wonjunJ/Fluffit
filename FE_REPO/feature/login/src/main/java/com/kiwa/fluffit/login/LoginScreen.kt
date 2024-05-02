@@ -33,10 +33,10 @@ import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.kiwa.fluffit.login.component.NaverLoginButton
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.OAuthLoginCallback
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
 
 private const val TAG = "LoginScreen_싸피"
 
@@ -165,7 +165,7 @@ private fun ObserveNavigate(
     onNavigationToHome: () -> Unit,
     viewState: LoginViewState
 ) {
-    if(viewState.navigateToHome) {
+    if (viewState.navigateToHome) {
         Log.d(TAG, "ObserveNavigate: 이동합니다 ${viewState.navigateToHome}")
         onNavigationToHome()
     }

@@ -18,11 +18,10 @@ class LoginViewModel @Inject constructor(
     private val checkAccessTokenUseCase: CheckAccessTokenUseCase,
     private val tryAutoLoginUseCase: TryAutoLoginUseCase,
     private val getNaverIdUseCase: GetNaverIdUseCase,
-    private val signInNaverUseCase: SignInNaverUseCase,
+    private val signInNaverUseCase: SignInNaverUseCase
 ) : BaseViewModel<LoginViewState, LoginViewEvent>() {
     override fun createInitialState(): LoginViewState =
         LoginViewState.Splash()
-
 
     override fun onTriggerEvent(event: LoginViewEvent) {
         setEvent(event)
@@ -89,7 +88,7 @@ class LoginViewModel @Inject constructor(
     private suspend fun tryToLogin(naverId: String) {
         signInNaverUseCase(naverId).fold(
             onSuccess = {
-                Log.d(TAG, "tryToLogin: 네이버ID 값 : ${naverId}")
+                Log.d(TAG, "tryToLogin: 네이버ID 값 : $naverId")
                 Log.d(TAG, "tryToLogin: 로그인 시도 성공")
                 setState { LoginViewState.LoginSuccess() }
             },

@@ -7,9 +7,9 @@ interface UserRepository {
 
     suspend fun signInNaver(code: String): Result<Unit>
 
-    suspend fun getNaverId(accessToken:String):Result<String>
+    suspend fun getNaverId(accessToken: String): Result<String>
 
-    suspend fun logout():Result<Unit>
+    suspend fun logout(): Result<Unit>
 
     suspend fun signOut(
         naverClientId: String,
