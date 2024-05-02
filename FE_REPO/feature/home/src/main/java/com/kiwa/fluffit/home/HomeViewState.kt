@@ -1,6 +1,6 @@
 package com.kiwa.fluffit.home
 
-import com.kiwa.fluffit.home.composebase.ViewState
+import com.kiwa.fluffit.base.ViewState
 import com.kiwa.fluffit.model.Flupet
 
 sealed class HomeViewState : ViewState {

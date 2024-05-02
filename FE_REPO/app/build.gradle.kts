@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.play.services.wearable)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(project(":core:designsystem"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

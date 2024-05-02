@@ -1,6 +1,6 @@
 package com.kiwa.fluffit.login
 
-import com.kiwa.fluffit.home.composebase.ViewState
+import com.kiwa.fluffit.base.ViewState
 
 sealed class LoginViewState : ViewState {
     abstract val isTryingAutoLogin: Boolean
