@@ -1,4 +1,4 @@
-package com.kiwa.battle_record.ui.theme
+package com.kiwa.fluffit.battle.record.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

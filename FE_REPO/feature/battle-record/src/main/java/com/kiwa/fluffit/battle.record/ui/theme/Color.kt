@@ -1,4 +1,4 @@
-package com.kiwa.flupet_history.ui.theme
+package com.kiwa.record.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

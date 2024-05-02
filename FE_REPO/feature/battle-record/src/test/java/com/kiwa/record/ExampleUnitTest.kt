@@ -1,6 +1,6 @@
-package com.kiwa.fluffit.model
+package com.kiwa.record
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**

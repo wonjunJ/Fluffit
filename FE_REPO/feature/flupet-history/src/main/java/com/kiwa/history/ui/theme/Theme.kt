@@ -1,4 +1,4 @@
-package com.kiwa.battle_record.ui.theme
+package com.kiwa.history.ui.theme
 
 import android.app.Activity
 import android.os.Build
