@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,7 +26,7 @@ fun FlupetNameUI(
     name: String
 ) {
     Row(
-        modifier = Modifier.padding(top = 12.dp),
+        modifier = Modifier.padding(top = 12.dp).padding(start = 32.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         when (viewState) {
@@ -46,7 +47,9 @@ fun FlupetNameUI(
 fun DisplayModeUI(name: String, onClickPencilButton: () -> Unit) {
     Text(
         text = name,
-        style = MaterialTheme.typography.bodyMedium
+        style = MaterialTheme.typography.bodyMedium,
+        modifier = Modifier.width(128.dp),
+        maxLines = 1
     )
     Image(
         painter = painterResource(id = R.drawable.pencil),
@@ -64,8 +67,17 @@ fun EditModeUI(name: String, onClickConfirmButton: (String) -> Unit) {
     CustomTextField(
         textState = textState,
         isSingleLine = true,
-        maxLength = 6
+        maxLength = 6,
+        modifier = Modifier.width(128.dp)
+
     )
 
-    Text(text = "확인", modifier = Modifier.clickable { onClickConfirmButton(textState.value) })
+    Image(
+        painter = painterResource(id = R.drawable.check),
+        contentDescription = null,
+        modifier = Modifier
+            .size(32.dp)
+            .padding(start = 4.dp)
+            .clickable { onClickConfirmButton(textState.value) }
+    )
 }
