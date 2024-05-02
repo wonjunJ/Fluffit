@@ -85,7 +85,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttpLogging)
 
-    implementation("com.navercorp.nid:oauth:5.9.0")
+    implementation("com.navercorp.nid:oauth:5.9.1") // jdk 11
 
     wearApp(project(":wear"))
     implementation(project(":core:domain"))

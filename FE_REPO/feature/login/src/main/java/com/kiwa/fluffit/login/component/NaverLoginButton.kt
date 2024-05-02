@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,11 +23,10 @@ private const val TAG = "NaverLoginButton_싸피"
 
 @Composable
 internal fun NaverLoginButton(
-    onNavigationToHome: () -> Unit,
-    viewState: LoginViewState,
     viewModel: LoginViewModel
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -40,10 +40,11 @@ internal fun NaverLoginButton(
                 ) {
                     viewModel.onTriggerEvent(LoginViewEvent.OnClickNaverLoginButton)
                     Log.d(TAG, "NaverLoginButton: 클릭된듯")
-//                    onNavigationToHome()
                 },
             painter = painterResource(id = R.drawable.naver_login_white),
             contentDescription = "네이버 로그인",
         )
     }
 }
+
+

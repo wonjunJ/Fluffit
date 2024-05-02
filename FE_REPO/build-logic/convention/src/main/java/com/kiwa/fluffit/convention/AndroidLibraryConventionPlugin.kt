@@ -53,6 +53,12 @@ internal class AndroidLibraryConventionPlugin : Plugin<Project> {
                         "NAVER_LOGIN_CLIENT_NAME",
                         "\"${properties["NAVER_LOGIN_CLIENT_NAME"]}\""
                     )
+
+                    buildConfigField(
+                        "String",
+                        "SECRET_KEY",
+                        "\"${properties["SECRET_KEY"]}\""
+                    )
                 }
 
                 viewBinding.enable = true

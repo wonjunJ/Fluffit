@@ -1,6 +1,7 @@
 package com.kiwa.fluffit.login
 
 import android.content.Context
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.compose.animation.AnimatedVisibility
@@ -37,6 +38,8 @@ import kotlin.coroutines.resume
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.OAuthLoginCallback
 
+private const val TAG = "LoginScreen_싸피"
+
 @Composable
 internal fun LoginScreen(
     navController: NavHostController = rememberNavController(),
@@ -55,6 +58,12 @@ internal fun LoginScreen(
     ObserveLoginAttempt(viewState, context, viewModel)
 
     ObserveToastMessage(viewState, snackBarHostState, viewModel)
+
+    LaunchedEffect(key1 = viewState.isTryingAutoLogin) {
+        Log.d(TAG, "LoginScreen: launchedEffect -> ${viewState.isTryingAutoLogin}")
+    }
+
+    ObserveNavigate(onNavigationToHome, viewState)
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -94,19 +103,17 @@ internal fun LoginScreen(
             )
         }
 
-        if(!viewState.isTryingAutoLogin){
-            AnimatedVisibility(
-                visible = !viewState.isTryingAutoLogin,
-                modifier = Modifier.align(Alignment.Center),
-                enter = slideInVertically(initialOffsetY = {
-                    it
-                }, animationSpec = tween(durationMillis = 3000)),
-                exit = slideOutVertically(targetOffsetY = {
-                    it
-                }, animationSpec = tween(durationMillis = 300))
-            ) {
-                NaverLoginButton(onNavigationToHome, viewState, viewModel)
-            }
+        AnimatedVisibility(
+            visible = !viewState.isTryingAutoLogin,
+            modifier = Modifier.align(Alignment.Center),
+            enter = slideInVertically(initialOffsetY = {
+                it
+            }, animationSpec = tween(durationMillis = 3000)),
+            exit = slideOutVertically(targetOffsetY = {
+                it
+            }, animationSpec = tween(durationMillis = 300))
+        ) {
+            NaverLoginButton(viewModel)
         }
     }
 }
@@ -117,15 +124,17 @@ private fun ObserveLoginAttempt(
     context: Context,
     viewModel: LoginViewModel
 ) {
-    LaunchedEffect(key1 = viewState.shouldDoLogin) {
-        if (viewState.shouldDoLogin) {
+    LaunchedEffect(key1 = viewState.clickLoginButton) {
+        if (viewState.clickLoginButton) {
             val result = authenticateWithNaver(context = context)
             result.fold(
                 onSuccess = {
+                    Log.d(TAG, "ObserveLoginAttempt: 성공")
                     viewModel.onTriggerEvent(LoginViewEvent.AttemptToFetchNaverId(it))
                 },
                 onFailure = { _ ->
                     viewModel.onTriggerEvent(LoginViewEvent.ShowToast("네이버 로그인 실패"))
+                    Log.d(TAG, "ObserveLoginAttempt: 실패")
                 }
             )
         }
@@ -148,6 +157,17 @@ private fun ObserveToastMessage(
             )
             viewModel.onTriggerEvent(LoginViewEvent.OnFinishToast)
         }
+    }
+}
+
+@Composable
+private fun ObserveNavigate(
+    onNavigationToHome: () -> Unit,
+    viewState: LoginViewState
+) {
+    if(viewState.navigateToHome) {
+        Log.d(TAG, "ObserveNavigate: 이동합니다 ${viewState.navigateToHome}")
+        onNavigationToHome()
     }
 }
 
