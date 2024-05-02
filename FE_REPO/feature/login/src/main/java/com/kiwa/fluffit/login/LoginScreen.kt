@@ -1,9 +1,11 @@
 package com.kiwa.fluffit.login
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
@@ -32,6 +34,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.kiwa.fluffit.login.component.FluffitSnackBarHost
 import com.kiwa.fluffit.login.component.NaverLoginButton
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.OAuthLoginCallback
@@ -42,7 +45,6 @@ private const val TAG = "LoginScreen_싸피"
 
 @Composable
 internal fun LoginScreen(
-    navController: NavHostController = rememberNavController(),
     viewModel: LoginViewModel = hiltViewModel<LoginViewModel>(),
     onNavigationToHome: () -> Unit
 ) {
@@ -59,8 +61,16 @@ internal fun LoginScreen(
 
     ObserveToastMessage(viewState, snackBarHostState, viewModel)
 
-    LaunchedEffect(key1 = viewState.isTryingAutoLogin) {
-        Log.d(TAG, "LoginScreen: launchedEffect -> ${viewState.isTryingAutoLogin}")
+    LaunchedEffect(key1 = viewState.shouldExit) {
+        if (viewState.shouldExit) {
+            (context as Activity).finish()
+        }
+    }
+
+    BackHandler {
+        val backPressedTime = System.currentTimeMillis()
+        Log.d(TAG, "LoginScreen: backPressedTime : ${backPressedTime}")
+        viewModel.onTriggerEvent(LoginViewEvent.OnClickBackButton(backPressedTime))
     }
 
     ObserveNavigate(onNavigationToHome, viewState)
@@ -115,6 +125,13 @@ internal fun LoginScreen(
         ) {
             NaverLoginButton(viewModel)
         }
+
+        FluffitSnackBarHost(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp),
+            snackBarHostState = snackBarHostState
+        )
     }
 }
 
@@ -148,6 +165,7 @@ private fun ObserveToastMessage(
     viewModel: LoginViewModel
 ) {
     LaunchedEffect(key1 = viewState.toastMessage) {
+        Log.d(TAG, "ObserveToastMessage: ${viewState.toastMessage}")
         if (viewState.toastMessage.isNotEmpty()) {
             snackBarHostState.currentSnackbarData?.dismiss()
             snackBarHostState.showSnackbar(

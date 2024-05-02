@@ -2,6 +2,7 @@ package com.kiwa.fluffit.home.ui.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -15,7 +16,9 @@ fun FlupetImageButton(@DrawableRes id: Int, modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(id = id),
             contentDescription = null,
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier.size(48.dp).clickable {
+
+            }
         )
     }
 }
