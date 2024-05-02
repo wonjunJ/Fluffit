@@ -34,14 +34,18 @@ import com.kiwa.fluffit.home.ui.components.FlupetImageButton
 import com.kiwa.fluffit.home.ui.components.StatDisplay
 
 @Composable
-internal fun HomeRoute(viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()) {
+internal fun HomeRoute(
+    viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
+    onNavigateToCollection: () -> Unit
+) {
     val uiState: HomeViewState by viewModel.uiState.collectAsStateWithLifecycle()
-    HomeScreen(uiState = uiState)
+    HomeScreen(uiState, onNavigateToCollection)
 }
 
 @Composable
 internal fun HomeScreen(
-    uiState: HomeViewState
+    uiState: HomeViewState,
+    onNavigateToCollection: () -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -60,7 +64,7 @@ internal fun HomeScreen(
             contentScale = ContentScale.FillHeight
         )
 
-        MainButtons()
+        MainButtons(onNavigateToCollection)
 
         Column(
             modifier = Modifier
@@ -131,7 +135,9 @@ private fun HealthDisplay(stat: Int) {
 }
 
 @Composable
-private fun MainButtons() {
+private fun MainButtons(
+    onNavigateToCollection: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -143,22 +149,22 @@ private fun MainButtons() {
             Spacer(modifier = Modifier.weight(1f))
             RankingButton()
         }
-        CollectionButton(modifier = Modifier.align(Alignment.BottomStart))
+        CollectionButton(modifier = Modifier.align(Alignment.BottomStart), onNavigateToCollection = onNavigateToCollection)
         UserButton(modifier = Modifier.align(Alignment.BottomEnd))
     }
 }
 
 @Composable
-private fun CollectionButton(modifier: Modifier) {
-    FlupetImageButton(id = R.drawable.collection, modifier = modifier)
+private fun CollectionButton(modifier: Modifier, onNavigateToCollection: () -> Unit) {
+    FlupetImageButton(id = R.drawable.collection, modifier = modifier,onNavigateToCollection)
 }
 
 @Composable
 private fun UserButton(modifier: Modifier) {
-    FlupetImageButton(id = R.drawable.user, modifier = modifier)
+//    FlupetImageButton(id = R.drawable.user, modifier = modifier)
 }
 
 @Composable
 private fun RankingButton() {
-    FlupetImageButton(id = R.drawable.ranking)
+//    FlupetImageButton(id = R.drawable.ranking)
 }

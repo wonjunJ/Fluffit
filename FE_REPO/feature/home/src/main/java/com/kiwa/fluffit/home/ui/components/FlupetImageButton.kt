@@ -11,14 +11,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FlupetImageButton(@DrawableRes id: Int, modifier: Modifier = Modifier) {
+fun FlupetImageButton(
+    @DrawableRes id: Int,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Box(modifier = modifier) {
         Image(
             painter = painterResource(id = id),
             contentDescription = null,
-            modifier = Modifier.size(48.dp).clickable {
-
-            }
+            modifier = Modifier
+                .size(48.dp)
+                .clickable {
+                    onClick()
+                }
         )
     }
 }
