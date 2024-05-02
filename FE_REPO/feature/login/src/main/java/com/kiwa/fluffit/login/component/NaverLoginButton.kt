@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.kiwa.fluffit.login.LoginViewEvent
 import com.kiwa.fluffit.login.LoginViewModel
 import com.kiwa.fluffit.login.R
 
