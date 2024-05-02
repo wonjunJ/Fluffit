@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -31,17 +29,31 @@ import coil.decode.ImageDecoderDecoder
 import coil.size.OriginalSize
 import com.kiwa.fluffit.home.ui.components.CoinDisplay
 import com.kiwa.fluffit.home.ui.components.FlupetImageButton
-import com.kiwa.fluffit.home.ui.components.StatDisplay
+import com.kiwa.fluffit.home.ui.components.FlupetNameUI
+import com.kiwa.fluffit.home.ui.components.FullnessDisplay
+import com.kiwa.fluffit.home.ui.components.HealthDisplay
 
 @Composable
 internal fun HomeRoute(viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()) {
     val uiState: HomeViewState by viewModel.uiState.collectAsStateWithLifecycle()
-    HomeScreen(uiState = uiState)
+    HomeScreen(
+        uiState = uiState,
+        onClickPencilButton = { viewModel.onTriggerEvent(HomeViewEvent.OnClickPencilButton) },
+        onClickConfirmButton = { name ->
+            viewModel.onTriggerEvent(
+                HomeViewEvent.OnClickConfirmEditButton(
+                    name
+                )
+            )
+        }
+    )
 }
 
 @Composable
 internal fun HomeScreen(
-    uiState: HomeViewState
+    uiState: HomeViewState,
+    onClickPencilButton: () -> Unit,
+    onClickConfirmButton: (String) -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -76,7 +88,8 @@ internal fun HomeScreen(
             Image(
                 painter = rememberImagePainter(
                     imageLoader = imageLoader,
-                    data = "https://github.com/shjung53/algorithm_study/assets/90888718/4399f85d-7810-464c-ad76-caae980ce047",
+                    data = "https://github.com/shjung53/algorithm_study/assets/" +
+                        "90888718/4399f85d-7810-464c-ad76-caae980ce047",
                     builder = {
                         size(OriginalSize)
                     }
@@ -86,48 +99,9 @@ internal fun HomeScreen(
                     .size(200.dp)
                     .padding(top = 32.dp)
             )
-
-            Row(
-                modifier = Modifier.padding(top = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "도끼보다토끼", style = MaterialTheme.typography.bodyMedium)
-                Image(
-                    painter = painterResource(id = R.drawable.pencil),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(start = 4.dp)
-                )
-            }
+            FlupetNameUI(uiState, onClickPencilButton, onClickConfirmButton, uiState.flupet.name)
         }
     }
-}
-
-@Composable
-private fun FullnessDisplay(stat: Int) {
-    val image = when (stat) {
-        0 -> R.drawable.fullness_0
-        in 1..20 -> R.drawable.fullness_20
-        in 21..40 -> R.drawable.fullness_40
-        in 41..60 -> R.drawable.fullness_60
-        in 61..80 -> R.drawable.fullness_80
-        else -> R.drawable.fullness_100
-    }
-    StatDisplay(statIconImage = R.drawable.fullness, statProgressImage = image)
-}
-
-@Composable
-private fun HealthDisplay(stat: Int) {
-    val image = when (stat) {
-        0 -> R.drawable.health_0
-        in 1..20 -> R.drawable.health_20
-        in 21..40 -> R.drawable.health_40
-        in 41..60 -> R.drawable.health_60
-        in 61..80 -> R.drawable.health_80
-        else -> R.drawable.health_100
-    }
-    StatDisplay(statIconImage = R.drawable.health, statProgressImage = image)
 }
 
 @Composable

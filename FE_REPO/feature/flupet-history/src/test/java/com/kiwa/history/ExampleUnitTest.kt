@@ -1,6 +1,6 @@
-package com.kiwa.battle_record
+package com.kiwa.history
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**

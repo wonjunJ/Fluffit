@@ -1,4 +1,4 @@
-package com.kiwa.flupet_history.ui.theme
+package com.kiwa.history.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
