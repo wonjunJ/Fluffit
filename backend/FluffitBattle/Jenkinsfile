@@ -1,6 +1,31 @@
+pipeline {
+    agent any
 
-node {
-  stage ('======== Clone repository ========') {
-    checkout scm
-  }
+    stages {
+        stage('Gradle build') {
+            steps {
+                dir('backend/FluffitBattle') {
+                    sh './gradlew clean build'
+                }
+            }
+        }
+
+        stage('Docker image build') {
+            steps {
+                dir('backend/FluffitBattle') {
+                    sh "docker stop FluffitBattle || true && docker rm FluffitBattle || true"
+                    sh 'docker rmi FluffitBattle || true'
+                    sh 'docker build -t FluffitBattle .'
+                }
+            }
+        }
+
+        stage('Docker container run') {
+            steps {
+                dir('backend/FluffitBattle') {
+                    sh 'docker run -d -p 8081:8080 --name FluffitBattle FluffitBattle'
+                }
+            }
+        }
+    }
 }
