@@ -1,23 +1,25 @@
 package com.kiwa.fluffit.login
 
+import android.content.Context
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -31,6 +33,12 @@ import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.kiwa.fluffit.login.component.NaverLoginButton
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import com.navercorp.nid.NaverIdLoginSDK
+import com.navercorp.nid.oauth.OAuthLoginCallback
+
+private const val TAG = "LoginScreen_싸피"
 
 @Composable
 internal fun LoginScreen(
@@ -41,7 +49,21 @@ internal fun LoginScreen(
     val viewState = viewModel.uiState.collectAsState().value
     val context = LocalContext.current
     val glide = remember { Glide.with(context) }
-    var visible by remember { mutableStateOf(false) }
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    if (viewState.isTryingAutoLogin) {
+        viewModel.onTriggerEvent(LoginViewEvent.AttemptAutoLogin)
+    }
+
+    ObserveLoginAttempt(viewState, context, viewModel)
+
+    ObserveToastMessage(viewState, snackBarHostState, viewModel)
+
+    LaunchedEffect(key1 = viewState.isTryingAutoLogin) {
+        Log.d(TAG, "LoginScreen: launchedEffect -> ${viewState.isTryingAutoLogin}")
+    }
+
+    ObserveNavigate(onNavigationToHome, viewState)
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -82,18 +104,95 @@ internal fun LoginScreen(
         }
 
         AnimatedVisibility(
-            visible = !visible,
+            visible = !viewState.isTryingAutoLogin,
             modifier = Modifier.align(Alignment.Center),
-            enter = fadeIn(animationSpec = tween(durationMillis = 1000)),
-            exit = fadeOut(animationSpec = tween(durationMillis = 1000))
-//            enter = slideInVertically(initialOffsetY = {
-//                it
-//            }, animationSpec = tween(durationMillis = 1000)),
-//            exit = slideOutVertically(targetOffsetY = {
-//                it
-//            }, animationSpec = tween(durationMillis = 1000))
+            enter = slideInVertically(initialOffsetY = {
+                it
+            }, animationSpec = tween(durationMillis = 3000)),
+            exit = slideOutVertically(targetOffsetY = {
+                it
+            }, animationSpec = tween(durationMillis = 300))
         ) {
-            NaverLoginButton(onNavigationToHome)
+            NaverLoginButton(viewModel)
         }
     }
 }
+
+@Composable
+private fun ObserveLoginAttempt(
+    viewState: LoginViewState,
+    context: Context,
+    viewModel: LoginViewModel
+) {
+    LaunchedEffect(key1 = viewState.clickLoginButton) {
+        if (viewState.clickLoginButton) {
+            val result = authenticateWithNaver(context = context)
+            result.fold(
+                onSuccess = {
+                    Log.d(TAG, "ObserveLoginAttempt: 성공")
+                    viewModel.onTriggerEvent(LoginViewEvent.AttemptToFetchNaverId(it))
+                },
+                onFailure = { _ ->
+                    viewModel.onTriggerEvent(LoginViewEvent.ShowToast("네이버 로그인 실패"))
+                    Log.d(TAG, "ObserveLoginAttempt: 실패")
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ObserveToastMessage(
+    viewState: LoginViewState,
+    snackBarHostState: SnackbarHostState,
+    viewModel: LoginViewModel
+) {
+    LaunchedEffect(key1 = viewState.toastMessage) {
+        if (viewState.toastMessage.isNotEmpty()) {
+            snackBarHostState.currentSnackbarData?.dismiss()
+            snackBarHostState.showSnackbar(
+                viewState.toastMessage,
+                actionLabel = "확인",
+                duration = SnackbarDuration.Short
+            )
+            viewModel.onTriggerEvent(LoginViewEvent.OnFinishToast)
+        }
+    }
+}
+
+@Composable
+private fun ObserveNavigate(
+    onNavigationToHome: () -> Unit,
+    viewState: LoginViewState
+) {
+    if(viewState.navigateToHome) {
+        Log.d(TAG, "ObserveNavigate: 이동합니다 ${viewState.navigateToHome}")
+        onNavigationToHome()
+    }
+}
+
+private suspend fun authenticateWithNaver(context: Context): Result<String> =
+    suspendCancellableCoroutine { continuation ->
+        val callback = object : OAuthLoginCallback {
+            override fun onSuccess() {
+                val accessToken = NaverIdLoginSDK.getAccessToken() ?: ""
+                continuation.resume(Result.success(accessToken))
+            }
+
+            override fun onFailure(httpStatus: Int, message: String) {
+                continuation.resume(
+                    Result.failure(
+                        Exception("Naver login failed: $httpStatus, $message")
+                    )
+                )
+            }
+
+            override fun onError(errorCode: Int, message: String) {
+                onFailure(errorCode, message)
+            }
+        }
+
+        NaverIdLoginSDK.authenticate(context, callback)
+
+        continuation.invokeOnCancellation {}
+    }

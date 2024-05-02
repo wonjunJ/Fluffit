@@ -5,7 +5,7 @@ import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 
 @Suppress("unused")
-class AndroidHiltConventionPlugin : Plugin<Project> {
+internal class AndroidHiltConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             with(pluginManager) {
