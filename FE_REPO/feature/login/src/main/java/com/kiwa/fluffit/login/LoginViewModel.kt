@@ -6,7 +6,7 @@ import com.kiwa.domain.usecase.CheckAccessTokenUseCase
 import com.kiwa.domain.usecase.GetNaverIdUseCase
 import com.kiwa.domain.usecase.SignInNaverUseCase
 import com.kiwa.domain.usecase.TryAutoLoginUseCase
-import com.kiwa.fluffit.home.composebase.BaseViewModel
+import com.kiwa.fluffit.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

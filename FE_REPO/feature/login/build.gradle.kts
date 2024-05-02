@@ -16,5 +16,6 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":core:model"))
 
-    implementation("com.navercorp.nid:oauth:5.9.1") // jdk 11
+    implementation("com.navercorp.nid:oauth:5.9.1")
+    implementation(project(":core:base")) // jdk 11
 }

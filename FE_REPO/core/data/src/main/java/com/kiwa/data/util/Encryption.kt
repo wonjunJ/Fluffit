@@ -7,7 +7,7 @@ import java.util.Base64
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-//암호화 알고리즘 정의 정해야함
+// 암호화 알고리즘 정의 정해야함
 private const val HMAC_ALGORITHM = "HmacSHA256"
 
 @Throws(NoSuchAlgorithmException::class, InvalidKeyException::class)

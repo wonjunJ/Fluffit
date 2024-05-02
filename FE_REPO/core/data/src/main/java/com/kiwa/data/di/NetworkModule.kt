@@ -18,10 +18,9 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private val logginInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             setLevel(HttpLoggingInterceptor.Level.HEADERS)
-        }
-        else{
+        } else {
             setLevel(HttpLoggingInterceptor.Level.NONE)
         }
     }
@@ -34,11 +33,10 @@ object NetworkModule {
     @Retention(AnnotationRetention.BINARY)
     annotation class AuthClient
 
-
     @Singleton
     @Provides
     @AuthClient
-    fun provideAuthClient(): OkHttpClient{
+    fun provideAuthClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.apply {
             addInterceptor(logginInterceptor)
@@ -49,7 +47,7 @@ object NetworkModule {
     @Singleton
     @Provides
     @SocialLoginClient
-    fun provideSocialClient(): OkHttpClient{
+    fun provideSocialClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.apply {
             addInterceptor(logginInterceptor)
@@ -58,6 +56,7 @@ object NetworkModule {
     }
 
     private val gson: Gson = GsonBuilder().disableHtmlEscaping().create()
+
     @Singleton
     @Provides
     fun provideConverterFactory(): GsonConverterFactory {

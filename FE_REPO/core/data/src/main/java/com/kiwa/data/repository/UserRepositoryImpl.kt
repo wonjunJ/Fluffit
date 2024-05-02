@@ -17,8 +17,11 @@ class UserRepositoryImpl @Inject constructor(
         val accessToken = tokenManager.getAccessToken()
 
         val result = runBlocking {
-            if (accessToken == "") Result.failure(exception = NullPointerException())
-            else Result.success(accessToken)
+            if (accessToken == "") {
+                Result.failure(exception = NullPointerException())
+            } else {
+                Result.success(accessToken)
+            }
         }
 
         return result.fold(
@@ -49,9 +52,9 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun signInNaver(code: String): Result<Unit> {
         val signature = calculateHmac("$code&NAVER")
 
-        Log.d(TAG, "signInNaver: code 값 : ${code}")
+        Log.d(TAG, "signInNaver: code 값 : $code")
 
-        //강제 token 발급 성공 코드
+        // 강제 token 발급 성공 코드
         val result = runBlocking {
             Result.success("")
         }
@@ -65,7 +68,7 @@ class UserRepositoryImpl @Inject constructor(
             }
         )
 
-        //test를 위해 강제 token 발급 성공 process로 대신하여 테스트함. 추후에는 하단 주석코드를 사용하면 됩니다
+        // test를 위해 강제 token 발급 성공 process로 대신하여 테스트함. 추후에는 하단 주석코드를 사용하면 됩니다
 //        val result = runBlocking { userDataSource.signInNaver(code, signature, "NAVER") }
 //        return result.fold(
 //            onSuccess = {
@@ -81,11 +84,11 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getNaverId(accessToken: String): Result<String> =
         userDataSource.getNaverLoginId(accessToken).fold(
             onSuccess = {
-                Log.d(TAG, "getNaverId: 네이버 ID 값 성공 : ${it}")
+                Log.d(TAG, "getNaverId: 네이버 ID 값 성공 : $it")
                 Result.success(it)
             },
             onFailure = {
-                Log.d(TAG, "getNaverId: 네이버 ID 값 실패 : ${it}")
+                Log.d(TAG, "getNaverId: 네이버 ID 값 실패 : $it")
                 Result.failure(it)
             }
         )

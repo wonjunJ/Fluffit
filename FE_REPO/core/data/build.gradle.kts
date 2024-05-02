@@ -1,17 +1,14 @@
-import java.util.Properties
+
 
 plugins {
     alias(libs.plugins.fluffit.androidlibrary)
     alias(libs.plugins.fluffit.hilt)
-}
-
-val properties = Properties().apply {
-    load(project.rootProject.file("local.properties").inputStream())
+    alias(libs.plugins.ktlintLibrary)
+    id("kotlin-kapt")
 }
 
 android {
     namespace = "com.kiwa.fluffit.data"
-
 }
 
 dependencies {

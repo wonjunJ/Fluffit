@@ -9,7 +9,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.kiwa.fluffit.home.R
+import com.kiwa.fluffit.designsystem.R
 
 val fluffitMainFontFamily = FontFamily(
     Font(R.font.neodgm, FontWeight.Normal, FontStyle.Normal)

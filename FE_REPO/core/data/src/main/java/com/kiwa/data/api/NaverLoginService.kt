@@ -8,5 +8,5 @@ interface NaverLoginService {
     @GET("nid/me")
     suspend fun getNaverUserId(
         @Header("Authorization") accessToken: String
-    ) : NaverUserIdResponse
+    ): NaverUserIdResponse
 }

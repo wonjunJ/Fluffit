@@ -10,10 +10,8 @@ class TokenManagerImpl @Inject constructor(
     override suspend fun getAccessToken(): String =
         tokenPreferences.getString("accessToken", "") ?: ""
 
-
     override suspend fun getRefreshToken(): String =
         tokenPreferences.getString("refreshToken", "") ?: ""
-
 
     override suspend fun saveToken(accessToken: String, refreshToken: String) {
         with(tokenPreferences.edit()) {
@@ -30,5 +28,4 @@ class TokenManagerImpl @Inject constructor(
             apply()
         }
     }
-
 }
