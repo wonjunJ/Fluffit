@@ -14,9 +14,9 @@ pipeline {
         stage('Docker image build') {
             steps {
                 dir('backend/FluffitFlupet') {
-                    sh "docker stop FluffitFlupet || true && docker rm FluffitFlupet || true"
-                    sh 'docker rmi FluffitFlupet || true'
-                    sh 'docker build -t FluffitFlupet .'
+                    sh "docker stop fluffitflupet || true && docker rm fluffitflupet || true"
+                    sh 'docker rmi fluffitflupet || true'
+                    sh 'docker build -t fluffitflupet .'
                 }
             }
         }
@@ -24,8 +24,14 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitFlupet') {
-                    sh 'docker run -d -p 8082:8080 --name FluffitFlupet FluffitFlupet'
+                    sh 'docker run -d -p 8082:8080 --name fluffitflupet fluffitflupet'
                 }
+            }
+        }
+
+        stage('Cleanup dangling images') {
+            steps {
+                sh 'docker image prune -f'
             }
         }
     }
