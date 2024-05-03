@@ -223,16 +223,16 @@ public class MemberFlupetRecord extends UpdatableRecordImpl<MemberFlupetRecord> 
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.energy_update_time</code>.
+     * Setter for <code>flupet_service.member_flupet.health_update_time</code>.
      */
-    public void setEnergyUpdateTime(LocalDateTime value) {
+    public void setHealthUpdateTime(LocalDateTime value) {
         set(14, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.energy_update_time</code>.
+     * Getter for <code>flupet_service.member_flupet.health_update_time</code>.
      */
-    public LocalDateTime getEnergyUpdateTime() {
+    public LocalDateTime getHealthUpdateTime() {
         return (LocalDateTime) get(14);
     }
 
@@ -331,7 +331,7 @@ public class MemberFlupetRecord extends UpdatableRecordImpl<MemberFlupetRecord> 
 
     @Override
     public Field<LocalDateTime> field15() {
-        return MemberFlupet.MEMBER_FLUPET.ENERGY_UPDATE_TIME;
+        return MemberFlupet.MEMBER_FLUPET.HEALTH_UPDATE_TIME;
     }
 
     @Override
@@ -406,7 +406,7 @@ public class MemberFlupetRecord extends UpdatableRecordImpl<MemberFlupetRecord> 
 
     @Override
     public LocalDateTime component15() {
-        return getEnergyUpdateTime();
+        return getHealthUpdateTime();
     }
 
     @Override
@@ -481,7 +481,7 @@ public class MemberFlupetRecord extends UpdatableRecordImpl<MemberFlupetRecord> 
 
     @Override
     public LocalDateTime value15() {
-        return getEnergyUpdateTime();
+        return getHealthUpdateTime();
     }
 
     @Override
@@ -570,7 +570,7 @@ public class MemberFlupetRecord extends UpdatableRecordImpl<MemberFlupetRecord> 
 
     @Override
     public MemberFlupetRecord value15(LocalDateTime value) {
-        setEnergyUpdateTime(value);
+        setHealthUpdateTime(value);
         return this;
     }
 
@@ -608,7 +608,7 @@ public class MemberFlupetRecord extends UpdatableRecordImpl<MemberFlupetRecord> 
     /**
      * Create a detached, initialised MemberFlupetRecord
      */
-    public MemberFlupetRecord(UInteger id, UInteger flupetId, String memberId, String name, Integer exp, UInteger steps, Byte isDead, LocalDateTime createTime, LocalDateTime endTime, Integer fullness, Integer health, Integer patCnt, LocalDateTime achaTime, LocalDateTime fullnessUpdateTime, LocalDateTime energyUpdateTime) {
+    public MemberFlupetRecord(UInteger id, UInteger flupetId, String memberId, String name, Integer exp, UInteger steps, Byte isDead, LocalDateTime createTime, LocalDateTime endTime, Integer fullness, Integer health, Integer patCnt, LocalDateTime achaTime, LocalDateTime fullnessUpdateTime, LocalDateTime healthUpdateTime) {
         super(MemberFlupet.MEMBER_FLUPET);
 
         setId(id);
@@ -625,6 +625,6 @@ public class MemberFlupetRecord extends UpdatableRecordImpl<MemberFlupetRecord> 
         setPatCnt(patCnt);
         setAchaTime(achaTime);
         setFullnessUpdateTime(fullnessUpdateTime);
-        setEnergyUpdateTime(energyUpdateTime);
+        setHealthUpdateTime(healthUpdateTime);
     }
 }

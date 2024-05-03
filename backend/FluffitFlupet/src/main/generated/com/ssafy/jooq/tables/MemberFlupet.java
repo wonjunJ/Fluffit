@@ -126,9 +126,9 @@ public class MemberFlupet extends TableImpl<MemberFlupetRecord> {
     public final TableField<MemberFlupetRecord, LocalDateTime> FULLNESS_UPDATE_TIME = createField(DSL.name("fullness_update_time"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field("NULL", SQLDataType.LOCALDATETIME)), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.energy_update_time</code>.
+     * The column <code>flupet_service.member_flupet.health_update_time</code>.
      */
-    public final TableField<MemberFlupetRecord, LocalDateTime> ENERGY_UPDATE_TIME = createField(DSL.name("energy_update_time"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field("NULL", SQLDataType.LOCALDATETIME)), this, "");
+    public final TableField<MemberFlupetRecord, LocalDateTime> HEALTH_UPDATE_TIME = createField(DSL.name("health_update_time"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field("NULL", SQLDataType.LOCALDATETIME)), this, "");
 
     private MemberFlupet(Name alias, Table<MemberFlupetRecord> aliased) {
         this(alias, aliased, null);

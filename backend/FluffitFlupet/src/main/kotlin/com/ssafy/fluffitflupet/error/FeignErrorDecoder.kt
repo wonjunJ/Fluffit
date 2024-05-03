@@ -9,6 +9,7 @@ import kotlin.Exception
 @Component
 class FeignErrorDecoder: ErrorDecoder {
     override fun decode(methodKey: String?, response: Response?): Exception {
+        println("여기왔나?")
         when(response?.status()){
             in 400..499 -> {
                 println(methodKey)
