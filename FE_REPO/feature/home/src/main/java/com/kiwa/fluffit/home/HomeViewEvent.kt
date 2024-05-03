@@ -11,8 +11,6 @@ sealed class HomeViewEvent : ViewEvent {
 
     data object OnUpdateHealth : HomeViewEvent()
 
-    data object OnClickRankingButton : HomeViewEvent()
-
     data object OnClickCollectionButton : HomeViewEvent()
 
     data object OnClickUserButton : HomeViewEvent()

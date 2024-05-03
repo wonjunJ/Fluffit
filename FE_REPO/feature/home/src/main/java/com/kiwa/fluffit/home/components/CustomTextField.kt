@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.home.ui.components
+package com.kiwa.fluffit.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
