@@ -22,7 +22,7 @@ pipeline {
                 dir('backend/FluffitConfig') {
                     sh "docker stop fluffitconfig  || true && docker rm fluffitconfig || true"
                     sh 'docker rmi fluffitconfig || true'
-                    sh 'docker build --build-arg JASYPT_KEY=${JASYPT_KEY} JKS_PWD=${JKS_PWD} JKS_ALIAS=${JKS_ALIAS} -t fluffitconfig .'
+                    sh 'docker build --build-arg JASYPT_KEY=${JASYPT_KEY} --build-arg JKS_PWD=${JKS_PWD} --build-arg JKS_ALIAS=${JKS_ALIAS} -t fluffitconfig .'
                 }
             }
         }
