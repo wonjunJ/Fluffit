@@ -30,7 +30,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitConfig') {
-                    sh 'docker run -d -p 8088:8080 --name fluffitconfig fluffitconfig'
+                    sh 'docker run -d -p 8088:8080 --network testnetwork --name fluffitconfig fluffitconfig'
                 }
             }
         }
