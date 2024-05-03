@@ -14,9 +14,9 @@ pipeline {
         stage('Docker image build') {
             steps {
                 dir('backend/FluffitBattle') {
-                    sh "docker stop FluffitBattle || true && docker rm FluffitBattle || true"
-                    sh 'docker rmi FluffitBattle || true'
-                    sh 'docker build -t FluffitBattle .'
+                    sh "docker stop fluffitbattle || true && docker rm fluffitbattle || true"
+                    sh 'docker rmi fluffitbattle || true'
+                    sh 'docker build -t fluffitbattle .'
                 }
             }
         }
@@ -24,8 +24,13 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitBattle') {
-                    sh 'docker run -d -p 8081:8080 --name FluffitBattle FluffitBattle'
+                    sh 'docker run -d -p 8081:8080 --name fluffitbattle fluffitbattle'
                 }
+            }
+        }
+        stage('Cleanup dangling images') {
+            steps {
+                sh 'docker image prune -f'
             }
         }
     }
