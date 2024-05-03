@@ -30,7 +30,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitConfig') {
-                    sh 'docker run -d -p -e JASYPT_KEY=${JASYPT_KEY} -e JKS_PWD=${JKS_PWD} -e JKS_ALIAS=${JKS_ALIAS} 8088:8080 --network testnetwork --name fluffitconfig fluffitconfig'
+                    sh 'docker run -d -e JASYPT_KEY=${JASYPT_KEY} -e JKS_PWD=${JKS_PWD} -e JKS_ALIAS=${JKS_ALIAS} -p 8088:8080 --network testnetwork --name fluffitconfig fluffitconfig'
                 }
             }
         }
