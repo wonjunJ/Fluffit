@@ -25,6 +25,5 @@ management:
       exposure:
         include: health, busrefresh, refresh, metrics
 
-
 jasypt:
   key: ${JASYPT_KEY}
