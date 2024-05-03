@@ -10,24 +10,33 @@ import java.time.LocalDateTime
 data class MemberFlupet(
     @Id
     val id: Long? = null,
+    @Column("flupet_id")
     var flupetId: Long? = null,
+    @Column("member_id")
     var memberId: String? = null,
     var name: String,
     var exp: Int = 0,
     var steps: Long = 0,
+    @Column("is_dead")
     var isDead: Boolean = false,
     //태어난 날짜
     @CreatedDate
-    var createTime: LocalDateTime,
+    @Column("create_time")
+    var createTime: LocalDateTime? = null,
     //죽은 날짜
-    var endTime: LocalDateTime,
+    @Column("end_time")
+    var endTime: LocalDateTime? = null,
     var fullness: Int = 100,
     var health: Int = 100,
     //쓰다듬기 남은 횟수
+    @Column("pat_cnt")
     var patCnt: Int = 5,
-    //죽기 일보 직전인 시간
-    var achaTime: LocalDateTime,
-    var fullnessUpdateTime: LocalDateTime,
-    var energyUpdateTime: LocalDateTime
+    //죽기 일보 직전인 시간(예상 죽을 시간 1시간전) - user에게 push알림을 보내기 위해
+    @Column("acha_time")
+    var achaTime: LocalDateTime? = null,
+    @Column("fullness_update_time")
+    var fullnessUpdateTime: LocalDateTime? = null,
+    @Column("health_update_time") //건강 업데이트 시간
+    var healthUpdateTime: LocalDateTime? = null
 ) {
 }

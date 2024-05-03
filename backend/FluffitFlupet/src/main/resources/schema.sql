@@ -1,10 +1,20 @@
 drop table if exists `member_flupet`;
+drop table if exists `flupet`;
+CREATE TABLE `flupet` (
+                          `id`	int unsigned auto_increment
+                              primary key,
+                          `name`	varchar(10)	NOT NULL,
+                          `img_url`	varchar(255)	NOT NULL,
+                          `stage`	int	NOT NULL
+);
+
+# drop table if exists `member_flupet`;
 CREATE TABLE `member_flupet` (
                                  `id`	int unsigned auto_increment
                                      primary key,
                                  `flupet_id`	int unsigned	NOT NULL,
                                  `member_id`	varchar(64)	NOT NULL,
-                                 `name`	varchar(10)     NULL,
+                                 `name`	varchar(10)    NOT NULL,
                                  `exp`	int	NOT NULL	DEFAULT 0,
                                  `steps`	int unsigned	NOT NULL	DEFAULT 0,
                                  `is_dead`	boolean	NOT NULL	DEFAULT false,
@@ -15,7 +25,7 @@ CREATE TABLE `member_flupet` (
                                  `pat_cnt`	int	NOT NULL	DEFAULT 5,
                                  `acha_time`	datetime(6)	NULL,
                                  `fullness_update_time`	datetime(6)	NULL,
-                                 `energy_update_time`	datetime(6)	NULL,
+                                 `health_update_time`	datetime(6)	NULL,
                                  CONSTRAINT `fk_member_flupet_flupet_id` FOREIGN KEY (`flupet_id`) REFERENCES `flupet` (`id`)
 );
 
@@ -29,15 +39,6 @@ CREATE TABLE `food_type` (
                              `health_effect`	int	NOT NULL,
                              `price`	int	NOT NULL,
                              `description`	varchar(255)	NOT NULL
-);
-
-drop table if exists `flupet`;
-CREATE TABLE `flupet` (
-                          `id`	int unsigned auto_increment
-                              primary key,
-                          `name`	varchar(10)	NOT NULL,
-                          `img_url`	varchar(255)	NOT NULL,
-                          `stage`	int	NOT NULL
 );
 
 -- ALTER TABLE `members` ADD CONSTRAINT `PK_MEMBERS` PRIMARY KEY (
