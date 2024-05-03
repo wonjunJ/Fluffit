@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Gradle build') {
+            steps {
+                dir('backend/FluffitMember') {
+                    sh 'chmod +x ./gradlew'
+                    sh './gradlew clean build'
+                }
+            }
+        }
+
+        stage('Docker image build') {
+            steps {
+                dir('backend/FluffitMember') {
+                    sh "docker stop fluffitmember || true && docker rm fluffitmember || true"
+                    sh 'docker rmi fluffitmember || true'
+                    sh 'docker build -t fluffitmember .'
+                }
+            }
+        }
+
+        stage('Docker container run') {
+            steps {
+                dir('backend/FluffitMember') {
+                    sh 'docker run -d -p 8081:8080 --name fluffitmember fluffitmember'
+                }
+            }
+        }
+        stage('Cleanup dangling images') {
+            steps {
+                sh 'docker image prune -f'
+            }
+        }
+    }
+}
