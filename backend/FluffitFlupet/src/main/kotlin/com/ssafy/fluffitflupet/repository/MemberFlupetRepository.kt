@@ -8,4 +8,5 @@ import reactor.core.publisher.Flux
 @Repository
 interface MemberFlupetRepository: ReactiveCrudRepository<MemberFlupet, Long>, MemberFlupetRepositoryCustom {
     fun findAllByIsDeadIsFalse(): Flux<MemberFlupet>
+    suspend fun findByMemberId(memberId: String): MemberFlupet?
 }
