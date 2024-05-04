@@ -24,8 +24,8 @@ class PetTaskScheduler(
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
     var dropList = ArrayList<MemberFlupet>()
 
-    //2시간마다 스케쥴링을 돈다
-    @Scheduled(fixedDelay = 1000 * 60 * 60 * 2)
+    //2시간마다 스케쥴링을 돈다(초기 딜레이를 얼마로 할지)
+    @Scheduled(fixedDelay = 1000 * 60 * 60 * 2L, initialDelay = 1000 * 60 * 2L)
     fun run() {
         memberFlupetRepository.findAllByIsDeadIsFalse()
             .onBackpressureBuffer(256,
@@ -82,6 +82,7 @@ class PetTaskScheduler(
             }
         }
         data.fullness = fullness
+        data.fullnessUpdateTime = LocalDateTime.now()
     }
 
     suspend fun updateHealth(data: MemberFlupet) {
@@ -100,6 +101,7 @@ class PetTaskScheduler(
             }
         }
         data.health = health
+        data.healthUpdateTime = LocalDateTime.now()
     }
 
     @PreDestroy

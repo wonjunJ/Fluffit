@@ -26,7 +26,8 @@ CREATE TABLE `member_flupet` (
                                  `acha_time`	datetime(6)	NULL,
                                  `fullness_update_time`	datetime(6)	NULL,
                                  `health_update_time`	datetime(6)	NULL,
-                                 CONSTRAINT `fk_member_flupet_flupet_id` FOREIGN KEY (`flupet_id`) REFERENCES `flupet` (`id`)
+                                 CONSTRAINT `fk_member_flupet_flupet_id` FOREIGN KEY (`flupet_id`) REFERENCES `flupet` (`id`),
+                                 INDEX `idx_member_id` (`member_id`)
 );
 
 drop table if exists `food_type`;

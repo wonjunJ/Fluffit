@@ -34,9 +34,11 @@ data class MemberFlupet(
     //죽기 일보 직전인 시간(예상 죽을 시간 1시간전) - user에게 push알림을 보내기 위해
     @Column("acha_time")
     var achaTime: LocalDateTime? = null,
-    @Column("fullness_update_time")
+    @CreatedDate
+    @Column("fullness_update_time") //포만감 마지막 업데이트 시간
     var fullnessUpdateTime: LocalDateTime? = null,
-    @Column("health_update_time") //건강 업데이트 시간
+    @CreatedDate
+    @Column("health_update_time") //건강 마지막 업데이트 시간
     var healthUpdateTime: LocalDateTime? = null
 ) {
 }
