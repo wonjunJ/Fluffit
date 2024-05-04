@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    config:
+      uri: http://127.0.0.1:8888
+      name: flupet-service
+  #Profiles을 사용한 Configuration 적용
+  #.yml 파일명은 user-service-dev로 설정
+#  profiles:
+#    active: dev
