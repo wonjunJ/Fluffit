@@ -20,9 +20,9 @@ pipeline {
         stage('Docker image build') {
             steps {
                 dir('backend/FluffitConfig') {
-                    sh "docker stop flconf  || true && docker rm flconf || true"
-                    sh 'docker rmi flconf || true'
-                    sh 'docker build -t flconf .'
+                    sh "docker stop config  || true && docker rm config || true"
+                    sh 'docker rmi config || true'
+                    sh 'docker build -t config .'
                 }
             }
         }
@@ -30,7 +30,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitConfig') {
-                    sh 'docker run -d -e JASYPT_KEY=${JASYPT_KEY} -e JKS_PWD=${JKS_PWD} -e JKS_ALIAS=${JKS_ALIAS} -p 18888:8888 --network testnetwork --name flconf flconf'
+                    sh 'docker run -d -e JASYPT_KEY=${JASYPT_KEY} -e JKS_PWD=${JKS_PWD} -e JKS_ALIAS=${JKS_ALIAS} -e TZ=Asia/Seoul -p 8888:8888 --network develop-net --name config config'
                 }
             }
         }
