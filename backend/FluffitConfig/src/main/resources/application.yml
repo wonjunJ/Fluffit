@@ -1,0 +1,29 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-service
+  cloud:
+    config:
+      server:
+        git: #default
+          uri: https://github.com/wonjunJ/fluffit_config
+          username: ENC(d2IM6gDqSIXJAaWijxYzKA==)
+          password: ENC(jTO/0HgYmORW8MA2DL1phlAilH8uSWQ2xYhZ+gLcltgndgasZ5L+krePRwVzviLDwtX3btSwH70=)
+          default-label: master #기본이 main 브랜치이므로 master 브랜치에서 가져오기 위해 설정
+        bootstrap: true
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: ENC(NebBCyJkmF5WU09eDlluCA==)
+    password: ENC(NebBCyJkmF5WU09eDlluCA==)
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, busrefresh, refresh, metrics
+
+jasypt:
+  key: ${JASYPT_KEY}
