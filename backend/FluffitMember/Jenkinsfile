@@ -14,9 +14,9 @@ pipeline {
         stage('Docker image build') {
             steps {
                 dir('backend/FluffitMember') {
-                    sh "docker stop fluffitmember || true && docker rm fluffitmember || true"
-                    sh 'docker rmi fluffitmember || true'
-                    sh 'docker build -t fluffitmember .'
+                    sh "docker stop member || true && docker rm member || true"
+                    sh 'docker rmi member || true'
+                    sh 'docker build -t member .'
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitMember') {
-                    sh 'docker run -d -p 8081:8080 --name fluffitmember fluffitmember'
+                    sh 'docker run -d -p 8080:8080 --name member -e TZ=Asia/Seoul --network develop-net member'
                 }
             }
         }
