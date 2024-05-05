@@ -14,9 +14,9 @@ pipeline {
         stage('Docker image build') {
             steps {
                 dir('backend/FluffitFlupet') {
-                    sh "docker stop fluffitflupet || true && docker rm fluffitflupet || true"
-                    sh 'docker rmi fluffitflupet || true'
-                    sh 'docker build -t fluffitflupet .'
+                    sh "docker stop flupet || true && docker rm flupet || true"
+                    sh 'docker rmi flupet || true'
+                    sh 'docker build -t flupet .'
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitFlupet') {
-                    sh 'docker run -d -p 8082:8080 --name fluffitflupet fluffitflupet'
+                    sh 'docker run -d -p 8081:8080 --name flupet -e TZ=Asia/Seoul --network develop-net flupet'
                 }
             }
         }
