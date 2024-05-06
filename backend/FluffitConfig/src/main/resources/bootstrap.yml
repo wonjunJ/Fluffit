@@ -5,7 +5,7 @@ encrypt:
     #location: file:/apiEncryptionKey.jks
     # Window용
     #location: file:apiEncryptionKey.jks
-    #location: file:/config/apiEncryptionKey.jks
+    location: file:/config/apiEncryptionKey.jks
     password: ${JKS_PWD} #ENC(xPv3Jlo1m5zpY4127BdHEA==)
     alias: ${JKS_ALIAS} #ENC(aOf2VmtI4OpHwENDzUnOx7zyx1DpvLpHUu4jhC86OOI=)
 
