@@ -14,9 +14,9 @@ pipeline {
         stage('Docker image build') {
             steps {
                 dir('backend/FluffitBattle') {
-                    sh "docker stop fluffitbattle || true && docker rm fluffitbattle || true"
-                    sh 'docker rmi fluffitbattle || true'
-                    sh 'docker build -t fluffitbattle .'
+                    sh "docker stop battle || true && docker rm battle || true"
+                    sh 'docker rmi battle || true'
+                    sh 'docker build -t battle .'
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitBattle') {
-                    sh 'docker run -d -p 8081:8080 --name fluffitbattle fluffitbattle'
+                    sh 'docker run -d -p 8082:8080 --name battle -e TZ=Asia/Seoul --network develop-net battle'
                 }
             }
         }
