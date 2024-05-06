@@ -1,15 +1,17 @@
 package com.ssafy.fluffitbattle.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@RedisHash("Battle")
 public class Battle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
