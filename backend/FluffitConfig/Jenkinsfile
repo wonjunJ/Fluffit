@@ -30,7 +30,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitConfig') {
-                    sh 'docker run -d -e JASYPT_KEY=${JASYPT_KEY} -e JKS_PWD=${JKS_PWD} -e JKS_ALIAS=${JKS_ALIAS} -e TZ=Asia/Seoul -p 8888:8888 --network develop-net --name config config'
+                    sh 'docker run -d -e JASYPT_KEY=${JASYPT_KEY} -e JKS_PWD=${JKS_PWD} -e JKS_ALIAS=${JKS_ALIAS} -e TZ=Asia/Seoul -p 8888:8888 --network develop-net --name config config -v /home/ubuntu/key/apiEncryptionKey.jks:/config/apiEncryptionKey.jks config'
                 }
             }
         }
