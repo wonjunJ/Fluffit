@@ -1,6 +1,7 @@
 package com.ssafy.fluffitflupet.service
 
 import com.ssafy.fluffitflupet.client.MemberServiceClient
+import com.ssafy.fluffitflupet.dto.CollectionResponse
 import com.ssafy.fluffitflupet.dto.FullResponse
 import com.ssafy.fluffitflupet.dto.HealthResponse
 import com.ssafy.fluffitflupet.dto.MainInfoResponse
@@ -9,6 +10,8 @@ import com.ssafy.fluffitflupet.error.ErrorType
 import com.ssafy.fluffitflupet.exception.CustomBadRequestException
 import com.ssafy.fluffitflupet.repository.MemberFlupetRepository
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.toList
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -94,5 +97,10 @@ class FlupetService(
             nextUpdateTime = (mflupet.healthUpdateTime!!.plusHours(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
             isEvolutionAvailable = if(mflupet.exp == 100) true else false
         )
+    }
+
+    suspend fun getPetCollection(userId: String): CollectionResponse {
+        val flupets = withContext(Dispatchers.IO){ memberFlupetRepository.findFlupetsByUserId(userId).toList() }
+        return CollectionResponse(flupets)
     }
 }

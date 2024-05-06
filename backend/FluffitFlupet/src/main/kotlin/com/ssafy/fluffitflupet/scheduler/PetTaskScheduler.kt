@@ -42,6 +42,7 @@ class PetTaskScheduler(
                 joinAll(job1, job2)
                 if(memberFlupet.fullness == 0 || memberFlupet.health == 0) {
                     memberFlupet.isDead = true
+                    memberFlupet.endTime = LocalDateTime.now()
                 }
                 withContext(Dispatchers.IO){
                     memberFlupetRepository.save(memberFlupet)
@@ -59,6 +60,7 @@ class PetTaskScheduler(
             joinAll(job1, job2)
             if(data.fullness == 0 || data.health == 0){
                 data.isDead = true
+                data.endTime = LocalDateTime.now()
             }
             withContext(Dispatchers.IO){
                 memberFlupetRepository.save(data)

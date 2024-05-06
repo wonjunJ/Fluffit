@@ -46,8 +46,11 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-    implementation 'io.springfox:springfox-boot-starter:3.0.0'  // Springfox Swagger 의존성 추가
-    implementation 'io.springfox:springfox-swagger-ui:3.0.0' // Swagger UI 의존성 추가
+    //Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+    //spring boot 3.X 버전에서는 밑어꺼 사용 불가
+//    implementation 'io.springfox:springfox-boot-starter:3.0.0'  // Springfox Swagger 의존성 추가
+//    implementation 'io.springfox:springfox-swagger-ui:3.0.0' // Swagger UI 의존성 추가
     //spring cloud config로 부터 설정 정보를 (동적으로)받아오기 위해서 필요
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
