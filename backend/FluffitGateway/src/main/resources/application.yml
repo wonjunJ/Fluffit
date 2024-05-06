@@ -29,13 +29,8 @@ spring:
   data:
     redis:
       host: fluffit.shop
-      port: 6379
+      port: 6380
       password: gumid204
-
-#redis:
-#  host: fluffit.shop
-#  port: 6379
-#  password: gumid204
 
 management:
   endpoint:
