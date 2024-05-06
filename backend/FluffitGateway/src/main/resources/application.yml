@@ -1,12 +1,12 @@
 server:
   port: 8000
 
-#eureka:
-#  client:
-#    register-with-eureka: true
-#    fetch-registry: true
-#    service-url:
-#      defaultZone: http://localhost:8761/eureka
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://fluffit.shop:8761/
 
 spring:
   application:
@@ -14,8 +14,35 @@ spring:
   cloud:
     gateway:
       routes:
+        #member-service
+        - id: auth
+          predicates:
+            - Path=/auth/**
+          uri: lb://MEMBER-SERVICE
+        - id: member
+          predicates:
+            - Path=/member/**
+          uri: lb://MEMBER-SERVICE
+          filters:
+            - CustomFilter
 
-#eureka?? ?? ????, ????? ??(Application?? ??? ??? ??)
-eureka:
-  client:
-    enabled: false
+  data:
+    redis:
+      host: fluffit.shop
+      port: 6379
+      password: gumid204
+
+#redis:
+#  host: fluffit.shop
+#  port: 6379
+#  password: gumid204
+
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: shutdown
+
