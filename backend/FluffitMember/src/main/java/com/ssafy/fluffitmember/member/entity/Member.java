@@ -9,17 +9,21 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private Integer id;
+
+    @Column(name = "member_id")
+    private String memberId;
 
     @Column(nullable = false)
     private String nickname;
@@ -41,15 +45,17 @@ public class Member {
     private int mflupet_id;
 
     @Builder
-    public Member(String socialId, String nickname, int coin, int battlePoint, int mflupetId) {
+    public Member(String memberId,String socialId, String nickname, int coin, int battlePoint, int mflupetId) {
+        this.memberId = memberId;
         this.socialId = socialId;
         this.nickname = nickname;
         this.coin = coin;
         this.battlePoint = battlePoint;
         this.mflupet_id = mflupetId;
     }
-    public static Member of(String socialId, String nickname, int coin, int battlePoint, int mflupetId) {
+    public static Member of(String memberId,String socialId, String nickname, int coin, int battlePoint, int mflupetId) {
         return builder()
+                .memberId(memberId)
                 .socialId(socialId)
                 .nickname(nickname)
                 .coin(coin)
