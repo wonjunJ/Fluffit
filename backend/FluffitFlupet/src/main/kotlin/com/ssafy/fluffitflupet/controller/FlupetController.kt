@@ -1,9 +1,6 @@
 package com.ssafy.fluffitflupet.controller
 
-import com.ssafy.fluffitflupet.dto.FullResponse
-import com.ssafy.fluffitflupet.dto.HealthResponse
-import com.ssafy.fluffitflupet.dto.MainInfoResponse
-import com.ssafy.fluffitflupet.dto.NickRequest
+import com.ssafy.fluffitflupet.dto.*
 import com.ssafy.fluffitflupet.service.FlupetService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,5 +37,10 @@ class FlupetController(
     @GetMapping("/health")
     suspend fun getHealth(@RequestHeader("userId") userId: String): HealthResponse {
         return flupetService.getHealth(userId)
+    }
+
+    @GetMapping("/collection")
+    suspend fun getPetCollection(@RequestHeader("userId") userId: String): CollectionResponse {
+        return flupetService.getPetCollection(userId)
     }
 }
