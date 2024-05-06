@@ -1,45 +1,72 @@
 package com.ssafy.fluffitmember.auth.service;
 
-import com.ssafy.fluffitmember._common.exception.CustomBadRequestException;
-import com.ssafy.fluffitmember._common.response.error.ErrorType;
-import com.ssafy.fluffitmember._common.response.success.SuccessResponse;
 import com.ssafy.fluffitmember.auth.dto.request.LoginReqDto;
 import com.ssafy.fluffitmember.auth.dto.response.LoginResDto;
+import com.ssafy.fluffitmember.exception.EncryptionException;
+import com.ssafy.fluffitmember.jwt.GeneratedToken;
+import com.ssafy.fluffitmember.jwt.JwtUtil;
+import com.ssafy.fluffitmember.member.entity.Member;
 import com.ssafy.fluffitmember.member.repository.MemberRepository;
-import com.ssafy.fluffitmember.redis.TokenRepository;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.Optional;
+import java.util.UUID;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final TokenRepository tokenRepository;
     private final MemberRepository memberRepository;
+    private final JwtUtil jwtUtil;
+
     @Value("${security.hmacKey}")
     private static String secretKey;
 
 
+    @Transactional
     public LoginResDto login(LoginReqDto loginReqDto) throws NoSuchAlgorithmException, InvalidKeyException {
 
         String encryptedData = encrypt(loginReqDto.getUserCode());
 
+        //암호화한 데이터가 다르면 에러 반환
         if(!encryptedData.equals(loginReqDto.getSignature())){
-            throw new CustomBadRequestException(ErrorType.NOT_AUTHENTICATED_USER);
+            throw new EncryptionException();
         }
 
+        //암호화된 id를 이용해 memberTable에서 데이터를 찾음
+        Optional<Member> findMember = memberRepository.findBySocialId(encryptedData);
+        String  memberId = UUID.randomUUID().toString();
+        //만약 데이터가 없다면 새로 회원가입 진행
+        if(findMember.isEmpty()) {
+            register(loginReqDto,memberId);
+        }
 
+        //token 생성 redis 저장
+        GeneratedToken generatedToken = jwtUtil.generateToken(memberId);
 
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        LoginResDto loginResDto = mapper.map(generatedToken,LoginResDto.class);
 
+        return loginResDto;
     }
 
-    public static String encrypt(String data) throws NoSuchAlgorithmException, InvalidKeyException {
+    @Transactional
+    public void register(LoginReqDto loginReqDto, String memberId) {
+        Member member = Member.of(memberId,loginReqDto.getSignature(), loginReqDto.getUserCode(),0,0,0);
+        Member savedMember = memberRepository.save(member);
+    }
+
+    public String encrypt(String data) throws NoSuchAlgorithmException, InvalidKeyException {
         // 시크릿 키로부터 SecretKeySpec 객체 생성
         SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
 
@@ -53,5 +80,4 @@ public class AuthService {
         // 바이너리 데이터를 Base64로 인코딩하여 문자열로 반환
         return Base64.getEncoder().encodeToString(result);
     }
-
 }
