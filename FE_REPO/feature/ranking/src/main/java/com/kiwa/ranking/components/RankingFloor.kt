@@ -1,6 +1,7 @@
 package com.kiwa.ranking.components
 
 import android.os.Build
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,10 +23,14 @@ import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.size.OriginalSize
+import com.kiwa.fluffit.designsystem.theme.bronze
+import com.kiwa.fluffit.designsystem.theme.gold
+import com.kiwa.fluffit.designsystem.theme.silver
+import com.kiwa.fluffit.model.RankingInfo
 import com.kiwa.fluffit.ranking.R
 
 @Composable
-fun RankingFloor(rank: Int, modifier: Modifier = Modifier) {
+fun RankingFloor(rankingInfo: RankingInfo, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
         .components {
@@ -35,46 +40,61 @@ fun RankingFloor(rank: Int, modifier: Modifier = Modifier) {
                 add(GifDecoder.Factory())
             }
         }.build()
-    val floorImage = when (rank) {
-        1 -> R.drawable.first_place
-        2 -> R.drawable.second_place
-        else -> R.drawable.third_place
+
+    @DrawableRes val floorImage: Int
+    val floorSize: Int
+    val textColor: Color
+
+    when (rankingInfo.rank) {
+        1 -> {
+            floorImage = R.drawable.first_place
+            floorSize = 90
+            textColor = gold
+        }
+
+        2 -> {
+            floorImage = R.drawable.second_place
+            floorSize = 70
+            textColor = silver
+        }
+
+        else -> {
+            floorImage = R.drawable.third_place
+            floorSize = 60
+            textColor = bronze
+        }
     }
-    val floorSize = when (rank) {
-        1 -> 90
-        2 -> 70
-        else -> 60
-    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.then(Modifier.padding(vertical = 12.dp))
     ) {
         val textStyle =
-            MaterialTheme.typography.headlineSmall.merge(fontSize = 12.sp, color = Color.White)
+            MaterialTheme.typography.headlineSmall.merge(fontSize = 12.sp, color = textColor)
         OutLinedText(
             onClickText = {},
-            text = "유저이름여덟임다",
+            text = rankingInfo.userName,
             textStyle = textStyle,
             strokeColor = Color.Black,
             strokeWidth = 1f
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         OutLinedText(
             onClickText = {},
-            text = "펫이름입니다",
+            text = rankingInfo.petName,
             textStyle = textStyle,
             strokeColor = Color.Black,
             strokeWidth = 1f
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         OutLinedText(
             onClickText = {},
-            text = "점수또는시간",
+            text = rankingInfo.score,
             textStyle = textStyle,
             strokeColor = Color.Black,
             strokeWidth = 1f
         )
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Box(modifier = Modifier.height((floorSize + 8).dp)) {
             Image(
                 painter = painterResource(id = floorImage),
@@ -86,8 +106,7 @@ fun RankingFloor(rank: Int, modifier: Modifier = Modifier) {
             Image(
                 painter = rememberImagePainter(
                     imageLoader = imageLoader,
-                    data = "https://github.com/shjung53/algorithm_study/assets/" +
-                        "90888718/4399f85d-7810-464c-ad76-caae980ce047",
+                    data = rankingInfo.petImageUrl,
                     builder = {
                         size(OriginalSize)
                     }

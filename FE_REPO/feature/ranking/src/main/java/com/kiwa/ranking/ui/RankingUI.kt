@@ -3,6 +3,7 @@ package com.kiwa.ranking.ui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,12 +20,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.kiwa.fluffit.model.RankingInfo
 import com.kiwa.fluffit.ranking.R
 import com.kiwa.ranking.components.RankingFloor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-internal fun AgeRankingUI(ageRankingList: List<String>, onClickBattleRankingButton: () -> Unit) {
+internal fun RankingUI(
+    rankingList: List<RankingInfo> = emptyList(),
+    myRanking: RankingInfo,
+    onClickShowAnotherRankingButton: () -> Unit,
+    rankingType: String,
+    anotherRankingType: String
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,13 +49,14 @@ internal fun AgeRankingUI(ageRankingList: List<String>, onClickBattleRankingButt
             modifier = Modifier.padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "장수 랭킹", style = MaterialTheme.typography.bodyMedium)
+            Text(text = rankingType, style = MaterialTheme.typography.bodyMedium)
             Text(
-                text = "배틀 랭킹 보기",
+                text = anotherRankingType,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
                     .padding(top = 4.dp)
                     .align(Alignment.End)
+                    .clickable { onClickShowAnotherRankingButton() }
             )
             Box(
                 modifier = Modifier
@@ -62,23 +71,42 @@ internal fun AgeRankingUI(ageRankingList: List<String>, onClickBattleRankingButt
                     contentScale = ContentScale.FillBounds
                 )
                 Row(verticalAlignment = Alignment.Bottom) {
-                    RankingFloor(rank = 2, Modifier.weight(0.33f))
-                    RankingFloor(rank = 1, Modifier.weight(0.33f))
-                    RankingFloor(rank = 3, Modifier.weight(0.33f))
+                    RankingFloor(
+                        rankingInfo = rankingList.find { rankInfo -> rankInfo.rank == 2 }
+                            ?: RankingInfo(2, "", "", "", ""),
+                        Modifier.weight(0.33f)
+                    )
+                    RankingFloor(
+                        rankingInfo = rankingList.find { rankInfo -> rankInfo.rank == 1 }
+                            ?: RankingInfo(
+                                1,
+                                "",
+                                "",
+                                "",
+                                "https://github.com/shjung53/algorithm_study/assets/" +
+                                    "90888718/4399f85d-7810-464c-ad76-caae980ce047"
+                            ),
+                        Modifier.weight(0.33f)
+                    )
+                    RankingFloor(
+                        rankingInfo = rankingList.find { rankInfo -> rankInfo.rank == 3 }
+                            ?: RankingInfo(3, "", "", "", ""),
+                        Modifier.weight(0.33f)
+                    )
                 }
             }
             Row {
                 val textStyle = MaterialTheme.typography.bodySmall
-                Text(text = "102.", style = textStyle)
+                Text(text = "${myRanking.rank}.", style = textStyle)
                 Text(
-                    text = "여덟글자닉네임임의 망해또입니다gdgd",
+                    text = myRanking.userName,
                     modifier = Modifier
                         .weight(1f)
                         .basicMarquee(),
                     style = textStyle.merge(textAlign = TextAlign.Start),
                     maxLines = 1
                 )
-                Text(text = "500점", style = textStyle)
+                Text(text = myRanking.score, style = textStyle)
             }
         }
     }

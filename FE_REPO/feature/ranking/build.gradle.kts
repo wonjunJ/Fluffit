@@ -15,4 +15,7 @@ android {
 dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:base"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:model"))
 }

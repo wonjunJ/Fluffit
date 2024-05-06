@@ -12,3 +12,6 @@ val Pink40 = Color(0xFF7D5260)
 
 val smooth_black = Color(0xFF646464)
 val lightGrey = Color(0xFFD7D7D7)
+val gold = Color(0xFFFFD700)
+val silver = Color(0xFFC0C0C0)
+val bronze = Color(0xFFCD7F32)

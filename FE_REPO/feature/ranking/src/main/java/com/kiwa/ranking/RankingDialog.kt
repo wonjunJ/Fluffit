@@ -5,8 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kiwa.ranking.ui.AgeRankingUI
-import com.kiwa.ranking.ui.BattleRankingUI
+import com.kiwa.ranking.ui.RankingUI
 
 @Composable
 internal fun RankingRoute(
@@ -31,14 +30,20 @@ internal fun RankingDialog(
 ) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         when (uiState) {
-            is RankingViewState.AgeRanking -> AgeRankingUI(
-                ageRankingList = uiState.ageRankingList,
-                onClickBattleRankingButton = onClickBattleRankingButton
+            is RankingViewState.AgeRanking -> RankingUI(
+                rankingList = uiState.ageRankingList,
+                myRanking = uiState.myRanking,
+                onClickShowAnotherRankingButton = onClickBattleRankingButton,
+                "장수 랭킹",
+                "배틀 랭킹 보기"
             )
 
-            is RankingViewState.BattleRanking -> BattleRankingUI(
-                uiState = uiState,
-                onClickAgeRankingButton = onClickAgeRankingButton
+            is RankingViewState.BattleRanking -> RankingUI(
+                rankingList = uiState.battleRankingList,
+                myRanking = uiState.myRanking,
+                onClickShowAnotherRankingButton = onClickAgeRankingButton,
+                "배틀 랭킹 보기",
+                "장수 랭킹 보기"
             )
         }
     }

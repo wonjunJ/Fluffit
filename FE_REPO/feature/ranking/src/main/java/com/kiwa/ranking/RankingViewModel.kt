@@ -1,33 +1,63 @@
 package com.kiwa.ranking
 
+import androidx.lifecycle.viewModelScope
+import com.kiwa.domain.usecase.GetAgeRankingUseCase
+import com.kiwa.domain.usecase.GetBattleRankingUseCase
 import com.kiwa.fluffit.base.BaseViewModel
+import com.kiwa.fluffit.model.RankingUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RankingViewModel @Inject constructor() : BaseViewModel<RankingViewState, RankingViewEvent>() {
+class RankingViewModel @Inject constructor(
+    private val getBattleRankingUseCase: GetBattleRankingUseCase,
+    private val getAgeRankingUseCase: GetAgeRankingUseCase
+) : BaseViewModel<RankingViewState, RankingViewEvent>() {
     override fun createInitialState(): RankingViewState =
-        RankingViewState.AgeRanking(ageRankingList = emptyList())
+        RankingViewState.AgeRanking()
 
     override fun onTriggerEvent(event: RankingViewEvent) {
-        when (event) {
-            RankingViewEvent.OnClickAgeRankingButton -> setState { showAgeRanking() }
-            RankingViewEvent.OnClickBattleRankingButton -> setState { showBattleRanking() }
+        viewModelScope.launch {
+            when (event) {
+                RankingViewEvent.OnClickAgeRankingButton -> getAgeRanking()
+                RankingViewEvent.OnClickBattleRankingButton -> getBattleRanking()
+            }
         }
     }
 
-    private fun RankingViewState.showAgeRanking(): RankingViewState =
-        when (this) {
-            is RankingViewState.AgeRanking -> this
-            is RankingViewState.BattleRanking ->
-                RankingViewState.AgeRanking(ageRankingList = emptyList())
+    init {
+        viewModelScope.launch {
+            when (currentState) {
+                is RankingViewState.AgeRanking -> getAgeRanking()
+                is RankingViewState.BattleRanking -> getBattleRanking()
+            }
         }
+    }
 
-    private fun RankingViewState.showBattleRanking(): RankingViewState =
-        when (this) {
-            is RankingViewState.AgeRanking ->
-                RankingViewState.BattleRanking(battleRankingList = emptyList())
+    private suspend fun getBattleRanking() {
+        getBattleRankingUseCase().fold(
+            onSuccess = { setState { showBattleRanking(it) } },
+            onFailure = {}
+        )
+    }
 
-            is RankingViewState.BattleRanking -> this
-        }
+    private suspend fun getAgeRanking() {
+        getAgeRankingUseCase().fold(
+            onSuccess = { setState { showAgeRanking(it) } },
+            onFailure = {}
+        )
+    }
+
+    private fun showAgeRanking(rankingUIModel: RankingUIModel): RankingViewState =
+        RankingViewState.AgeRanking(
+            ageRankingList = rankingUIModel.rankingList,
+            myRanking = rankingUIModel.myRanking
+        )
+
+    private fun showBattleRanking(rankingUIModel: RankingUIModel): RankingViewState =
+        RankingViewState.BattleRanking(
+            battleRankingList = rankingUIModel.rankingList,
+            myRanking = rankingUIModel.myRanking
+        )
 }
