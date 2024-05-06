@@ -4,4 +4,8 @@ import com.kiwa.fluffit.home.composebase.ViewEvent
 
 sealed class CollectionViewEvent : ViewEvent {
     data object initLoadingCollections : CollectionViewEvent()
+
+    data object afterLoadingCollections : CollectionViewEvent()
+
+    data object OnFinishToast : CollectionViewEvent()
 }

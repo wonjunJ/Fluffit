@@ -3,6 +3,8 @@ package com.kiwa.data.di
 import androidx.media3.ui.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.kiwa.data.util.AuthAuthenticator
+import com.kiwa.data.util.AuthInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,6 +12,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -17,7 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private val logginInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+    private val loggingInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
         if(BuildConfig.DEBUG){
             setLevel(HttpLoggingInterceptor.Level.HEADERS)
         }
@@ -28,12 +31,33 @@ object NetworkModule {
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
+    annotation class CollectionClient
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
     annotation class SocialLoginClient
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class AuthClient
 
+    @Singleton
+    @Provides
+    @CollectionClient
+    fun provideCollectionClient(
+        authInterceptor: AuthInterceptor,
+        authAuthenticator: AuthAuthenticator
+    ): OkHttpClient {
+        val builder = OkHttpClient.Builder()
+        builder.apply {
+            readTimeout(60, TimeUnit.SECONDS)
+            connectTimeout(60, TimeUnit.SECONDS)
+            addInterceptor(authInterceptor)
+            addInterceptor(loggingInterceptor)
+            authenticator(authAuthenticator)
+        }
+        return builder.build()
+    }
 
     @Singleton
     @Provides
@@ -41,7 +65,7 @@ object NetworkModule {
     fun provideAuthClient(): OkHttpClient{
         val builder = OkHttpClient.Builder()
         builder.apply {
-            addInterceptor(logginInterceptor)
+            addInterceptor(loggingInterceptor)
         }
         return builder.build()
     }
@@ -52,7 +76,7 @@ object NetworkModule {
     fun provideSocialClient(): OkHttpClient{
         val builder = OkHttpClient.Builder()
         builder.apply {
-            addInterceptor(logginInterceptor)
+            addInterceptor(loggingInterceptor)
         }
         return builder.build()
     }

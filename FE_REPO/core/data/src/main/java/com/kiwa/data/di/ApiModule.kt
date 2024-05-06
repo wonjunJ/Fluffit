@@ -1,6 +1,7 @@
 package com.kiwa.data.di
 
 import com.kiwa.data.api.AuthService
+import com.kiwa.data.api.CollectionService
 import com.kiwa.data.api.NaverAuthService
 import com.kiwa.data.api.NaverLoginService
 import com.kiwa.fluffit.data.BuildConfig
@@ -23,6 +24,10 @@ object ApiModule {
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
+    annotation class CollectionRetrofit
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
     annotation class NaverRetrofit
 
     @Qualifier
@@ -32,6 +37,19 @@ object ApiModule {
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class AuthRetrofit
+
+    @Singleton
+    @Provides
+    @CollectionRetrofit
+    fun provideCollectionRetrofit(
+        @NetworkModule.CollectionClient
+        okHttpClient: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(BuildConfig.BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(gsonConverterFactory)
+        .build()
 
     @Singleton
     @Provides
@@ -78,6 +96,13 @@ object ApiModule {
         @AuthRetrofit
         retrofit: Retrofit
     ): AuthService = retrofit.create((AuthService::class.java))
+
+    @Singleton
+    @Provides
+    fun provideCollectionApi(
+        @CollectionRetrofit
+        retrofit: Retrofit
+    ): CollectionService = retrofit.create(CollectionService::class.java)
 
     @Singleton
     @Provides

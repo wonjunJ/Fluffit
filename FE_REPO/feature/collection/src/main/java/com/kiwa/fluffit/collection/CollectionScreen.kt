@@ -8,11 +8,17 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,33 +27,49 @@ import androidx.hilt.navigation.compose.hiltViewModel
 internal fun CollectionScreen(
     viewModel: CollectionViewModel = hiltViewModel<CollectionViewModel>()
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Image(
-            modifier = Modifier.fillMaxSize(),
-            painter = painterResource(id = R.drawable.collection_background),
-            contentDescription = "도감 배경화면",
-            contentScale = ContentScale.Crop
-        )
+    val viewState = viewModel.uiState.collectAsState().value
+    val context = LocalContext.current
 
-        Column(
+    if(viewState.isLoadingCollected){
+        viewModel.onTriggerEvent(CollectionViewEvent.initLoadingCollections)
+    }
+
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    ObserveToastMessage(viewState = viewState, snackBarHostState, viewModel = viewModel)
+
+    Box(
+        modifier = Modifier.fillMaxSize().background(Color.White)
+    ) {
+        when(viewState){
+            is CollectionViewState.Init -> CollectionLoadingView()
+            is CollectionViewState.Default -> CollectionView(viewState.collectionList)
+        }
+
+        CollectionSnackBarHost(
             modifier = Modifier
-                .fillMaxHeight(0.6f)
-                .fillMaxWidth(0.7f)
-                .align(Alignment.Center)
-                .background(Color.Black),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Box(
-                modifier = Modifier.fillMaxHeight(0.3f).fillMaxWidth(0.5f).background(Color.Blue)
+                .align(Alignment.BottomCenter)
+                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp),
+            snackBarHostState = snackBarHostState
+        )
+    }
+}
+
+@Composable
+private fun ObserveToastMessage(
+    viewState: CollectionViewState,
+    snackBarHostState: SnackbarHostState,
+    viewModel: CollectionViewModel
+) {
+    LaunchedEffect(key1 = viewState.toastMessage) {
+        if (viewState.toastMessage.isNotEmpty()) {
+            snackBarHostState.currentSnackbarData?.dismiss()
+            snackBarHostState.showSnackbar(
+                viewState.toastMessage,
+                actionLabel = "확인",
+                duration = SnackbarDuration.Short
             )
-            Box(
-                modifier = Modifier.fillMaxHeight(0.3f).fillMaxWidth(0.5f).background(Color.Yellow)
-            )
-            Box(
-                modifier = Modifier.fillMaxHeight(0.3f).fillMaxWidth(0.5f).background(Color.Red)
-            )
+            viewModel.onTriggerEvent(CollectionViewEvent.OnFinishToast)
         }
     }
 }

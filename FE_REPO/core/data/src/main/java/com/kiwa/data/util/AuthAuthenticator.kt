@@ -23,7 +23,7 @@ class AuthAuthenticator @Inject constructor(
             val result = runCatching {
                 authService.refreshUserToken(
                     refreshToken,
-                    "Bearer $accessToken"
+//                    "Bearer $accessToken"
                 )
             }
 
