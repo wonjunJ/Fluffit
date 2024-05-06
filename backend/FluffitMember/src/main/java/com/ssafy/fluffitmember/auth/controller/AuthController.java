@@ -4,6 +4,8 @@ import com.ssafy.fluffitmember._common.response.success.SuccessResponse;
 import com.ssafy.fluffitmember.auth.dto.request.LoginReqDto;
 import com.ssafy.fluffitmember.auth.dto.response.LoginResDto;
 import com.ssafy.fluffitmember.auth.service.AuthService;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +20,10 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public SuccessResponse<LoginResDto> login(@RequestBody LoginReqDto loginReqDto){
-        a
+    public SuccessResponse<LoginResDto> login(@RequestBody LoginReqDto loginReqDto)
+            throws NoSuchAlgorithmException, InvalidKeyException {
+        LoginResDto loginResDto = authService.login(loginReqDto);
+        return SuccessResponse;
     }
 
 }
