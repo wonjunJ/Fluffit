@@ -9,3 +9,5 @@ spring:
       name: user-service
   application:
     name: user-service
+security:
+  hmacKey: ZCj6NxuDt0jyq946B4M9TiIej
