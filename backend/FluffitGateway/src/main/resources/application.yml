@@ -48,4 +48,5 @@ management:
     web:
       exposure:
         include: shutdown
-
+jwt:
+  secret: $dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDawoeidnvdslkasdfasdfasd1asdf123DEnE
