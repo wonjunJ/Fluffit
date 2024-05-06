@@ -24,7 +24,6 @@ spring:
         #member-service
         - id: auth
           predicates:
-            -
             - Path=/auth/**
           uri: lb://MEMBER-SERVICE
         - id: member
