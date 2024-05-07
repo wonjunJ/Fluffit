@@ -26,6 +26,10 @@ gradlePlugin{
             id = "fluffit.plugin.androidlibrary"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
+        register("AndroidLibraryComposeConventionPlugin"){
+            id = "fluffit.plugin.compose"
+            implementationClass = "AndroidLibraryComposeConventionPlugin"
+        }
         register("JavaLibraryConventionPlugin"){
             id = "fluffit.plugin.javalibrary"
             implementationClass = "JavaLibraryConventionPlugin"

@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.play.services.wearable)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(project(":core:designsystem"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -84,9 +85,12 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttpLogging)
 
+    implementation("com.navercorp.nid:oauth:5.9.1") // jdk 11
+
     wearApp(project(":wear"))
     implementation(project(":core:domain"))
     implementation(project(":core:data"))
+    implementation(project(":core:model"))
     implementation(project(":feature:login"))
     implementation(project(":feature:battle-record"))
     implementation(project(":feature:collection"))

@@ -1,6 +1,8 @@
+import com.android.build.gradle.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 
@@ -11,8 +13,20 @@ internal class FeatureConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("fluffit.plugin.androidlibrary")
-//                apply("androidx.navigation.safeargs.kotlin")
                 apply("fluffit.plugin.hilt")
+                apply("fluffit.plugin.compose")
+            }
+
+            extensions.configure<LibraryExtension> {
+                defaultConfig {
+                    testInstrumentationRunner =
+                        "com.google.samples.apps.nowinandroid.core.testing.NiaTestRunner"
+
+                    vectorDrawables {
+                        useSupportLibrary = true
+                    }
+                }
+                testOptions.animationsDisabled = true
             }
 
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
@@ -38,9 +52,12 @@ internal class FeatureConventionPlugin : Plugin<Project> {
                 "androidTestImplementation"(libs.findLibrary("androidx.junit").get())
                 "androidTestImplementation"(libs.findLibrary("androidx.espresso.core").get())
                 "androidTestImplementation"(platform(libs.findLibrary("androidx.compose.bom").get()))
-//                "androidTestImplementation"(libs.findLibrary("androidx.ui.test.junit4").get())
                 "implementation"(libs.findLibrary("glide").get())
                 "ksp"(libs.findLibrary("glide.compiler").get())
+                "implementation"(libs.findLibrary("coil").get())
+                "implementation"(libs.findLibrary("coil.gif").get())
+
+                "implementation"(libs.findBundle("androidx.lifecycle").get())
             }
         }
     }

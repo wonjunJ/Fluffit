@@ -11,6 +11,7 @@ playServicesWearable = "18.1.0"
 material = "1.11.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
+compose-compiler = "1.5.0"
 composeBom = "2023.08.00"
 composeMaterial = "1.2.1"
 composeFoundation = "1.2.1"
@@ -33,6 +34,7 @@ runtime = "1.6.6"
 volley = "1.2.1"
 glide = "4.13.0"
 ksp = "1.9.10-1.0.13"
+coil = "2.6.0"
 
 kotlinxCoroutines = "1.7.1"
 kotlinxSerializationJson = "1.5.1"
@@ -93,6 +95,23 @@ play-services-location = { group = "com.google.android.gms", name = "play-servic
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
+
+viewmodel-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
+compose-viewmodel-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+compose-lifecycle = {group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx"}
+
+#compose
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+ui = { group = "androidx.compose.ui", name = "ui" }
+ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+ui-foundation = { group = "androidx.compose.foundation", name = "foundation" }
+material3-compose = { group = "androidx.compose.material3", name = "material3" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
@@ -107,6 +126,7 @@ fluffit-androidlibrary = { id = "fluffit.plugin.androidlibrary", version = "unsp
 fluffit-javalibrary = { id = "fluffit.plugin.javalibrary", version = "unspecified"}
 fluffit-feature = { id = "fluffit.plugin.feature", version = "unspecified"}
 fluffit-hilt = { id = "fluffit.plugin.hilt", version = "unspecified"}
+fluffit-compose = { id = "fluffit.plugin.compose", version = "unspecified"}
 hilt-navigation = { id = "androidx.hilt", version.ref = "hiltNav"}
 
 [bundles]
@@ -114,3 +134,7 @@ androidx-runtime = ["androidx-runtime", "androidx-runtime-livedata","androidx-ru
 androidx-ui = ["androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling", "androidx-ui-test-junit4", "androidx-ui-test-manifest", "androidx-ui-tooling-preview"]
 androidx-room = ["androidx-room-common", "androidx-room-compiler"]
 androidx-navigation = ["androidx-navigation-compose", "androidx-navigation-runtime-ktx"]
+androidx-lifecycle = ["viewmodel-lifecycle", "compose-viewmodel-lifecycle", "compose-lifecycle"]
+
+compose = ["ui", "ui-graphics", "ui-tooling-preview", "material3-compose", "coil-compose", "ui-foundation"]
+compose-debug = ["ui-tooling", "ui-test-manifest" ]

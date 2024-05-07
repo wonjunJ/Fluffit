@@ -17,6 +17,13 @@ internal fun Project.configureAndroidCompose(
         composeOptions {
             kotlinCompilerExtensionVersion = libs.findVersion("compose.compiler").get().requiredVersion
         }
+
+        testOptions {
+            unitTests {
+                // For Robolectric
+                isIncludeAndroidResources = true
+            }
+        }
     }
 
     dependencies {

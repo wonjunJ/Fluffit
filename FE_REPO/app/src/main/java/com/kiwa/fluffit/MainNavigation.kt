@@ -1,7 +1,5 @@
 package com.kiwa.fluffit
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,11 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navOptions
+import com.kiwa.fluffit.collection.collectionScreen
+import com.kiwa.fluffit.collection.navigateToCollection
 import com.kiwa.fluffit.home.homeScreen
 import com.kiwa.fluffit.home.navigateToHome
 import com.kiwa.fluffit.login.loginRoute
 import com.kiwa.fluffit.login.loginScreen
+import com.kiwa.ranking.navigateToRanking
+import com.kiwa.ranking.ranking
 
 @Composable
 fun MainNavigation(
@@ -36,8 +37,13 @@ fun MainNavigation(
             navController.navigateToHome()
         }
 
-        homeScreen {
-            navController.navigateUp()
-        }
+        homeScreen(
+            onNavigateToCollection = { navController.navigateToCollection() },
+            onNavigateToRankingDialog = { navController.navigateToRanking() }
+        )
+
+        ranking { navController.popBackStack() }
+
+        collectionScreen()
     }
 }

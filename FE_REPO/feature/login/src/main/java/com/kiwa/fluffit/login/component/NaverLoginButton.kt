@@ -13,17 +13,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.kiwa.fluffit.login.LoginViewEvent
+import com.kiwa.fluffit.login.LoginViewModel
 import com.kiwa.fluffit.login.R
 
 private const val TAG = "NaverLoginButton_싸피"
+
 @Composable
 internal fun NaverLoginButton(
-    onNavigationToHome: () -> Unit
-){
+    viewModel: LoginViewModel
+) {
     val interactionSource = remember { MutableInteractionSource() }
+
     Box(
         modifier = Modifier.fillMaxSize()
-    ){
+    ) {
         Image(
             modifier = Modifier
                 .padding(bottom = 90.dp)
@@ -32,11 +36,11 @@ internal fun NaverLoginButton(
                     interactionSource = interactionSource,
                     indication = null
                 ) {
+                    viewModel.onTriggerEvent(LoginViewEvent.OnClickNaverLoginButton)
                     Log.d(TAG, "NaverLoginButton: 클릭된듯")
-                    onNavigationToHome()
                 },
             painter = painterResource(id = R.drawable.naver_login_white),
-            contentDescription = "네이버 로그인",
+            contentDescription = "네이버 로그인"
         )
     }
 }

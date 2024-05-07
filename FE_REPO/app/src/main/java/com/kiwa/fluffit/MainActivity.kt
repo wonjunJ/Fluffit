@@ -3,7 +3,7 @@ package com.kiwa.fluffit
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.kiwa.home.ui.theme.FluffitTheme
+import com.kiwa.fluffit.designsystem.theme.FluffitTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
