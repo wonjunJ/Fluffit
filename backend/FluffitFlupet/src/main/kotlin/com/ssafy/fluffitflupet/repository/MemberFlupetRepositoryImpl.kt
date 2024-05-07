@@ -7,9 +7,11 @@ import com.ssafy.jooq.tables.MemberFlupet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.withContext
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
+import reactor.core.publisher.Flux
 
 class MemberFlupetRepositoryImpl(
     private val dslContext: DSLContext
@@ -46,29 +48,62 @@ class MemberFlupetRepositoryImpl(
     }
 
     override suspend fun findFlupetsByUserId(userId: String): Flow<CollectionResponse.Flupet> {
-        return dslContext
-            .select(
-                FLUPET.NAME.`as`("species"),
-                FLUPET.IMG_URL,
-                FLUPET.STAGE.`as`("tier"),
-                DSL.field( //jooq에서 임의의 새로운 필드를 생성하기 위한 방법
-                    DSL.exists(
-                        dslContext
-                            .selectOne()
-                            .from(MEMBER_FLUPET)
-                            .where(
-                                MEMBER_FLUPET.FLUPET_ID.eq(FLUPET.ID)
-                                    .and(MEMBER_FLUPET.MEMBER_ID.eq(userId))
-                            )
-                    )
-                ).`as`("metBefore")
-            )
-            .from(FLUPET)
-            .orderBy(
-                FLUPET.ID.asc()
-            )
-            .fetchInto(CollectionResponse.Flupet::class.java)
+        return Flux.from(
+            dslContext
+                .select(
+                    FLUPET.NAME.`as`("species"),
+                    FLUPET.IMG_URL,
+                    FLUPET.STAGE.`as`("tier"),
+                    DSL.field( //jooq에서 임의의 새로운 필드를 생성하기 위한 방법
+                        DSL.exists(
+                            dslContext
+                                .selectOne()
+                                .from(MEMBER_FLUPET)
+                                .where(
+                                    MEMBER_FLUPET.FLUPET_ID.eq(FLUPET.ID)
+                                        .and(MEMBER_FLUPET.MEMBER_ID.eq(userId))
+                                )
+                        )
+                    ).`as`("metBefore")
+                )
+                .from(FLUPET)
+                .orderBy(
+                    FLUPET.ID.asc()
+                )
+        )
+            .map { record ->
+                CollectionResponse.Flupet(
+                    species = record.get("species", String::class.java),
+                    imageUrl = record.get(FLUPET.IMG_URL, String::class.java),
+                    tier = record.get("tier", Int::class.java),
+                    metBefore = record.get("metBefore", Boolean::class.java)
+                )
+            }
             .asFlow()
+//        return dslContext
+//            .select(
+//                FLUPET.NAME.`as`("species"),
+//                FLUPET.IMG_URL,
+//                FLUPET.STAGE.`as`("tier"),
+//                DSL.field( //jooq에서 임의의 새로운 필드를 생성하기 위한 방법
+//                    DSL.exists(
+//                        dslContext
+//                            .selectOne()
+//                            .from(MEMBER_FLUPET)
+//                            .where(
+//                                MEMBER_FLUPET.FLUPET_ID.eq(FLUPET.ID)
+//                                    .and(MEMBER_FLUPET.MEMBER_ID.eq(userId))
+//                            )
+//                    )
+//                ).`as`("metBefore")
+//            )
+//            .from(FLUPET)
+//            .orderBy(
+//                FLUPET.ID.asc()
+//            )
+//            .fetchInto(CollectionResponse.Flupet::class.java)
+//            .asFlow()
+        //return dslContext.selectOne().fetchInto(CollectionResponse.Flupet::class.java).asFlow()
     }
 
 }

@@ -10,23 +10,23 @@ import com.ssafy.jooq.tables.MemberFlupet;
 
 
 /**
- * Convenience access to all tables in flupet_service.
+ * Convenience access to all tables in fluffit_flupet.
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
 
     /**
-     * The table <code>flupet_service.flupet</code>.
+     * The table <code>fluffit_flupet.flupet</code>.
      */
     public static final Flupet FLUPET = Flupet.FLUPET;
 
     /**
-     * The table <code>flupet_service.food_type</code>.
+     * The table <code>fluffit_flupet.food_type</code>.
      */
     public static final FoodType FOOD_TYPE = FoodType.FOOD_TYPE;
 
     /**
-     * The table <code>flupet_service.member_flupet</code>.
+     * The table <code>fluffit_flupet.member_flupet</code>.
      */
     public static final MemberFlupet MEMBER_FLUPET = MemberFlupet.MEMBER_FLUPET;
 }

@@ -23,56 +23,56 @@ public class FlupetRecord extends UpdatableRecordImpl<FlupetRecord> implements R
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>flupet_service.flupet.id</code>.
+     * Setter for <code>fluffit_flupet.flupet.id</code>.
      */
     public void setId(UInteger value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>flupet_service.flupet.id</code>.
+     * Getter for <code>fluffit_flupet.flupet.id</code>.
      */
     public UInteger getId() {
         return (UInteger) get(0);
     }
 
     /**
-     * Setter for <code>flupet_service.flupet.name</code>.
+     * Setter for <code>fluffit_flupet.flupet.name</code>.
      */
     public void setName(String value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>flupet_service.flupet.name</code>.
+     * Getter for <code>fluffit_flupet.flupet.name</code>.
      */
     public String getName() {
         return (String) get(1);
     }
 
     /**
-     * Setter for <code>flupet_service.flupet.img_url</code>.
+     * Setter for <code>fluffit_flupet.flupet.img_url</code>.
      */
     public void setImgUrl(String value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>flupet_service.flupet.img_url</code>.
+     * Getter for <code>fluffit_flupet.flupet.img_url</code>.
      */
     public String getImgUrl() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>flupet_service.flupet.stage</code>.
+     * Setter for <code>fluffit_flupet.flupet.stage</code>.
      */
     public void setStage(Integer value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>flupet_service.flupet.stage</code>.
+     * Getter for <code>fluffit_flupet.flupet.stage</code>.
      */
     public Integer getStage() {
         return (Integer) get(3);

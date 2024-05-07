@@ -47,7 +47,8 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     //Swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.0.4'
+    //implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:1.7.0'
     //spring boot 3.X 버전에서는 밑어꺼 사용 불가
 //    implementation 'io.springfox:springfox-boot-starter:3.0.0'  // Springfox Swagger 의존성 추가
 //    implementation 'io.springfox:springfox-swagger-ui:3.0.0' // Swagger UI 의존성 추가
@@ -84,7 +85,7 @@ def loadYaml(String path) {
 }
 def application = loadYaml('src/main/resources/application.yml')
 
-//println "DB URL: ${System.getenv('DB_URL')}"
+println "DB URL: ${System.getenv('DB_URL')}"
 
 jooq {
     version = '3.17.5'
