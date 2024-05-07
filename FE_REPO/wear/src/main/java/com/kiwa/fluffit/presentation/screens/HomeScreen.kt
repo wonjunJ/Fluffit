@@ -2,7 +2,9 @@ package com.kiwa.fluffit.presentation.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -16,7 +18,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.CircularProgressIndicator
 import com.example.wearapp.presentation.HealthViewModel
 import com.kiwa.fluffit.R
-import com.kiwa.fluffit.presentation.components.PetImageDisplay
+import com.kiwa.fluffit.presentation.components.CoinDisplay
+import com.kiwa.fluffit.presentation.components.MainPetImageDisplay
 import com.kiwa.fluffit.presentation.components.StepsDisplay
 
 @Composable
@@ -50,11 +53,22 @@ fun MainScreen() {
 
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier.align(Alignment.TopCenter)
         ) {
-            val image = painterResource(R.drawable.dog_white)
+            Spacer(modifier = Modifier.height(18.dp))
             StepsDisplay(steps = steps)
-            PetImageDisplay(image)
+        }
+        Box(modifier = Modifier.align(Alignment.Center)){
+            val image = painterResource(R.drawable.dog_white)
+//        Spacer(modifier = Modifier.height(16.dp))
+            MainPetImageDisplay(image)
+        }
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        ) {
+            CoinDisplay(coin = 13420)
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }

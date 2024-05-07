@@ -10,25 +10,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 
 @Composable
-fun StepsDisplay(steps: Long?) {
-    val formattedSteps = DecimalFormat("#,###").format(steps ?: 0)
+fun CoinDisplay(coin: Long?) {
+    val formattedCoin = DecimalFormat("#,###").format(coin ?: 0)
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
-            modifier = Modifier.size(20.dp).padding(end = 3.dp),
-            painter = painterResource(R.drawable.footprint),
+            modifier = Modifier.size(15.dp).padding(end = 3.dp),
+            painter = painterResource(R.drawable.coin),
             contentDescription = "footprint"
         )
         Text(
-            text = "$formattedSteps",
+            text = "$formattedCoin",
             fontFamily = fluffitWearFontFamily
         )
     }
-
 }

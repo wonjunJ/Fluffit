@@ -16,6 +16,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -42,11 +43,11 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Text
 import com.example.wearapp.presentation.HealthViewModel
+import com.kiwa.fluffit.presentation.components.FeedButton
+import com.kiwa.fluffit.presentation.screens.FeedScreen
 import com.kiwa.fluffit.presentation.screens.MainScreen
-import dagger.hilt.EntryPoint
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import javax.inject.Inject
 
 private const val TAG = "MainActivity"
 
@@ -124,7 +125,7 @@ fun WearApp() {
 
     LaunchedEffect(currentPage) {
         showIndicator = true
-        pagerState.animateScrollToPage(currentPage, animationSpec = spring(dampingRatio = 0.8f, stiffness = 300f))
+        pagerState.animateScrollToPage(currentPage, animationSpec = spring(dampingRatio = 0.8f, stiffness = 500f))
         delay(1000)
         showIndicator = false
     }
@@ -137,7 +138,9 @@ fun WearApp() {
         {
             HorizontalPageIndicator(
                 pageIndicatorState = pageIndicatorState,
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 3.dp)
             )
         }
 
@@ -147,7 +150,7 @@ fun WearApp() {
         ) { page ->
             when(page){
                 0 -> MainScreen()
-                1 -> Greeting(greetingName = "page2")
+                1 -> FeedScreen()
                 2 -> Greeting(greetingName = "page3")
                 3 -> Greeting(greetingName = "page4")
             }
@@ -170,5 +173,6 @@ fun Greeting(greetingName: String) {
             color = MaterialTheme.colors.primary,
             text = "$greetingName"
         )
+        FeedButton()
     }
 }

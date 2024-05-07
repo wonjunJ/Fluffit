@@ -35,12 +35,14 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                         proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
                     }
                 }
-            }
 
-//            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-//            dependencies {
-//                "implementation"(libs.findLibrary("junit4").get())
-//            }
+                val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+                dependencies {
+                    "testImplementation"(libs.findLibrary("junit").get())
+                    "androidTestImplementation"(libs.findLibrary("androidx.junit").get())
+                    "androidTestImplementation"(libs.findLibrary("androidx.espresso.core").get())
+                }
+            }
         }
     }
 }
