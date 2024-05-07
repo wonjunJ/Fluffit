@@ -14,5 +14,4 @@ android {
 dependencies {
     implementation(project(":feature:home"))
     implementation(project(":core:model"))
-    implementation(project(":core:model"))
 }

@@ -24,7 +24,7 @@ object ApiModule {
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
-    annotation class CollectionRetrofit
+    annotation class FlupetRetrofit
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
@@ -40,9 +40,9 @@ object ApiModule {
 
     @Singleton
     @Provides
-    @CollectionRetrofit
+    @FlupetRetrofit
     fun provideCollectionRetrofit(
-        @NetworkModule.CollectionClient
+        @NetworkModule.FlupetClient
         okHttpClient: OkHttpClient,
         gsonConverterFactory: GsonConverterFactory
     ): Retrofit = Retrofit.Builder()
@@ -100,7 +100,7 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideCollectionApi(
-        @CollectionRetrofit
+        @FlupetRetrofit
         retrofit: Retrofit
     ): CollectionService = retrofit.create(CollectionService::class.java)
 
