@@ -6,7 +6,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://fluffit.shop:8761/
+      defaultZone: http://fluffit.shop:8761/eureka
 
 spring:
   application:
