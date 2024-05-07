@@ -106,7 +106,7 @@ jooq {
                 generator {
                     database {
                         name = 'org.jooq.meta.mariadb.MariaDBDatabase' // Updated for MariaDB
-                        inputSchema = 'flupet_service' // Ensure this matches your MariaDB schema
+                        inputSchema = 'fluffit_flupet' // Ensure this matches your MariaDB schema
                     }
                     target {
                         packageName = 'com.ssafy.jooq'
