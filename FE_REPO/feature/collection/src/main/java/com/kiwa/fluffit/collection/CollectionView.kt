@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kiwa.fluffit.designsystem.theme.fluffitTypography
 import com.kiwa.fluffit.model.flupet.FlupetCollection
 
 @Composable
@@ -37,23 +39,34 @@ internal fun CollectionView(
         )
 
         Column(
+            horizontalAlignment = Alignment.Start,
             modifier = Modifier
                 .fillMaxHeight(0.6f)
-                .fillMaxWidth(0.7f)
+                .fillMaxWidth(0.75f)
                 .align(Alignment.Center)
-                .background(Color.Red),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .background(Color.Red)
+                .padding(horizontal = 10.dp),
         ) {
             for (i in 0..collectionList.size - 1 step (2)) {
-                Spacer(modifier = Modifier.height(20.dp))
-                Text(text = collectionList.get(i).species)
-                Spacer(modifier = Modifier.height(10.dp))
-                Row(modifier = Modifier.padding(all = 10.dp)) {
-                    for (j in i..i + 1) {
-                        CollectionFlupetCard(collectionList, j)
-                    }
+                Text(
+                    text = collectionList.get(i).species,
+                    style = fluffitTypography.bodyMedium,
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    CollectionFlupetCard(
+                        modifier = Modifier.weight(1f),
+                        collectionList, i
+                    )
+                    Spacer(modifier = Modifier.width(20.dp))
+                    CollectionFlupetCard(
+                        modifier = Modifier.weight(1f),
+                        collectionList, i + 1
+                    )
                 }
-                Spacer(modifier = Modifier.height(10.dp))
             }
         }
     }
