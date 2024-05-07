@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+    
+    environment {
+        JASYPT_KEY = credentials('JASYPT_KEY')
+        JKS_PWD = credentials('JKS_PWD')
+        JKS_ALIAS = credentials('JKS_ALIAS')
+    }
+
+    stages {
+        stage('Gradle build') {
+            steps {
+                dir('backend/FluffitConfig') {
+                    sh 'chmod +x ./gradlew'
+                    sh './gradlew clean build'
+                }
+            }
+        }
+
+        stage('Docker image build') {
+            steps {
+                dir('backend/FluffitConfig') {
+                    sh "docker stop config  || true && docker rm config || true"
+                    sh 'docker rmi config || true'
+                    sh 'docker build -t config .'
+                }
+            }
+        }
+
+        stage('Docker container run') {
+            steps {
+                dir('backend/FluffitConfig') {
+                   sh 'docker run -d -e JASYPT_KEY=${JASYPT_KEY} -e JKS_PWD=${JKS_PWD} -e JKS_ALIAS=${JKS_ALIAS} -e TZ=Asia/Seoul -p 8888:8888 --network develop-net --name config -v /home/ubuntu/key/apiEncryptionKey.jks:/config/apiEncryptionKey.jks config'
+                }
+            }
+        }
+    }
+}
+
+
