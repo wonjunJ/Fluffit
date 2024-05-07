@@ -6,13 +6,13 @@ import androidx.navigation.compose.composable
 
 const val homeRoute = "home"
 fun NavGraphBuilder.homeScreen(
-    onNavigateToCollection: () -> Unit
+    onNavigateToCollection: () -> Unit,
+    onNavigateToRankingDialog: () -> Unit
 ) {
-    composable(homeRoute) {
-        HomeRoute(
-            onNavigateToCollection = onNavigateToCollection
-        )
-    }
+    HomeRoute(
+        onNavigateToRankingDialog = onNavigateToRankingDialog,
+        onNavigateToCollection = onNavigateToCollection
+    )
 }
 
 fun NavController.navigateToHome() {

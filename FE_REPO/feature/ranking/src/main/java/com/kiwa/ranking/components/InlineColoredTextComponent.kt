@@ -1,4 +1,4 @@
-package com.kiwa.ranking.ui.components
+package com.kiwa.ranking.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Text

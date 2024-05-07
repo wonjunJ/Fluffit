@@ -74,5 +74,35 @@ val fluffitTypography = Typography(
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
         color = Color.Black
+    ),
+
+    headlineLarge = TextStyle(
+        fontFamily = fluffitMainFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp,
+        textAlign = TextAlign.Center,
+        color = Color.Black
+    ),
+
+    headlineMedium = TextStyle(
+        fontFamily = fluffitMainFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.5.sp,
+        textAlign = TextAlign.Center,
+        color = Color.Black
+    ),
+
+    headlineSmall = TextStyle(
+        fontFamily = fluffitMainFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.5.sp,
+        textAlign = TextAlign.Center,
+        color = Color.Black
     )
 )

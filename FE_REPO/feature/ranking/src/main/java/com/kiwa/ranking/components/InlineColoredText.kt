@@ -1,4 +1,4 @@
-package com.kiwa.ranking.ui.components
+package com.kiwa.ranking.components
 
 import android.graphics.Color
 import androidx.compose.foundation.Canvas

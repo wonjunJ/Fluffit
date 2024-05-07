@@ -25,8 +25,8 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeViewState, HomeVie
                             event.name
                         )
                     }
+
                     HomeViewEvent.OnClickPencilButton -> setState { onStartEditName() }
-                    HomeViewEvent.OnClickRankingButton -> TODO()
                     HomeViewEvent.OnClickUserButton -> TODO()
                     HomeViewEvent.OnUpdateFullness -> TODO()
                     HomeViewEvent.OnUpdateHealth -> TODO()
@@ -35,13 +35,21 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeViewState, HomeVie
         }
     }
 
+    private fun HomeViewState.dismissRankingDialog(): HomeViewState =
+        when (this) {
+            is HomeViewState.Default -> this
+            is HomeViewState.FlupetNameEdit -> this
+            is HomeViewState.Loading -> this
+        }
+
     private fun HomeViewState.onStartEditName(): HomeViewState =
         when (this) {
             is HomeViewState.Default -> HomeViewState.FlupetNameEdit(
                 coin = this.coin,
                 flupet = this.flupet,
                 nextFullnessUpdateTime = this.nextFullnessUpdateTime,
-                nextHealthUpdateTime = this.nextHealthUpdateTime
+                nextHealthUpdateTime = this.nextHealthUpdateTime,
+                message = this.message
             )
 
             is HomeViewState.FlupetNameEdit -> this

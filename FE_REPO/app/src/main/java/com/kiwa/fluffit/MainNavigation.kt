@@ -17,6 +17,8 @@ import com.kiwa.fluffit.home.homeScreen
 import com.kiwa.fluffit.home.navigateToHome
 import com.kiwa.fluffit.login.loginRoute
 import com.kiwa.fluffit.login.loginScreen
+import com.kiwa.ranking.navigateToRanking
+import com.kiwa.ranking.ranking
 
 @Composable
 fun MainNavigation(
@@ -35,6 +37,9 @@ fun MainNavigation(
             navController.navigateToHome()
         }
 
+        homeScreen { navController.navigateToRanking() }
+
+        ranking { navController.popBackStack() }
         homeScreen {
             navController.navigateToCollection()
         }

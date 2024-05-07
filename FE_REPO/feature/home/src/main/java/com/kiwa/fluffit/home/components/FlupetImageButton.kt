@@ -14,17 +14,13 @@ import androidx.compose.ui.unit.dp
 fun FlupetImageButton(
     @DrawableRes id: Int,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClickImage: () -> Unit = {}
 ) {
     Box(modifier = modifier) {
         Image(
             painter = painterResource(id = id),
             contentDescription = null,
-            modifier = Modifier
-                .size(48.dp)
-                .clickable {
-                    onClick()
-                }
+            modifier = Modifier.size(48.dp).clickable { onClickImage() }
         )
     }
 }

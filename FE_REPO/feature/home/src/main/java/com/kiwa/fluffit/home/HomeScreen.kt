@@ -27,16 +27,17 @@ import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.size.OriginalSize
-import com.kiwa.fluffit.home.ui.components.CoinDisplay
-import com.kiwa.fluffit.home.ui.components.FlupetImageButton
-import com.kiwa.fluffit.home.ui.components.FlupetNameUI
-import com.kiwa.fluffit.home.ui.components.FullnessDisplay
-import com.kiwa.fluffit.home.ui.components.HealthDisplay
+import com.kiwa.fluffit.home.components.CoinDisplay
+import com.kiwa.fluffit.home.components.FlupetImageButton
+import com.kiwa.fluffit.home.components.FullnessDisplay
+import com.kiwa.fluffit.home.components.HealthDisplay
+import com.kiwa.fluffit.home.ui.FlupetNameUI
 
 @Composable
 internal fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
-    onNavigateToCollection: () -> Unit
+    onNavigateToCollection: () -> Unit,
+    onNavigateToRankingDialog: () -> Unit
 ) {
     val uiState: HomeViewState by viewModel.uiState.collectAsStateWithLifecycle()
     HomeScreen(
@@ -49,6 +50,7 @@ internal fun HomeRoute(
                 )
             )
         },
+        onClickRankingButton = { onNavigateToRankingDialog() },
         onClickCollectionButton = onNavigateToCollection
     )
 }
@@ -57,8 +59,9 @@ internal fun HomeRoute(
 internal fun HomeScreen(
     uiState: HomeViewState,
     onClickPencilButton: () -> Unit,
+    onClickCollectionButton: () -> Unit,
     onClickConfirmButton: (String) -> Unit,
-    onClickCollectionButton: () -> Unit
+    onClickRankingButton: () -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -77,7 +80,7 @@ internal fun HomeScreen(
             contentScale = ContentScale.FillHeight
         )
 
-        MainButtons(onClickCollectionButton)
+        MainButtons(onClickCollectionButton, onClickRankingButton)
 
         Column(
             modifier = Modifier
@@ -111,7 +114,8 @@ internal fun HomeScreen(
 
 @Composable
 private fun MainButtons(
-    onClickCollectionButton: () -> Unit
+    onClickCollectionButton: () -> Unit,
+    onClickRankingButton: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -122,7 +126,7 @@ private fun MainButtons(
         Row(modifier = Modifier.align(Alignment.TopCenter), verticalAlignment = Alignment.Bottom) {
             CoinDisplay(coin = 1000)
             Spacer(modifier = Modifier.weight(1f))
-            RankingButton()
+            RankingButton(onClickRankingButton)
         }
         CollectionButton(
             modifier = Modifier.align(Alignment.BottomStart),
@@ -139,10 +143,10 @@ private fun CollectionButton(modifier: Modifier, onNavigateToCollection: () -> U
 
 @Composable
 private fun UserButton(modifier: Modifier) {
-//    FlupetImageButton(id = R.drawable.user, modifier = modifier)
+    FlupetImageButton(id = R.drawable.user, modifier = modifier)
 }
 
 @Composable
-private fun RankingButton() {
-//    FlupetImageButton(id = R.drawable.ranking)
+private fun RankingButton(onClickRankingButton: () -> Unit) {
+    FlupetImageButton(id = R.drawable.ranking, onClickImage = onClickRankingButton)
 }

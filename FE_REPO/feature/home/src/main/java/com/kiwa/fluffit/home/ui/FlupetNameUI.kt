@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.home.ui.components
+package com.kiwa.fluffit.home.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.kiwa.fluffit.home.HomeViewState
 import com.kiwa.fluffit.home.R
+import com.kiwa.fluffit.home.components.CustomTextField
 
 @Composable
 fun FlupetNameUI(
@@ -26,19 +27,19 @@ fun FlupetNameUI(
     name: String
 ) {
     Row(
-        modifier = Modifier.padding(top = 12.dp).padding(start = 32.dp),
+        modifier = Modifier
+            .padding(top = 12.dp)
+            .padding(start = 32.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         when (viewState) {
-            is HomeViewState.Default -> DisplayModeUI(name = name) {
-                onClickPencilButton()
-            }
-
             is HomeViewState.FlupetNameEdit -> EditModeUI(name) {
                 onClickConfirmButton(it)
             }
 
-            is HomeViewState.Loading -> TODO()
+            else -> DisplayModeUI(name = name) {
+                onClickPencilButton()
+            }
         }
     }
 }

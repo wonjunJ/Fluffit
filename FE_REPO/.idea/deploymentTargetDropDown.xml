@@ -5,20 +5,21 @@
       <entry key="app">
         <State />
       </entry>
-      <entry key="core.base">
-        <State />
-      </entry>
-      <entry key="core.designsystem">
-        <State />
-      </entry>
-      <entry key="core.model">
-        <State />
-      </entry>
-      <entry key="core.ui">
-        <State />
-      </entry>
       <entry key="wear">
-        <State />
+        <State>
+          <runningDeviceTargetSelectedWithDropDown>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="SERIAL_NUMBER" />
+                  <value value="R3CN603EDEP" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-05-05T14:54:09.216845200Z" />
+        </State>
       </entry>
     </value>
   </component>
