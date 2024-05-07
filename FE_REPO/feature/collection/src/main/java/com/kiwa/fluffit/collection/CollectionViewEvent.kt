@@ -1,6 +1,6 @@
 package com.kiwa.fluffit.collection
 
-import com.kiwa.fluffit.home.composebase.ViewEvent
+import com.kiwa.fluffit.base.ViewEvent
 
 sealed class CollectionViewEvent : ViewEvent {
     data object initLoadingCollections : CollectionViewEvent()

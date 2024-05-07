@@ -1,5 +1,7 @@
 package com.kiwa.data.di
 
+import com.kiwa.data.datasource.CollectionDataSource
+import com.kiwa.data.datasource.CollectionDataSourceImpl
 import com.kiwa.data.datasource.UserDataSource
 import com.kiwa.data.datasource.UserDataSourceImpl
 import dagger.Binds

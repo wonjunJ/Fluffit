@@ -51,7 +51,7 @@ internal fun HomeRoute(
                 )
             )
         },
-        onNavigateToCollection = onNavigateToCollection
+        onClickCollectionButton = onNavigateToCollection
     )
 }
 
@@ -60,7 +60,7 @@ internal fun HomeScreen(
     uiState: HomeViewState,
     onClickPencilButton: () -> Unit,
     onClickConfirmButton: (String) -> Unit,
-    onNavigateToCollection: () -> Unit
+    onClickCollectionButton: () -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -79,7 +79,7 @@ internal fun HomeScreen(
             contentScale = ContentScale.FillHeight
         )
 
-        MainButtons(onNavigateToCollection)
+        MainButtons(onClickCollectionButton)
 
         Column(
             modifier = Modifier
@@ -113,7 +113,7 @@ internal fun HomeScreen(
 
 @Composable
 private fun MainButtons(
-    onNavigateToCollection: () -> Unit
+    onClickCollectionButton: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -126,7 +126,7 @@ private fun MainButtons(
             Spacer(modifier = Modifier.weight(1f))
             RankingButton()
         }
-        CollectionButton(modifier = Modifier.align(Alignment.BottomStart), onNavigateToCollection = onNavigateToCollection)
+        CollectionButton(modifier = Modifier.align(Alignment.BottomStart), onNavigateToCollection = onClickCollectionButton)
         UserButton(modifier = Modifier.align(Alignment.BottomEnd))
     }
 }

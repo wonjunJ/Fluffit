@@ -1,6 +1,6 @@
 package com.kiwa.fluffit.collection
 
-import com.kiwa.fluffit.home.composebase.ViewState
+import com.kiwa.fluffit.base.ViewState
 import com.kiwa.fluffit.model.flupet.FlupetCollection
 
 sealed class CollectionViewState : ViewState {
