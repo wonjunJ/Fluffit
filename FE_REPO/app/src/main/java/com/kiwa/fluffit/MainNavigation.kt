@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.kiwa.fluffit.collection.collectionScreen
+import com.kiwa.fluffit.collection.navigateToCollection
 import com.kiwa.fluffit.home.homeScreen
 import com.kiwa.fluffit.home.navigateToHome
 import com.kiwa.fluffit.login.loginRoute
@@ -33,8 +35,10 @@ fun MainNavigation(
             navController.navigateToHome()
         }
 
-        homeScreen {
-            navController.navigateUp()
+        homeScreen{
+            navController.navigateToCollection()
         }
+
+        collectionScreen()
     }
 }

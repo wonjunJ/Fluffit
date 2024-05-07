@@ -11,3 +11,7 @@ android {
         exclude(group = "com.intellij", module = "annotations")
     }
 }
+dependencies {
+    implementation(project(":feature:home"))
+    implementation(project(":core:model"))
+}

@@ -23,7 +23,7 @@ class UserDataSourceImpl @Inject constructor(
         userCode: String,
         signature: String,
         provider: String
-    ): Result<Tokens> = runCatching {
-        authService.signInNaver(NaverLoginRequest(signature))
+    ): Result<TokenResponse> = runCatching {
+        authService.signInNaver(NaverLoginRequest(userCode, signature))
     }
 }

@@ -2,21 +2,21 @@ package com.kiwa.data.api
 
 import com.kiwa.fluffit.model.user.request.NaverLoginRequest
 import com.kiwa.fluffit.model.user.response.TokenResponse
-import com.kiwa.fluffit.model.user.response.Tokens
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthService {
     // api 언제 나와요
 
-    @POST("api/")
+    @GET("api/members/refresh")
     suspend fun refreshUserToken(
         @Header("refreshToken") refreshToken: String,
-        @Header("Authorization") accessToken: String
+//        @Header("Authorization") accessToken: String
     ): TokenResponse
 
-    @POST("api/auth/auto")
+    @POST("api/members/autoLogin")
     suspend fun autoLogin(
         @Header("Authorization") accessToken: String
     ): TokenResponse
@@ -24,5 +24,5 @@ interface AuthService {
     @POST("api/login")
     suspend fun signInNaver(
         @Body naverLoginRequest: NaverLoginRequest
-    ): Tokens
+    ): TokenResponse
 }

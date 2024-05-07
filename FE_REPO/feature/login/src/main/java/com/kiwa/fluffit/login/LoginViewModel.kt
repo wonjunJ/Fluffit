@@ -43,6 +43,11 @@ class LoginViewModel @Inject constructor(
             is LoginViewEvent.AttemptToFetchNaverId -> fetchUserNaverId(event.accessToken)
             is LoginViewEvent.ShowToast -> setState { showToast(event.message) }
             LoginViewEvent.OnFinishToast -> setState { onFinishToast() }
+            is LoginViewEvent.OnClickBackButton -> setState {
+                onClickBackButton(
+                    event.backPressedTime
+                )
+            }
         }
     }
 
@@ -122,5 +127,51 @@ class LoginViewModel @Inject constructor(
             is LoginViewState.AutoLogin -> copy(toastMessage = "")
             is LoginViewState.LoginSuccess -> copy(toastMessage = "")
         }
+    }
+
+    private fun LoginViewState.onClickBackButton(backPressedTime: Long): LoginViewState {
+        if (checkBackPressedRightBefore(backPressedTime, currentState.lastBackPressedTime)) {
+            return when (this) {
+                is LoginViewState.Default -> copy(shouldExit = true)
+                is LoginViewState.Login -> copy(shouldExit = true)
+                is LoginViewState.Splash -> copy(shouldExit = true)
+                is LoginViewState.AutoLogin -> copy(shouldExit = true)
+                is LoginViewState.LoginSuccess -> copy(shouldExit = true)
+            }
+        }
+
+        return when (this) {
+            is LoginViewState.Default -> copy(
+                lastBackPressedTime = backPressedTime,
+                toastMessage = "한번 더 누르면 종료됩니다."
+            )
+
+            is LoginViewState.Login -> copy(
+                lastBackPressedTime = backPressedTime,
+                toastMessage = "한번 더 누르면 종료됩니다."
+            )
+
+            is LoginViewState.Splash -> copy(
+                lastBackPressedTime = backPressedTime,
+                toastMessage = "한번 더 누르면 종료됩니다."
+            )
+
+            is LoginViewState.AutoLogin -> copy(
+                lastBackPressedTime = backPressedTime,
+                toastMessage = "한번 더 누르면 종료됩니다."
+            )
+
+            is LoginViewState.LoginSuccess -> copy(
+                lastBackPressedTime = backPressedTime,
+                toastMessage = "한번 더 누르면 종료됩니다."
+            )
+        }
+    }
+
+    private fun checkBackPressedRightBefore(
+        backPressedTime: Long,
+        lastBackPressedTime: Long
+    ): Boolean {
+        return backPressedTime - lastBackPressedTime < 1000
     }
 }

@@ -13,5 +13,9 @@ import javax.inject.Singleton
 abstract class DataSourceModule {
     @Binds
     @Singleton
-    abstract fun bindUserDataSource(userDataSourceImpl: UserDataSourceImpl): UserDataSource
+    abstract fun bindUserDataSource(userDataSourceImpl: UserDataSourceImpl) : UserDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindCollectionDataSource(collectionDataSourceImpl: CollectionDataSourceImpl) : CollectionDataSource
 }

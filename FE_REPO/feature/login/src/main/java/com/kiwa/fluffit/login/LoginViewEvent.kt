@@ -11,6 +11,8 @@ sealed class LoginViewEvent : ViewEvent {
 
     data class AttemptToFetchNaverId(val accessToken: String) : LoginViewEvent()
 
+    data class OnClickBackButton(val backPressedTime: Long) : LoginViewEvent()
+
     data class ShowToast(val message: String) : LoginViewEvent()
 
     data object OnFinishToast : LoginViewEvent()

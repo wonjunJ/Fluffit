@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -34,7 +36,10 @@ import com.kiwa.fluffit.home.ui.components.FullnessDisplay
 import com.kiwa.fluffit.home.ui.components.HealthDisplay
 
 @Composable
-internal fun HomeRoute(viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()) {
+internal fun HomeRoute(
+    viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
+    onNavigateToCollection: () -> Unit
+) {
     val uiState: HomeViewState by viewModel.uiState.collectAsStateWithLifecycle()
     HomeScreen(
         uiState = uiState,
@@ -45,7 +50,8 @@ internal fun HomeRoute(viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
                     name
                 )
             )
-        }
+        },
+        onNavigateToCollection = onNavigateToCollection
     )
 }
 
@@ -53,7 +59,8 @@ internal fun HomeRoute(viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
 internal fun HomeScreen(
     uiState: HomeViewState,
     onClickPencilButton: () -> Unit,
-    onClickConfirmButton: (String) -> Unit
+    onClickConfirmButton: (String) -> Unit,
+    onNavigateToCollection: () -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -72,7 +79,7 @@ internal fun HomeScreen(
             contentScale = ContentScale.FillHeight
         )
 
-        MainButtons()
+        MainButtons(onNavigateToCollection)
 
         Column(
             modifier = Modifier
@@ -105,7 +112,9 @@ internal fun HomeScreen(
 }
 
 @Composable
-private fun MainButtons() {
+private fun MainButtons(
+    onNavigateToCollection: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -117,22 +126,22 @@ private fun MainButtons() {
             Spacer(modifier = Modifier.weight(1f))
             RankingButton()
         }
-        CollectionButton(modifier = Modifier.align(Alignment.BottomStart))
+        CollectionButton(modifier = Modifier.align(Alignment.BottomStart), onNavigateToCollection = onNavigateToCollection)
         UserButton(modifier = Modifier.align(Alignment.BottomEnd))
     }
 }
 
 @Composable
-private fun CollectionButton(modifier: Modifier) {
-    FlupetImageButton(id = R.drawable.collection, modifier = modifier)
+private fun CollectionButton(modifier: Modifier, onNavigateToCollection: () -> Unit) {
+    FlupetImageButton(id = R.drawable.collection, modifier = modifier,onNavigateToCollection)
 }
 
 @Composable
 private fun UserButton(modifier: Modifier) {
-    FlupetImageButton(id = R.drawable.user, modifier = modifier)
+//    FlupetImageButton(id = R.drawable.user, modifier = modifier)
 }
 
 @Composable
 private fun RankingButton() {
-    FlupetImageButton(id = R.drawable.ranking)
+//    FlupetImageButton(id = R.drawable.ranking)
 }
