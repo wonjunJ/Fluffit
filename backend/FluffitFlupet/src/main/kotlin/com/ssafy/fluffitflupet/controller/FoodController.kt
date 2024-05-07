@@ -16,5 +16,5 @@ class FoodController(
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default
 
-    @GetMapping()
+//    @GetMapping()
 }
