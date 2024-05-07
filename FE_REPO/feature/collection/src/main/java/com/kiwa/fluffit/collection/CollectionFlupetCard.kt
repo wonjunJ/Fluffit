@@ -16,7 +16,6 @@ internal fun CollectionFlupetCard(
 ) {
     Box(
         modifier = Modifier.background(Color.White).size(60.dp)
-    ){
-
+    ) {
     }
 }

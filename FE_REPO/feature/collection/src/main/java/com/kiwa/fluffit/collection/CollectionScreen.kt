@@ -1,12 +1,8 @@
 package com.kiwa.fluffit.collection
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -17,9 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -30,7 +24,7 @@ internal fun CollectionScreen(
     val viewState = viewModel.uiState.collectAsState().value
     val context = LocalContext.current
 
-    if(viewState.isLoadingCollected){
+    if (viewState.isLoadingCollected) {
         viewModel.onTriggerEvent(CollectionViewEvent.initLoadingCollections)
     }
 
@@ -41,7 +35,7 @@ internal fun CollectionScreen(
     Box(
         modifier = Modifier.fillMaxSize().background(Color.White)
     ) {
-        when(viewState){
+        when (viewState) {
             is CollectionViewState.Init -> CollectionLoadingView()
             is CollectionViewState.Default -> CollectionView(viewState.collectionList)
         }

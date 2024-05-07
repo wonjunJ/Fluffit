@@ -4,7 +4,7 @@ import com.kiwa.fluffit.base.ViewState
 import com.kiwa.fluffit.model.flupet.FlupetCollection
 
 sealed class CollectionViewState : ViewState {
-    abstract val isLoadingCollected : Boolean
+    abstract val isLoadingCollected: Boolean
     abstract val toastMessage: String
 
     data class Init(

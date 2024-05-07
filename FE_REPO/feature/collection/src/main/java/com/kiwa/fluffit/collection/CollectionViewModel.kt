@@ -44,7 +44,6 @@ class CollectionViewModel @Inject constructor(
                     setState { showToast("도감 기록을 가져오는 데 실패했습니다.") }
                 }
             )
-
         }
     }
 

@@ -6,12 +6,12 @@ import androidx.navigation.compose.composable
 
 const val collectionRoute = "collection"
 
-fun NavGraphBuilder.collectionScreen(){
-    composable(collectionRoute){
+fun NavGraphBuilder.collectionScreen() {
+    composable(collectionRoute) {
         CollectionScreen()
     }
 }
 
-fun NavController.navigateToCollection(){
+fun NavController.navigateToCollection() {
     this.navigate(collectionRoute)
 }

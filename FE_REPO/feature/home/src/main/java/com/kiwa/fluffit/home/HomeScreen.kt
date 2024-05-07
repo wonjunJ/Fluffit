@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -126,14 +124,17 @@ private fun MainButtons(
             Spacer(modifier = Modifier.weight(1f))
             RankingButton()
         }
-        CollectionButton(modifier = Modifier.align(Alignment.BottomStart), onNavigateToCollection = onClickCollectionButton)
+        CollectionButton(
+            modifier = Modifier.align(Alignment.BottomStart),
+            onNavigateToCollection = onClickCollectionButton
+        )
         UserButton(modifier = Modifier.align(Alignment.BottomEnd))
     }
 }
 
 @Composable
 private fun CollectionButton(modifier: Modifier, onNavigateToCollection: () -> Unit) {
-    FlupetImageButton(id = R.drawable.collection, modifier = modifier,onNavigateToCollection)
+    FlupetImageButton(id = R.drawable.collection, modifier = modifier, onNavigateToCollection)
 }
 
 @Composable

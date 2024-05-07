@@ -12,7 +12,7 @@ interface AuthService {
 
     @GET("api/members/refresh")
     suspend fun refreshUserToken(
-        @Header("refreshToken") refreshToken: String,
+        @Header("refreshToken") refreshToken: String
 //        @Header("Authorization") accessToken: String
     ): TokenResponse
 

@@ -35,7 +35,7 @@ fun MainNavigation(
             navController.navigateToHome()
         }
 
-        homeScreen{
+        homeScreen {
             navController.navigateToCollection()
         }
 

@@ -4,7 +4,6 @@ import com.kiwa.data.api.AuthService
 import com.kiwa.data.api.NaverLoginService
 import com.kiwa.fluffit.model.user.request.NaverLoginRequest
 import com.kiwa.fluffit.model.user.response.TokenResponse
-import com.kiwa.fluffit.model.user.response.Tokens
 import javax.inject.Inject
 
 class UserDataSourceImpl @Inject constructor(

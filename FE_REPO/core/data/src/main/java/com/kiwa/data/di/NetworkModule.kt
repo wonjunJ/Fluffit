@@ -21,7 +21,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private val loggingInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             setLevel(HttpLoggingInterceptor.Level.HEADERS)
         } else {
             setLevel(HttpLoggingInterceptor.Level.NONE)
@@ -61,7 +61,7 @@ object NetworkModule {
     @Singleton
     @Provides
     @AuthClient
-    fun provideAuthClient(): OkHttpClient{
+    fun provideAuthClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.apply {
             addInterceptor(loggingInterceptor)
@@ -72,7 +72,7 @@ object NetworkModule {
     @Singleton
     @Provides
     @SocialLoginClient
-    fun provideSocialClient(): OkHttpClient{
+    fun provideSocialClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.apply {
             addInterceptor(loggingInterceptor)

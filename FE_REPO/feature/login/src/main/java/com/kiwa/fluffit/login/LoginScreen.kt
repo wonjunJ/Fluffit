@@ -30,8 +30,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.kiwa.fluffit.login.component.FluffitSnackBarHost
@@ -69,7 +67,7 @@ internal fun LoginScreen(
 
     BackHandler {
         val backPressedTime = System.currentTimeMillis()
-        Log.d(TAG, "LoginScreen: backPressedTime : ${backPressedTime}")
+        Log.d(TAG, "LoginScreen: backPressedTime : $backPressedTime")
         viewModel.onTriggerEvent(LoginViewEvent.OnClickBackButton(backPressedTime))
     }
 

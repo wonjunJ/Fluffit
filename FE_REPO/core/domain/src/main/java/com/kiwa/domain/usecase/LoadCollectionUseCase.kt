@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class LoadCollectionUseCase @Inject constructor(
     private val repository: CollectionRepository
-){
+) {
     suspend operator fun invoke() = repository.loadCollection()
 }

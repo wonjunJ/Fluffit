@@ -22,7 +22,7 @@ class AuthAuthenticator @Inject constructor(
         return runBlocking {
             val result = runCatching {
                 authService.refreshUserToken(
-                    refreshToken,
+                    refreshToken
 //                    "Bearer $accessToken"
                 )
             }
