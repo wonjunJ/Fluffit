@@ -26,7 +26,7 @@ class CollectionViewModel @Inject constructor(
         }
     }
 
-    private suspend fun collectionViewEvent(event: CollectionViewEvent) {
+    private fun collectionViewEvent(event: CollectionViewEvent) {
         when (event) {
             CollectionViewEvent.initLoadingCollections -> tryLoadCollections()
             CollectionViewEvent.afterLoadingCollections -> TODO()

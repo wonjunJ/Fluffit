@@ -108,7 +108,7 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideRankingApi(
-        @FlupetRetrofit
+        @FluffitRetrofit
         retrofit: Retrofit
     ): RankingService = retrofit.create(RankingService::class.java)
 

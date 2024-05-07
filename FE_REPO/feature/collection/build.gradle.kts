@@ -13,7 +13,7 @@ android {
 }
 dependencies {
     implementation(project(":feature:home"))
-    implementation(project(":core:model"))
+    implementation(project(":core:domain"))
     implementation(project(":core:base"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:model")) // jdk 11

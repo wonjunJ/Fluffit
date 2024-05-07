@@ -22,7 +22,6 @@ internal fun CollectionScreen(
     viewModel: CollectionViewModel = hiltViewModel<CollectionViewModel>()
 ) {
     val viewState = viewModel.uiState.collectAsState().value
-    val context = LocalContext.current
 
     if (viewState.isLoadingCollected) {
         viewModel.onTriggerEvent(CollectionViewEvent.initLoadingCollections)
