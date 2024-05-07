@@ -26,9 +26,9 @@ public class DefaultCatalog extends CatalogImpl {
     public static final DefaultCatalog DEFAULT_CATALOG = new DefaultCatalog();
 
     /**
-     * The schema <code>flupet_service</code>.
+     * The schema <code>fluffit_flupet</code>.
      */
-    public final FlupetService FLUPET_SERVICE = FlupetService.FLUPET_SERVICE;
+    public final FluffitFlupet FLUFFIT_FLUPET = FluffitFlupet.FLUFFIT_FLUPET;
 
     /**
      * No further instances allowed
@@ -40,7 +40,7 @@ public class DefaultCatalog extends CatalogImpl {
     @Override
     public final List<Schema> getSchemas() {
         return Arrays.asList(
-            FlupetService.FLUPET_SERVICE
+            FluffitFlupet.FLUFFIT_FLUPET
         );
     }
 

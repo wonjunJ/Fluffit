@@ -25,182 +25,182 @@ public class MemberFlupetRecord extends UpdatableRecordImpl<MemberFlupetRecord> 
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>flupet_service.member_flupet.id</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.id</code>.
      */
     public void setId(UInteger value) {
         set(0, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.id</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.id</code>.
      */
     public UInteger getId() {
         return (UInteger) get(0);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.flupet_id</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.flupet_id</code>.
      */
     public void setFlupetId(UInteger value) {
         set(1, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.flupet_id</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.flupet_id</code>.
      */
     public UInteger getFlupetId() {
         return (UInteger) get(1);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.member_id</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.member_id</code>.
      */
     public void setMemberId(String value) {
         set(2, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.member_id</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.member_id</code>.
      */
     public String getMemberId() {
         return (String) get(2);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.name</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.name</code>.
      */
     public void setName(String value) {
         set(3, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.name</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.name</code>.
      */
     public String getName() {
         return (String) get(3);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.exp</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.exp</code>.
      */
     public void setExp(Integer value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.exp</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.exp</code>.
      */
     public Integer getExp() {
         return (Integer) get(4);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.steps</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.steps</code>.
      */
     public void setSteps(UInteger value) {
         set(5, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.steps</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.steps</code>.
      */
     public UInteger getSteps() {
         return (UInteger) get(5);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.is_dead</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.is_dead</code>.
      */
     public void setIsDead(Byte value) {
         set(6, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.is_dead</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.is_dead</code>.
      */
     public Byte getIsDead() {
         return (Byte) get(6);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.create_time</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.create_time</code>.
      */
     public void setCreateTime(LocalDateTime value) {
         set(7, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.create_time</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.create_time</code>.
      */
     public LocalDateTime getCreateTime() {
         return (LocalDateTime) get(7);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.end_time</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.end_time</code>.
      */
     public void setEndTime(LocalDateTime value) {
         set(8, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.end_time</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.end_time</code>.
      */
     public LocalDateTime getEndTime() {
         return (LocalDateTime) get(8);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.fullness</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.fullness</code>.
      */
     public void setFullness(Integer value) {
         set(9, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.fullness</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.fullness</code>.
      */
     public Integer getFullness() {
         return (Integer) get(9);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.health</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.health</code>.
      */
     public void setHealth(Integer value) {
         set(10, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.health</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.health</code>.
      */
     public Integer getHealth() {
         return (Integer) get(10);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.pat_cnt</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.pat_cnt</code>.
      */
     public void setPatCnt(Integer value) {
         set(11, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.pat_cnt</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.pat_cnt</code>.
      */
     public Integer getPatCnt() {
         return (Integer) get(11);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.acha_time</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.acha_time</code>.
      */
     public void setAchaTime(LocalDateTime value) {
         set(12, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.acha_time</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.acha_time</code>.
      */
     public LocalDateTime getAchaTime() {
         return (LocalDateTime) get(12);
@@ -208,7 +208,7 @@ public class MemberFlupetRecord extends UpdatableRecordImpl<MemberFlupetRecord> 
 
     /**
      * Setter for
-     * <code>flupet_service.member_flupet.fullness_update_time</code>.
+     * <code>fluffit_flupet.member_flupet.fullness_update_time</code>.
      */
     public void setFullnessUpdateTime(LocalDateTime value) {
         set(13, value);
@@ -216,21 +216,21 @@ public class MemberFlupetRecord extends UpdatableRecordImpl<MemberFlupetRecord> 
 
     /**
      * Getter for
-     * <code>flupet_service.member_flupet.fullness_update_time</code>.
+     * <code>fluffit_flupet.member_flupet.fullness_update_time</code>.
      */
     public LocalDateTime getFullnessUpdateTime() {
         return (LocalDateTime) get(13);
     }
 
     /**
-     * Setter for <code>flupet_service.member_flupet.health_update_time</code>.
+     * Setter for <code>fluffit_flupet.member_flupet.health_update_time</code>.
      */
     public void setHealthUpdateTime(LocalDateTime value) {
         set(14, value);
     }
 
     /**
-     * Getter for <code>flupet_service.member_flupet.health_update_time</code>.
+     * Getter for <code>fluffit_flupet.member_flupet.health_update_time</code>.
      */
     public LocalDateTime getHealthUpdateTime() {
         return (LocalDateTime) get(14);

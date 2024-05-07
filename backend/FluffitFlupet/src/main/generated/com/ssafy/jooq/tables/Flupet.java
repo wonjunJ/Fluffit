@@ -4,7 +4,7 @@
 package com.ssafy.jooq.tables;
 
 
-import com.ssafy.jooq.FlupetService;
+import com.ssafy.jooq.FluffitFlupet;
 import com.ssafy.jooq.Keys;
 import com.ssafy.jooq.tables.records.FlupetRecord;
 
@@ -39,7 +39,7 @@ public class Flupet extends TableImpl<FlupetRecord> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>flupet_service.flupet</code>
+     * The reference instance of <code>fluffit_flupet.flupet</code>
      */
     public static final Flupet FLUPET = new Flupet();
 
@@ -52,22 +52,22 @@ public class Flupet extends TableImpl<FlupetRecord> {
     }
 
     /**
-     * The column <code>flupet_service.flupet.id</code>.
+     * The column <code>fluffit_flupet.flupet.id</code>.
      */
     public final TableField<FlupetRecord, UInteger> ID = createField(DSL.name("id"), SQLDataType.INTEGERUNSIGNED.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>flupet_service.flupet.name</code>.
+     * The column <code>fluffit_flupet.flupet.name</code>.
      */
     public final TableField<FlupetRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(10).nullable(false), this, "");
 
     /**
-     * The column <code>flupet_service.flupet.img_url</code>.
+     * The column <code>fluffit_flupet.flupet.img_url</code>.
      */
     public final TableField<FlupetRecord, String> IMG_URL = createField(DSL.name("img_url"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
-     * The column <code>flupet_service.flupet.stage</code>.
+     * The column <code>fluffit_flupet.flupet.stage</code>.
      */
     public final TableField<FlupetRecord, Integer> STAGE = createField(DSL.name("stage"), SQLDataType.INTEGER.nullable(false), this, "");
 
@@ -80,21 +80,21 @@ public class Flupet extends TableImpl<FlupetRecord> {
     }
 
     /**
-     * Create an aliased <code>flupet_service.flupet</code> table reference
+     * Create an aliased <code>fluffit_flupet.flupet</code> table reference
      */
     public Flupet(String alias) {
         this(DSL.name(alias), FLUPET);
     }
 
     /**
-     * Create an aliased <code>flupet_service.flupet</code> table reference
+     * Create an aliased <code>fluffit_flupet.flupet</code> table reference
      */
     public Flupet(Name alias) {
         this(alias, FLUPET);
     }
 
     /**
-     * Create a <code>flupet_service.flupet</code> table reference
+     * Create a <code>fluffit_flupet.flupet</code> table reference
      */
     public Flupet() {
         this(DSL.name("flupet"), null);
@@ -106,7 +106,7 @@ public class Flupet extends TableImpl<FlupetRecord> {
 
     @Override
     public Schema getSchema() {
-        return aliased() ? null : FlupetService.FLUPET_SERVICE;
+        return aliased() ? null : FluffitFlupet.FLUFFIT_FLUPET;
     }
 
     @Override

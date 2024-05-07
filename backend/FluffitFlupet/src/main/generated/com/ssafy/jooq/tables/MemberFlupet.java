@@ -4,7 +4,8 @@
 package com.ssafy.jooq.tables;
 
 
-import com.ssafy.jooq.FlupetService;
+import com.ssafy.jooq.FluffitFlupet;
+import com.ssafy.jooq.Indexes;
 import com.ssafy.jooq.Keys;
 import com.ssafy.jooq.tables.records.MemberFlupetRecord;
 
@@ -17,6 +18,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Function15;
 import org.jooq.Identity;
+import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
@@ -42,7 +44,7 @@ public class MemberFlupet extends TableImpl<MemberFlupetRecord> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>flupet_service.member_flupet</code>
+     * The reference instance of <code>fluffit_flupet.member_flupet</code>
      */
     public static final MemberFlupet MEMBER_FLUPET = new MemberFlupet();
 
@@ -55,78 +57,78 @@ public class MemberFlupet extends TableImpl<MemberFlupetRecord> {
     }
 
     /**
-     * The column <code>flupet_service.member_flupet.id</code>.
+     * The column <code>fluffit_flupet.member_flupet.id</code>.
      */
     public final TableField<MemberFlupetRecord, UInteger> ID = createField(DSL.name("id"), SQLDataType.INTEGERUNSIGNED.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.flupet_id</code>.
+     * The column <code>fluffit_flupet.member_flupet.flupet_id</code>.
      */
     public final TableField<MemberFlupetRecord, UInteger> FLUPET_ID = createField(DSL.name("flupet_id"), SQLDataType.INTEGERUNSIGNED.nullable(false), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.member_id</code>.
+     * The column <code>fluffit_flupet.member_flupet.member_id</code>.
      */
     public final TableField<MemberFlupetRecord, String> MEMBER_ID = createField(DSL.name("member_id"), SQLDataType.VARCHAR(64).nullable(false), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.name</code>.
+     * The column <code>fluffit_flupet.member_flupet.name</code>.
      */
     public final TableField<MemberFlupetRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(10).nullable(false), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.exp</code>.
+     * The column <code>fluffit_flupet.member_flupet.exp</code>.
      */
     public final TableField<MemberFlupetRecord, Integer> EXP = createField(DSL.name("exp"), SQLDataType.INTEGER.nullable(false).defaultValue(DSL.field("0", SQLDataType.INTEGER)), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.steps</code>.
+     * The column <code>fluffit_flupet.member_flupet.steps</code>.
      */
     public final TableField<MemberFlupetRecord, UInteger> STEPS = createField(DSL.name("steps"), SQLDataType.INTEGERUNSIGNED.nullable(false).defaultValue(DSL.field("0", SQLDataType.INTEGERUNSIGNED)), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.is_dead</code>.
+     * The column <code>fluffit_flupet.member_flupet.is_dead</code>.
      */
     public final TableField<MemberFlupetRecord, Byte> IS_DEAD = createField(DSL.name("is_dead"), SQLDataType.TINYINT.nullable(false).defaultValue(DSL.field("0", SQLDataType.TINYINT)), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.create_time</code>.
+     * The column <code>fluffit_flupet.member_flupet.create_time</code>.
      */
     public final TableField<MemberFlupetRecord, LocalDateTime> CREATE_TIME = createField(DSL.name("create_time"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.end_time</code>.
+     * The column <code>fluffit_flupet.member_flupet.end_time</code>.
      */
     public final TableField<MemberFlupetRecord, LocalDateTime> END_TIME = createField(DSL.name("end_time"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field("NULL", SQLDataType.LOCALDATETIME)), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.fullness</code>.
+     * The column <code>fluffit_flupet.member_flupet.fullness</code>.
      */
     public final TableField<MemberFlupetRecord, Integer> FULLNESS = createField(DSL.name("fullness"), SQLDataType.INTEGER.nullable(false).defaultValue(DSL.field("100", SQLDataType.INTEGER)), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.health</code>.
+     * The column <code>fluffit_flupet.member_flupet.health</code>.
      */
     public final TableField<MemberFlupetRecord, Integer> HEALTH = createField(DSL.name("health"), SQLDataType.INTEGER.nullable(false).defaultValue(DSL.field("100", SQLDataType.INTEGER)), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.pat_cnt</code>.
+     * The column <code>fluffit_flupet.member_flupet.pat_cnt</code>.
      */
     public final TableField<MemberFlupetRecord, Integer> PAT_CNT = createField(DSL.name("pat_cnt"), SQLDataType.INTEGER.nullable(false).defaultValue(DSL.field("5", SQLDataType.INTEGER)), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.acha_time</code>.
+     * The column <code>fluffit_flupet.member_flupet.acha_time</code>.
      */
     public final TableField<MemberFlupetRecord, LocalDateTime> ACHA_TIME = createField(DSL.name("acha_time"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field("NULL", SQLDataType.LOCALDATETIME)), this, "");
 
     /**
      * The column
-     * <code>flupet_service.member_flupet.fullness_update_time</code>.
+     * <code>fluffit_flupet.member_flupet.fullness_update_time</code>.
      */
     public final TableField<MemberFlupetRecord, LocalDateTime> FULLNESS_UPDATE_TIME = createField(DSL.name("fullness_update_time"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field("NULL", SQLDataType.LOCALDATETIME)), this, "");
 
     /**
-     * The column <code>flupet_service.member_flupet.health_update_time</code>.
+     * The column <code>fluffit_flupet.member_flupet.health_update_time</code>.
      */
     public final TableField<MemberFlupetRecord, LocalDateTime> HEALTH_UPDATE_TIME = createField(DSL.name("health_update_time"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field("NULL", SQLDataType.LOCALDATETIME)), this, "");
 
@@ -139,7 +141,7 @@ public class MemberFlupet extends TableImpl<MemberFlupetRecord> {
     }
 
     /**
-     * Create an aliased <code>flupet_service.member_flupet</code> table
+     * Create an aliased <code>fluffit_flupet.member_flupet</code> table
      * reference
      */
     public MemberFlupet(String alias) {
@@ -147,7 +149,7 @@ public class MemberFlupet extends TableImpl<MemberFlupetRecord> {
     }
 
     /**
-     * Create an aliased <code>flupet_service.member_flupet</code> table
+     * Create an aliased <code>fluffit_flupet.member_flupet</code> table
      * reference
      */
     public MemberFlupet(Name alias) {
@@ -155,7 +157,7 @@ public class MemberFlupet extends TableImpl<MemberFlupetRecord> {
     }
 
     /**
-     * Create a <code>flupet_service.member_flupet</code> table reference
+     * Create a <code>fluffit_flupet.member_flupet</code> table reference
      */
     public MemberFlupet() {
         this(DSL.name("member_flupet"), null);
@@ -167,7 +169,12 @@ public class MemberFlupet extends TableImpl<MemberFlupetRecord> {
 
     @Override
     public Schema getSchema() {
-        return aliased() ? null : FlupetService.FLUPET_SERVICE;
+        return aliased() ? null : FluffitFlupet.FLUFFIT_FLUPET;
+    }
+
+    @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.MEMBER_FLUPET_IDX_MEMBER_ID);
     }
 
     @Override
@@ -188,7 +195,7 @@ public class MemberFlupet extends TableImpl<MemberFlupetRecord> {
     private transient Flupet _flupet;
 
     /**
-     * Get the implicit join path to the <code>flupet_service.flupet</code>
+     * Get the implicit join path to the <code>fluffit_flupet.flupet</code>
      * table.
      */
     public Flupet flupet() {
