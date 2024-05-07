@@ -30,7 +30,7 @@ object NetworkModule {
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
-    annotation class FlupetClient
+    annotation class FluffitClient
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
@@ -42,8 +42,8 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    @FlupetClient
-    fun provideFlupetClient(
+    @FluffitClient
+    fun provideFluffitClient(
         authInterceptor: AuthInterceptor,
         authAuthenticator: AuthAuthenticator
     ): OkHttpClient {
