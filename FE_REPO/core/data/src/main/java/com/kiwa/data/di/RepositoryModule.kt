@@ -1,6 +1,8 @@
 package com.kiwa.data.di
 
+import com.kiwa.data.repository.RankingRepositoryImpl
 import com.kiwa.data.repository.UserRepositoryImpl
+import com.kiwa.domain.repository.RankingRepository
 import com.kiwa.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -14,4 +16,9 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindUserRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindRankingRepository(rankingRepositoryImpl: RankingRepositoryImpl):
+        RankingRepository
 }

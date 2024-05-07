@@ -8,4 +8,5 @@ dependencies {
     implementation(libs.javax.inject)
     implementation(libs.hilt.core)
     implementation(project(":core:model"))
+    implementation(project(":core:model"))
 }
