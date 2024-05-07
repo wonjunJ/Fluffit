@@ -13,13 +13,6 @@ java {
 
 repositories {
 	mavenCentral()  // Maven 중앙 저장소
-	maven { url "https://repo.spring.io/release" }  // Spring 릴리스 저장소
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1"
-	}
 }
 
 ext {
@@ -29,34 +22,47 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+	// jpa
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-
+	//cloud
+	implementation 'org.springframework.cloud:spring-cloud-starter'
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-	//spring cloud config로 부터 설정 정보를 (동적으로)받아오기 위해서 필요
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
-	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	//eureka
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	//spring cloud config로 부터 설정 정보를 (동적으로)받아오기 위해서 필요
+	// actuator
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	// bus
+	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+	// bootstrap
+	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+	// validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	// jpa
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	// jwt관련 의존성
+	// jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-	//mapper
+	// devtools
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// mapper
 	implementation 'org.modelmapper:modelmapper:2.3.8'
+	// Openfeign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
+	implementation 'org.mariadb.jdbc:mariadb-java-client'
 }
-
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
 tasks.named('test') {
 	useJUnitPlatform()
 }
