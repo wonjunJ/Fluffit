@@ -1,19 +1,46 @@
 package com.ssafy.fluffitflupet.controller
 
-import com.ssafy.fluffitflupet.dto.MainInfoResponse
+import com.ssafy.fluffitflupet.dto.*
 import com.ssafy.fluffitflupet.service.FlupetService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import org.springframework.web.bind.annotation.*
+import kotlin.coroutines.CoroutineContext
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/flupet")
 class FlupetController(
     private val flupetService: FlupetService
-) {
+): CoroutineScope {
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Default
+
     @GetMapping("/info")
-    suspend fun getMainInfo(@RequestHeader("userId") userId: String): MainInfoResponse {
+    suspend fun getMainInfo(@RequestHeader("userId") userId: String): MainInfoResponse? {
         return flupetService.getMainInfo(userId)
+    }
+
+    @PutMapping("/nickname")
+    suspend fun updateNickname(@RequestHeader("userId") userId: String, @RequestBody nickname: NickRequest): Map<String, String> {
+        val job = coroutineScope { launch { flupetService.updateNickname(userId, nickname.nickname) } }
+        job.join()
+        return mapOf("result" to "SUCCESS")
+    }
+
+    @GetMapping("/fullness")
+    suspend fun getFullness(@RequestHeader("userId") userId: String): FullResponse {
+        return flupetService.getFullness(userId)
+    }
+
+    @GetMapping("/health")
+    suspend fun getHealth(@RequestHeader("userId") userId: String): HealthResponse {
+        return flupetService.getHealth(userId)
+    }
+
+    @GetMapping("/collection")
+    suspend fun getPetCollection(@RequestHeader("userId") userId: String): CollectionResponse {
+        return flupetService.getPetCollection(userId)
     }
 }
