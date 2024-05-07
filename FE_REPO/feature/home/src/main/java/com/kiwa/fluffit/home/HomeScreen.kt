@@ -28,10 +28,10 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.size.OriginalSize
 import com.kiwa.fluffit.home.components.CoinDisplay
-import com.kiwa.fluffit.home.components.FlupetImageButton
 import com.kiwa.fluffit.home.components.FullnessDisplay
 import com.kiwa.fluffit.home.components.HealthDisplay
 import com.kiwa.fluffit.home.ui.FlupetNameUI
+import com.kiwa.fluffit.home.ui.components.FlupetImageButton
 
 @Composable
 internal fun HomeRoute(

@@ -15,5 +15,6 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":core:model"))
     implementation(project(":core:base"))
-    implementation(project(":core:designsystem")) // jdk 11
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:model")) // jdk 11
 }

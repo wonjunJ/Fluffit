@@ -37,12 +37,12 @@ fun MainNavigation(
             navController.navigateToHome()
         }
 
-        homeScreen { navController.navigateToRanking() }
+        homeScreen(
+            onNavigateToCollection = { navController.navigateToCollection() },
+            onNavigateToRankingDialog = { navController.navigateToRanking() }
+        )
 
         ranking { navController.popBackStack() }
-        homeScreen {
-            navController.navigateToCollection()
-        }
 
         collectionScreen()
     }

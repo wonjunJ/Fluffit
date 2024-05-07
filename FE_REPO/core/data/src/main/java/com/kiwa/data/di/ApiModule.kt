@@ -4,6 +4,7 @@ import com.kiwa.data.api.AuthService
 import com.kiwa.data.api.CollectionService
 import com.kiwa.data.api.NaverAuthService
 import com.kiwa.data.api.NaverLoginService
+import com.kiwa.data.api.RankingService
 import com.kiwa.fluffit.data.BuildConfig
 import dagger.Module
 import dagger.Provides
@@ -103,6 +104,13 @@ object ApiModule {
         @FlupetRetrofit
         retrofit: Retrofit
     ): CollectionService = retrofit.create(CollectionService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideRankingApi(
+        @FlupetRetrofit
+        retrofit: Retrofit
+    ): RankingService = retrofit.create(RankingService::class.java)
 
     @Singleton
     @Provides
