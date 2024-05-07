@@ -1,7 +1,6 @@
 package com.kiwa.fluffit.collection
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,10 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kiwa.fluffit.designsystem.theme.fluffitTypography
 import com.kiwa.fluffit.model.flupet.FlupetCollection
@@ -41,16 +38,16 @@ internal fun CollectionView(
         Column(
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
-                .fillMaxHeight(0.6f)
+                .fillMaxHeight(0.7f)
                 .fillMaxWidth(0.75f)
                 .align(Alignment.Center)
-                .background(Color.Red)
-                .padding(horizontal = 10.dp),
+                .padding(top = 30.dp)
         ) {
             for (i in 0..collectionList.size - 1 step (2)) {
                 Text(
+                    modifier = Modifier.weight(0.2f),
                     text = collectionList.get(i).species,
-                    style = fluffitTypography.bodyMedium,
+                    style = fluffitTypography.bodyMedium
                 )
                 Row(
                     modifier = Modifier
@@ -59,74 +56,18 @@ internal fun CollectionView(
                 ) {
                     CollectionFlupetCard(
                         modifier = Modifier.weight(1f),
-                        collectionList, i
+                        collectionList,
+                        i
                     )
                     Spacer(modifier = Modifier.width(20.dp))
                     CollectionFlupetCard(
                         modifier = Modifier.weight(1f),
-                        collectionList, i + 1
+                        collectionList,
+                        i + 1
                     )
                 }
+                Spacer(modifier = Modifier.height(20.dp))
             }
         }
     }
-}
-
-@Composable
-@Preview
-fun checkCollectionView() {
-    val list: MutableList<FlupetCollection> = mutableListOf()
-
-    list.add(
-        FlupetCollection(
-            species = "하얀 토끼",
-            imageUrl = "https://github.com/shjung53/algorithm_study/assets/90888718/4399f85d-7810-464c-ad76-caae980ce047",
-            tier = 1,
-            metBefore = true
-        )
-    )
-    list.add(
-        FlupetCollection(
-            species = "하얀 토끼",
-            imageUrl = "https://github.com/shjung53/algorithm_study/assets/90888718/4399f85d-7810-464c-ad76-caae980ce047",
-            tier = 2,
-            metBefore = false
-        )
-    )
-
-    list.add(
-        FlupetCollection(
-            species = "갈색 토끼",
-            imageUrl = "https://github.com/shjung53/algorithm_study/assets/90888718/4399f85d-7810-464c-ad76-caae980ce047",
-            tier = 1,
-            metBefore = true
-        )
-    )
-    list.add(
-        FlupetCollection(
-            species = "갈색 토끼",
-            imageUrl = "https://github.com/shjung53/algorithm_study/assets/90888718/4399f85d-7810-464c-ad76-caae980ce047",
-            tier = 2,
-            metBefore = true
-        )
-    )
-
-    list.add(
-        FlupetCollection(
-            species = "검정 토끼",
-            imageUrl = "https://github.com/shjung53/algorithm_study/assets/90888718/4399f85d-7810-464c-ad76-caae980ce047",
-            tier = 1,
-            metBefore = true
-        )
-    )
-    list.add(
-        FlupetCollection(
-            species = "검정 토끼",
-            imageUrl = "https://github.com/shjung53/algorithm_study/assets/90888718/4399f85d-7810-464c-ad76-caae980ce047",
-            tier = 2,
-            metBefore = false
-        )
-    )
-
-    CollectionView(collectionList = list)
 }
