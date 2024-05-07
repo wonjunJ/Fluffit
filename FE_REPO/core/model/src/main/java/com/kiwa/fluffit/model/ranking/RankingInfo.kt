@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.model
+package com.kiwa.fluffit.model.ranking
 
 data class RankingInfo(
     val rank: Int,

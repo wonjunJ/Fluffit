@@ -22,16 +22,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.work.WorkManager
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.size.OriginalSize
 import com.kiwa.fluffit.home.components.CoinDisplay
+import com.kiwa.fluffit.home.components.FlupetImageButton
 import com.kiwa.fluffit.home.components.FullnessDisplay
 import com.kiwa.fluffit.home.components.HealthDisplay
 import com.kiwa.fluffit.home.ui.FlupetNameUI
-import com.kiwa.fluffit.home.ui.components.FlupetImageButton
 
 @Composable
 internal fun HomeRoute(
@@ -40,6 +41,12 @@ internal fun HomeRoute(
     onNavigateToRankingDialog: () -> Unit
 ) {
     val uiState: HomeViewState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    val workManager = WorkManager.getInstance(LocalContext.current)
+
+    workManager.reserveNewRequest("fullness_update", uiState.nextFullnessUpdateTime)
+    workManager.reserveNewRequest("health_update", uiState.nextHealthUpdateTime)
+
     HomeScreen(
         uiState = uiState,
         onClickPencilButton = { viewModel.onTriggerEvent(HomeViewEvent.OnClickPencilButton) },

@@ -1,13 +1,17 @@
 package com.kiwa.fluffit.home
 
 import androidx.lifecycle.viewModelScope
+import com.kiwa.domain.usecase.GetMainUIInfoUseCase
 import com.kiwa.fluffit.base.BaseViewModel
+import com.kiwa.fluffit.model.main.MainUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : BaseViewModel<HomeViewState, HomeViewEvent>() {
+class HomeViewModel @Inject constructor(
+    private val getMainUIInfoUseCase: GetMainUIInfoUseCase
+) : BaseViewModel<HomeViewState, HomeViewEvent>() {
     override fun createInitialState(): HomeViewState =
         HomeViewState.Default()
 
@@ -17,6 +21,7 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeViewState, HomeVie
 
     init {
         viewModelScope.launch {
+            getMainUIInfo()
             uiEvent.collect { event ->
                 when (event) {
                     HomeViewEvent.OnClickCollectionButton -> TODO()
@@ -35,12 +40,20 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeViewState, HomeVie
         }
     }
 
-    private fun HomeViewState.dismissRankingDialog(): HomeViewState =
-        when (this) {
-            is HomeViewState.Default -> this
-            is HomeViewState.FlupetNameEdit -> this
-            is HomeViewState.Loading -> this
-        }
+    private suspend fun getMainUIInfo(){
+        getMainUIInfoUseCase().fold(
+            onSuccess = { setState { showMainUIInfo(it) } },
+            onFailure = {}
+        )
+    }
+
+    private fun showMainUIInfo(mainUIModel: MainUIModel): HomeViewState =
+        HomeViewState.Default(
+            coin = mainUIModel.coin,
+            flupet = mainUIModel.flupet,
+            nextFullnessUpdateTime = mainUIModel.nextFullnessUpdateTime,
+            nextHealthUpdateTime = mainUIModel.nextHealthUpdateTime
+        )
 
     private fun HomeViewState.onStartEditName(): HomeViewState =
         when (this) {
@@ -53,7 +66,6 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeViewState, HomeVie
             )
 
             is HomeViewState.FlupetNameEdit -> this
-            is HomeViewState.Loading -> this
         }
 
     private fun HomeViewState.onConfirmName(name: String): HomeViewState =
@@ -65,7 +77,5 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeViewState, HomeVie
                 nextFullnessUpdateTime = this.nextFullnessUpdateTime,
                 nextHealthUpdateTime = this.nextHealthUpdateTime
             )
-
-            is HomeViewState.Loading -> this
         }
 }

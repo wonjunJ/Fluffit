@@ -2,8 +2,8 @@ package com.kiwa.data.repository
 
 import com.kiwa.data.datasource.RankingDataSource
 import com.kiwa.domain.repository.RankingRepository
-import com.kiwa.fluffit.model.RankingInfo
-import com.kiwa.fluffit.model.RankingUIModel
+import com.kiwa.fluffit.model.ranking.RankingInfo
+import com.kiwa.fluffit.model.ranking.RankingUIModel
 import javax.inject.Inject
 
 class RankingRepositoryImpl @Inject constructor(

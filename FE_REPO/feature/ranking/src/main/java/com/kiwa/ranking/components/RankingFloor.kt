@@ -26,7 +26,7 @@ import coil.size.OriginalSize
 import com.kiwa.fluffit.designsystem.theme.bronze
 import com.kiwa.fluffit.designsystem.theme.gold
 import com.kiwa.fluffit.designsystem.theme.silver
-import com.kiwa.fluffit.model.RankingInfo
+import com.kiwa.fluffit.model.ranking.RankingInfo
 import com.kiwa.fluffit.ranking.R
 
 @Composable

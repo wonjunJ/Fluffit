@@ -1,6 +1,6 @@
 package com.kiwa.domain.repository
 
-import com.kiwa.fluffit.model.RankingUIModel
+import com.kiwa.fluffit.model.ranking.RankingUIModel
 
 interface RankingRepository {
 
