@@ -1,15 +1,2 @@
 server:
-  port: 8080
-spring:
-  config:
-    import: optional:configserver:http://fluffit.shop:8888/
-  cloud:
-    config:
-      #      name: ecommerce
-      name: user-service
-  application:
-    name: user-service
-security:
-  hmacKey: ZCj6NxuDt0jyq946B4M9TiIej
-jwt:
-  secret: $dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDawoeidnvdslkasdfasdfasd1asdf123DEnE
+  port: 0
