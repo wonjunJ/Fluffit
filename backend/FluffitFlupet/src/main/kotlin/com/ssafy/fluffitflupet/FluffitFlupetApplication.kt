@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 import reactor.util.Loggers
 
 @SpringBootApplication
-//@EnableDiscoveryClient
+@EnableDiscoveryClient
 @EnableFeignClients
 @EnableScheduling
 class FluffitFlupetApplication

@@ -39,7 +39,7 @@ CREATE TABLE `food_type` (
                              `fullness_effect`	int	NOT NULL,
                              `health_effect`	int	NOT NULL,
                              `price`	int	NOT NULL,
-                             `stock`	int	NOT NULL    DEFAULT 30, #남아있는 음식의 재고량
+                             `stock`	int	NOT NULL    DEFAULT 30,
                              `description`	varchar(255)	NOT NULL
 );
 
