@@ -29,7 +29,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitFlupet') {
-                    sh 'docker run -d -e DB_URL=${DB_URL} -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} --name flupet -e TZ=Asia/Seoul --network develop-net flupet'
+                    sh 'docker run -d -e DB_URL=${DB_URL} -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} --name flupet -e TZ=Asia/Seoul --network dev-net flupet'
                 }
             }
         }
