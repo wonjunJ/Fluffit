@@ -15,14 +15,17 @@ import java.util.UUID;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final MemberRepository memberRepository;
@@ -30,6 +33,8 @@ public class AuthService {
 
     @Value("${security.hmacKey}")
     private static String secretKey;
+
+    private final Environment env;
 
 
     @Transactional
@@ -67,8 +72,12 @@ public class AuthService {
     }
 
     public String encrypt(String data) throws NoSuchAlgorithmException, InvalidKeyException {
+
+
         // 시크릿 키로부터 SecretKeySpec 객체 생성
-        SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
+        String hmackey = env.getProperty("security.hmackey");
+        log.info("////////hmackey = "+hmackey);
+        SecretKeySpec secretKeySpec = new SecretKeySpec(hmackey.getBytes(), "HmacSHA256");
 
         // HMAC SHA-256 Mac 인스턴스 생성
         Mac mac = Mac.getInstance("HmacSHA256");
