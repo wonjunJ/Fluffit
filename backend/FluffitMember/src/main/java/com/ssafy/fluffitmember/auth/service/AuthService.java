@@ -73,7 +73,6 @@ public class AuthService {
 
     public String encrypt(String data) throws NoSuchAlgorithmException, InvalidKeyException {
 
-
         // 시크릿 키로부터 SecretKeySpec 객체 생성
         String hmackey = env.getProperty("security.hmackey");
         log.info("////////hmackey = "+hmackey);
@@ -86,7 +85,9 @@ public class AuthService {
         // 데이터를 암호화
         byte[] result = mac.doFinal(data.getBytes());
 
+        String encodeData = Base64.getEncoder().encodeToString(result);
+        log.info("encodeData = " + encodeData);
         // 바이너리 데이터를 Base64로 인코딩하여 문자열로 반환
-        return Base64.getEncoder().encodeToString(result);
+        return encodeData;
     }
 }
