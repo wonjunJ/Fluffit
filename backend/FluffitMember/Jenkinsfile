@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         JWT_SECRET = credentials('JWT_SECRET')
+        HMAC_KEY = credentials('HMAC_KEY')
     }
 
     stages {
@@ -27,7 +28,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitMember') {
-                    sh 'docker run -d -e JWT_SECRET=${JWT_SECRET} --name member -e TZ=Asia/Seoul --network dev-net member'
+                    sh 'docker run -d -e JWT_SECRET=${JWT_SECRET} -e HMAC_KEY=${HMAC_KEY} --name member -e TZ=Asia/Seoul --network dev-net member'
                 }
             }
         }
