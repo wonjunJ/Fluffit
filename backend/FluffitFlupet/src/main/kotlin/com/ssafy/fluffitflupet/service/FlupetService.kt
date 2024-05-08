@@ -1,6 +1,7 @@
 package com.ssafy.fluffitflupet.service
 
 import com.ssafy.fluffitflupet.client.MemberServiceClient
+import com.ssafy.fluffitflupet.client.MemberServiceClientAsync
 import com.ssafy.fluffitflupet.dto.CollectionResponse
 import com.ssafy.fluffitflupet.dto.FullResponse
 import com.ssafy.fluffitflupet.dto.HealthResponse
@@ -23,7 +24,7 @@ import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Private
 @Service
 class FlupetService(
     private val memberFlupetRepository: MemberFlupetRepository,
-    private val userServiceClient: MemberServiceClient
+    private val client: MemberServiceClientAsync
 ) {
     //lombok slf4j를 쓰기 위해
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
@@ -33,7 +34,7 @@ class FlupetService(
         println("여기왔나?")
         val mainInfoDto = async { memberFlupetRepository.findMainInfoByUserId(userId) }
         //ErrorDecoder로 오류 처리를 할지, 아니면 try~catch로 오류처리를 할지
-        val coinWait = async(Dispatchers.IO) { userServiceClient.getUserCoin(userId) }
+        val coinWait = async { client.getUserCoin(userId) }
         val dto = mainInfoDto.await()
         val coin = coinWait.await()
         if(dto == null){ //현재 플러펫이 없다(mainInfoDto 연산이 완료될때까지 '블로킹되지 않고' 기다리게 된다)

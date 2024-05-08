@@ -18,12 +18,12 @@ class FoodController(
         get() = Dispatchers.Default
 
     @GetMapping("/list")
-    suspend fun getFeedList(@RequestHeader("userId") userId: String): FoodListResponse {
+    suspend fun getFeedList(@RequestHeader("memberId") userId: String): FoodListResponse {
         return foodService.getFeedList(userId)
     }
 
     @PutMapping("/feeding/{foodId}")
-    suspend fun feedToPet(@RequestHeader("userId") userId: String, @PathVariable("foodId") foodId: Long): FeedingResponse? {
+    suspend fun feedToPet(@RequestHeader("memberId") userId: String, @PathVariable("foodId") foodId: Long): FeedingResponse? {
         return foodService.feedToPet(userId, foodId)
     }
 }

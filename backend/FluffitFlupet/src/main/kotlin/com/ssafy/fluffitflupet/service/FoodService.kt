@@ -1,6 +1,7 @@
 package com.ssafy.fluffitflupet.service
 
 import com.ssafy.fluffitflupet.client.MemberServiceClient
+import com.ssafy.fluffitflupet.client.MemberServiceClientAsync
 import com.ssafy.fluffitflupet.dto.FeedingResponse
 import com.ssafy.fluffitflupet.dto.FoodListResponse
 import com.ssafy.fluffitflupet.error.ErrorType
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service
 @Service
 class FoodService(
     private val foodRepository: FoodRepository,
-    private val userServiceClient: MemberServiceClient,
+    private val client: MemberServiceClientAsync,
     private val reactiveRedisTemplate: ReactiveRedisTemplate<String, String>
 ) {
     //lombok slf4j를 쓰기 위해
@@ -25,9 +26,9 @@ class FoodService(
 
     suspend fun getFeedList(userId: String): FoodListResponse = coroutineScope {
         val foods = ArrayList<FoodListResponse.Food>()
-        val foodlist = async(Dispatchers.IO) { foodRepository.findAll() }
-        val coinWait = async(Dispatchers.IO) { userServiceClient.getUserCoin(userId) }
-        foodlist.await().collect{ value ->
+        val foodlist = withContext(Dispatchers.IO){ foodRepository.findAll() }
+        val coinWait = async { client.getUserCoin(userId) }
+        foodlist.collect{ value ->
             foods.add(FoodListResponse.Food(
                 id = value.id,
                 name = value.name,
@@ -49,6 +50,7 @@ class FoodService(
         if (food == null){
             throw CustomBadRequestException(ErrorType.INVALID_FOODID)
         }
+
         return null
     }
 }

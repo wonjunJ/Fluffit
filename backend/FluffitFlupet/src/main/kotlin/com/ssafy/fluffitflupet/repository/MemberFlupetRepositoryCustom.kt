@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface MemberFlupetRepositoryCustom {
     suspend fun findMainInfoByUserId(userId: String): MainInfoDto?
-    suspend fun findFlupetsByUserId(userId: String): Flow<CollectionResponse.Flupet>
+    fun findFlupetsByUserId(userId: String): Flow<CollectionResponse.Flupet>
 }
