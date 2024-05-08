@@ -37,7 +37,8 @@ import com.kiwa.fluffit.home.ui.components.FlupetImageButton
 internal fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
     onNavigateToCollection: () -> Unit,
-    onNavigateToRankingDialog: () -> Unit
+    onNavigateToRankingDialog: () -> Unit,
+    onNavigateToMyPage: () -> Unit
 ) {
     val uiState: HomeViewState by viewModel.uiState.collectAsStateWithLifecycle()
     HomeScreen(
@@ -51,7 +52,8 @@ internal fun HomeRoute(
             )
         },
         onClickRankingButton = { onNavigateToRankingDialog() },
-        onClickCollectionButton = onNavigateToCollection
+        onClickCollectionButton = onNavigateToCollection,
+        onClickMyPage = onNavigateToMyPage
     )
 }
 
@@ -61,7 +63,8 @@ internal fun HomeScreen(
     onClickPencilButton: () -> Unit,
     onClickCollectionButton: () -> Unit,
     onClickConfirmButton: (String) -> Unit,
-    onClickRankingButton: () -> Unit
+    onClickRankingButton: () -> Unit,
+    onClickMyPage: () -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -80,7 +83,7 @@ internal fun HomeScreen(
             contentScale = ContentScale.FillHeight
         )
 
-        MainButtons(onClickCollectionButton, onClickRankingButton)
+        MainButtons(onClickCollectionButton, onClickRankingButton, onClickMyPage)
 
         Column(
             modifier = Modifier
@@ -115,7 +118,8 @@ internal fun HomeScreen(
 @Composable
 private fun MainButtons(
     onClickCollectionButton: () -> Unit,
-    onClickRankingButton: () -> Unit
+    onClickRankingButton: () -> Unit,
+    onClickMyPage: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -132,7 +136,10 @@ private fun MainButtons(
             modifier = Modifier.align(Alignment.BottomStart),
             onNavigateToCollection = onClickCollectionButton
         )
-        UserButton(modifier = Modifier.align(Alignment.BottomEnd))
+        UserButton(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            onNavigateToMyPage = onClickMyPage
+        )
     }
 }
 
@@ -142,8 +149,8 @@ private fun CollectionButton(modifier: Modifier, onNavigateToCollection: () -> U
 }
 
 @Composable
-private fun UserButton(modifier: Modifier) {
-    FlupetImageButton(id = R.drawable.user, modifier = modifier)
+private fun UserButton(modifier: Modifier, onNavigateToMyPage: () -> Unit) {
+    FlupetImageButton(id = R.drawable.user, modifier = modifier, onNavigateToMyPage)
 }
 
 @Composable

@@ -7,6 +7,6 @@ import retrofit2.http.Header
 interface CollectionService {
     @GET("api/flupet/collection")
     suspend fun loadCollection(
-        @Header("Authorization") accessToken: String
+//        @Header("Authorization") accessToken: String
     ): CollectionResponse
 }

@@ -13,9 +13,10 @@ class CollectionRepositoryImpl @Inject constructor(
 ) : CollectionRepository {
 
     override suspend fun loadCollection(): Result<List<FlupetCollection>> {
-        val accessToken = tokenManager.getAccessToken()
+//        val accessToken = tokenManager.getAccessToken()
         val result = runBlocking {
-            collectionDataSource.loadCollection(accessToken)
+//            collectionDataSource.loadCollection(accessToken)
+            collectionDataSource.loadCollection()
         }
 
         return result.fold(

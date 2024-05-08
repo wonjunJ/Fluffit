@@ -17,6 +17,8 @@ import com.kiwa.fluffit.home.homeScreen
 import com.kiwa.fluffit.home.navigateToHome
 import com.kiwa.fluffit.login.loginRoute
 import com.kiwa.fluffit.login.loginScreen
+import com.kiwa.fluffit.mypage.myPageScreen
+import com.kiwa.fluffit.mypage.navigateToMyPage
 import com.kiwa.ranking.navigateToRanking
 import com.kiwa.ranking.ranking
 
@@ -39,11 +41,16 @@ fun MainNavigation(
 
         homeScreen(
             onNavigateToCollection = { navController.navigateToCollection() },
-            onNavigateToRankingDialog = { navController.navigateToRanking() }
+            onNavigateToRankingDialog = { navController.navigateToRanking() },
+            onNavigateToMyPage = { navController.navigateToMyPage() }
         )
 
         ranking { navController.popBackStack() }
 
         collectionScreen()
+
+        myPageScreen(
+
+        )
     }
 }
