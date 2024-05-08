@@ -26,8 +26,11 @@ public class Battle {
     @Enumerated(EnumType.STRING)
     private BattleType battleType;
 
-//    @Builder
-//    public Battle(
-//            Long organizerId, Long participantId,
-//    )
+    @Builder
+    public Battle(Long organizerId, Long participantId, BattleType battleType) {
+        this.organizerId = organizerId;
+        this.participantId = participantId;
+        this.battleType = battleType;
+        this.battleDate = LocalDateTime.now(); // 배틀 생성 시 현재 시간으로 설정
+    }
 }

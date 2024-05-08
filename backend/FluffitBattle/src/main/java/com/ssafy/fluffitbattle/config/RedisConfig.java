@@ -21,14 +21,20 @@ public class RedisConfig {
     private String host;
 
     @Value("${spring.data.redis.port}")
-    private int port;
+    private String port;
 
     @Value("${spring.data.redis.password}")
     private String password;
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(host, port));
+        RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
+        redisStandaloneConfiguration.setHostName(host);
+        redisStandaloneConfiguration.setPort(Integer.parseInt(port));
+        redisStandaloneConfiguration.setPassword(password);
+        LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
+        return lettuceConnectionFactory;
+//        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(host, port));
     }
 
     @Bean

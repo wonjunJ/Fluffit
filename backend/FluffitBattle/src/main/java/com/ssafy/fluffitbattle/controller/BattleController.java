@@ -27,6 +27,9 @@ public class BattleController {
         return ResponseEntity.ok(notificationService.createEmitter(userId));
     }
 
+    // 게임 레디
+
+
     // 배틀 결과 처리
     @PostMapping("/finish")
     public ResponseEntity<Void> finishBattle(@RequestParam Long battleId, @RequestParam String result) {
