@@ -18,29 +18,29 @@ class FlupetController(
         get() = Dispatchers.Default
 
     @GetMapping("/info")
-    suspend fun getMainInfo(@RequestHeader("userId") userId: String): MainInfoResponse? {
+    suspend fun getMainInfo(@RequestHeader("memberId") userId: String): MainInfoResponse? {
         return flupetService.getMainInfo(userId)
     }
 
     @PutMapping("/nickname")
-    suspend fun updateNickname(@RequestHeader("userId") userId: String, @RequestBody nickname: NickRequest): Map<String, String> {
+    suspend fun updateNickname(@RequestHeader("memberId") userId: String, @RequestBody nickname: NickRequest): Map<String, String> {
         val job = coroutineScope { launch { flupetService.updateNickname(userId, nickname.nickname) } }
         job.join()
         return mapOf("result" to "SUCCESS")
     }
 
     @GetMapping("/fullness")
-    suspend fun getFullness(@RequestHeader("userId") userId: String): FullResponse {
+    suspend fun getFullness(@RequestHeader("memberId") userId: String): FullResponse {
         return flupetService.getFullness(userId)
     }
 
     @GetMapping("/health")
-    suspend fun getHealth(@RequestHeader("userId") userId: String): HealthResponse {
+    suspend fun getHealth(@RequestHeader("memberId") userId: String): HealthResponse {
         return flupetService.getHealth(userId)
     }
 
     @GetMapping("/collection")
-    suspend fun getPetCollection(@RequestHeader("userId") userId: String): CollectionResponse {
+    suspend fun getPetCollection(@RequestHeader("memberId") userId: String): CollectionResponse {
         return flupetService.getPetCollection(userId)
     }
 }
