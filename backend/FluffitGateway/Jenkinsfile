@@ -29,7 +29,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitGateway') {
-                    sh 'docker run -d -e JWT_SECRET=${JWT_SECRET} -p 8000:8000 --name gateway -e TZ=Asia/Seoul --network develop-net gateway'
+                    sh 'docker run -d -e JWT_SECRET=${JWT_SECRET} -p 8000:8000 --name gateway -e TZ=Asia/Seoul --network dev-net gateway'
                 }
             }
         }
