@@ -7,5 +7,5 @@ import org.springframework.web.bind.annotation.PathVariable
 @FeignClient(name = "member-service")
 interface MemberServiceClient {
     @GetMapping("/{userId}")
-    suspend fun getUserCoin(@PathVariable("userId") userId: String): Int
+    fun getUserCoin(@PathVariable("userId") userId: String): Int
 }

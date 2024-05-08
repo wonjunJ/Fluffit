@@ -47,7 +47,7 @@ class MemberFlupetRepositoryImpl(
         }
     }
 
-    override suspend fun findFlupetsByUserId(userId: String): Flow<CollectionResponse.Flupet> {
+    override fun findFlupetsByUserId(userId: String): Flow<CollectionResponse.Flupet> {
         return Flux.from(
             dslContext
                 .select(
