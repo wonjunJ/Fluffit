@@ -24,7 +24,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitEureka') {
-                    sh 'docker run -d -p 8761:8761 --name eureka -e TZ=Asia/Seoul --network develop-net eureka'
+                    sh 'docker run -d -p 8761:8761 --name eureka -e TZ=Asia/Seoul --network dev-net eureka'
                 }
             }
         }
