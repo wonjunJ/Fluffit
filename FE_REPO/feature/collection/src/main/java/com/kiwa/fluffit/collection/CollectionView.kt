@@ -32,7 +32,7 @@ internal fun CollectionView(
             modifier = Modifier.fillMaxSize(),
             painter = painterResource(id = R.drawable.collection_background),
             contentDescription = "도감 배경화면",
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds
         )
 
         Column(
@@ -45,15 +45,19 @@ internal fun CollectionView(
         ) {
             for (i in 0..collectionList.size - 1 step (2)) {
                 Text(
-                    modifier = Modifier.weight(0.2f),
+                    modifier = Modifier
+                        .weight(0.2f)
+                        .padding(start = 10.dp),
                     text = collectionList.get(i).species,
                     style = fluffitTypography.bodyMedium
                 )
+                Spacer(modifier = Modifier.height(10.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
+                    Spacer(modifier = Modifier.width(10.dp))
                     CollectionFlupetCard(
                         modifier = Modifier.weight(1f),
                         collectionList,
@@ -65,6 +69,7 @@ internal fun CollectionView(
                         collectionList,
                         i + 1
                     )
+                    Spacer(modifier = Modifier.width(10.dp))
                 }
                 Spacer(modifier = Modifier.height(20.dp))
             }
