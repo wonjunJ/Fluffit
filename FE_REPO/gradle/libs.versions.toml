@@ -38,7 +38,7 @@ coil = "2.6.0"
 
 kotlinxCoroutines = "1.7.1"
 kotlinxSerializationJson = "1.5.1"
-workRuntimeKtx = "2.9.0"
+workRuntimeKtx = "2.7.1"
 
 [libraries]
 #Dependencies of the included build-logic

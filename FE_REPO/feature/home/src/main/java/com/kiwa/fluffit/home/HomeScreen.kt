@@ -1,6 +1,7 @@
 package com.kiwa.fluffit.home
 
 import android.os.Build.VERSION.SDK_INT
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.size.OriginalSize
 import com.kiwa.fluffit.home.components.CoinDisplay
+import com.kiwa.fluffit.home.components.FlupetAndStatUI
 import com.kiwa.fluffit.home.components.FlupetImageButton
 import com.kiwa.fluffit.home.components.FullnessDisplay
 import com.kiwa.fluffit.home.components.HealthDisplay
@@ -41,11 +43,6 @@ internal fun HomeRoute(
     onNavigateToRankingDialog: () -> Unit
 ) {
     val uiState: HomeViewState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    val workManager = WorkManager.getInstance(LocalContext.current)
-
-    workManager.reserveNewRequest("fullness_update", uiState.nextFullnessUpdateTime)
-    workManager.reserveNewRequest("health_update", uiState.nextHealthUpdateTime)
 
     HomeScreen(
         uiState = uiState,
@@ -79,6 +76,7 @@ internal fun HomeScreen(
                 add(GifDecoder.Factory())
             }
         }.build()
+
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.main_background),
@@ -87,7 +85,7 @@ internal fun HomeScreen(
             contentScale = ContentScale.FillHeight
         )
 
-        MainButtons(onClickCollectionButton, onClickRankingButton)
+        MainButtons(uiState.coin, onClickCollectionButton, onClickRankingButton)
 
         Column(
             modifier = Modifier
@@ -98,8 +96,7 @@ internal fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(24.dp))
-            FullnessDisplay(stat = 100)
-            HealthDisplay(stat = 100)
+            FlupetAndStatUI(uiState = uiState)
             Image(
                 painter = rememberImagePainter(
                     imageLoader = imageLoader,
@@ -121,6 +118,7 @@ internal fun HomeScreen(
 
 @Composable
 private fun MainButtons(
+    coin: Int,
     onClickCollectionButton: () -> Unit,
     onClickRankingButton: () -> Unit
 ) {
@@ -131,7 +129,7 @@ private fun MainButtons(
             .padding(top = 120.dp)
     ) {
         Row(modifier = Modifier.align(Alignment.TopCenter), verticalAlignment = Alignment.Bottom) {
-            CoinDisplay(coin = 1000)
+            CoinDisplay(coin = coin)
             Spacer(modifier = Modifier.weight(1f))
             RankingButton(onClickRankingButton)
         }

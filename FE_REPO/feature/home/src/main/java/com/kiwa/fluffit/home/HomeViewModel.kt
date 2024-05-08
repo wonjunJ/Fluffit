@@ -1,8 +1,12 @@
 package com.kiwa.fluffit.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.kiwa.domain.usecase.GetMainUIInfoUseCase
+import com.kiwa.domain.usecase.UpdateFullnessUseCase
 import com.kiwa.fluffit.base.BaseViewModel
+import com.kiwa.fluffit.model.main.Flupet
+import com.kiwa.fluffit.model.main.FullnessUpdateInfo
 import com.kiwa.fluffit.model.main.MainUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -10,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getMainUIInfoUseCase: GetMainUIInfoUseCase
+    private val getMainUIInfoUseCase: GetMainUIInfoUseCase,
+    private val updateFullnessUseCase: UpdateFullnessUseCase
 ) : BaseViewModel<HomeViewState, HomeViewEvent>() {
     override fun createInitialState(): HomeViewState =
         HomeViewState.Default()
@@ -22,6 +27,11 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getMainUIInfo()
+            Log.d("확인", "유즈케이스: $updateFullnessUseCase")
+            updateFullnessUseCase().collect {
+                Log.d("확인 컬렉트", it.toString())
+                setState { updateFullness(it) }
+            }
             uiEvent.collect { event ->
                 when (event) {
                     HomeViewEvent.OnClickCollectionButton -> TODO()
@@ -40,11 +50,48 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getMainUIInfo(){
-        getMainUIInfoUseCase().fold(
-            onSuccess = { setState { showMainUIInfo(it) } },
-            onFailure = {}
-        )
+    private fun HomeViewState.updateFullness(fullnessUpdateInfo: FullnessUpdateInfo): HomeViewState =
+        when (this) {
+            is HomeViewState.Default -> this.copy(
+                nextFullnessUpdateTime = fullnessUpdateInfo.nextUpdateTime,
+                flupet = this.flupet.copy(
+                    fullness = fullnessUpdateInfo.fullness,
+                    evolutionAvailable = fullnessUpdateInfo.isEvolutionAvailable
+                )
+            )
+
+            is HomeViewState.FlupetNameEdit -> this.copy(
+                nextFullnessUpdateTime = fullnessUpdateInfo.nextUpdateTime,
+                flupet = this.flupet.copy(
+                    fullness = fullnessUpdateInfo.fullness,
+                    evolutionAvailable = fullnessUpdateInfo.isEvolutionAvailable
+                )
+            )
+        }
+
+
+    private suspend fun getMainUIInfo() {
+        setState {
+            showMainUIInfo(
+                MainUIModel(
+                    1000,
+                    Flupet(
+                        100,
+                        100,
+                        "",
+                        "도끼",
+                        "2012.35.34",
+                        "125시간", false
+                    ),
+                    nextFullnessUpdateTime = 0,
+                    nextHealthUpdateTime = 0,
+                )
+            )
+        }
+//        getMainUIInfoUseCase().fold(
+//            onSuccess = { setState { showMainUIInfo(it) } },
+//            onFailure = {}
+//        )
     }
 
     private fun showMainUIInfo(mainUIModel: MainUIModel): HomeViewState =
