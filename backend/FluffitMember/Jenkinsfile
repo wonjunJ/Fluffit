@@ -27,7 +27,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitMember') {
-                    sh 'docker run -d -e JWT_SECRET=${JWT_SECRET} --name member -e TZ=Asia/Seoul --network develop-net member'
+                    sh 'docker run -d -e JWT_SECRET=${JWT_SECRET} --name member -e TZ=Asia/Seoul --network dev-net member'
                 }
             }
         }
