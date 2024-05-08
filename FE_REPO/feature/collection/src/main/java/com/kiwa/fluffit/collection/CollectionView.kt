@@ -35,42 +35,51 @@ internal fun CollectionView(
             modifier = Modifier.fillMaxSize(),
             painter = painterResource(id = R.drawable.collection_background),
             contentDescription = "도감 배경화면",
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds
         )
 
         Column(
             horizontalAlignment = Alignment.Start,
             modifier = Modifier
-                .fillMaxHeight(0.6f)
+                .fillMaxHeight(0.7f)
                 .fillMaxWidth(0.75f)
                 .align(Alignment.Center)
-                .background(Color.Red)
-                .padding(horizontal = 10.dp),
+                .padding(top = 30.dp)
         ) {
             for (i in 0..collectionList.size - 1 step (2)) {
                 Text(
+                    modifier = Modifier
+                        .weight(0.2f)
+                        .padding(start = 10.dp),
                     text = collectionList.get(i).species,
-                    style = fluffitTypography.bodyMedium,
+                    style = fluffitTypography.bodyMedium
                 )
+                Spacer(modifier = Modifier.height(10.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                 ) {
+                    Spacer(modifier = Modifier.width(10.dp))
                     CollectionFlupetCard(
                         modifier = Modifier.weight(1f),
-                        collectionList, i
+                        collectionList,
+                        i
                     )
                     Spacer(modifier = Modifier.width(20.dp))
                     CollectionFlupetCard(
                         modifier = Modifier.weight(1f),
-                        collectionList, i + 1
+                        collectionList,
+                        i + 1
                     )
+                    Spacer(modifier = Modifier.width(10.dp))
                 }
+                Spacer(modifier = Modifier.height(20.dp))
             }
         }
     }
 }
+
 
 @Composable
 @Preview

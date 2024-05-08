@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.kiwa.fluffit.model.flupet.FlupetCollection
 
 @Composable
 internal fun CollectionScreen(
@@ -24,19 +25,74 @@ internal fun CollectionScreen(
     val viewState = viewModel.uiState.collectAsState().value
     val context = LocalContext.current
 
-    if (viewState.isLoadingCollected) {
-        viewModel.onTriggerEvent(CollectionViewEvent.initLoadingCollections)
-    }
+//    if (viewState.isLoadingCollected) {
+//        viewModel.onTriggerEvent(CollectionViewEvent.initLoadingCollections)
+//    }
 
     val snackBarHostState = remember { SnackbarHostState() }
 
     ObserveToastMessage(viewState = viewState, snackBarHostState, viewModel = viewModel)
 
+    //테스트용 더미 데이터 코드
+    val list: MutableList<FlupetCollection> = mutableListOf()
+
+    list.add(
+        FlupetCollection(
+            species = "하얀 토끼",
+            imageUrl = "https://www.gstatic.com/webp/gallery3/1.sm.png",
+            tier = 1,
+            metBefore = true
+        )
+    )
+    list.add(
+        FlupetCollection(
+            species = "하얀 토끼",
+            imageUrl = "https://www.gstatic.com/webp/gallery3/1.sm.png",
+            tier = 2,
+            metBefore = false
+        )
+    )
+
+    list.add(
+        FlupetCollection(
+            species = "갈색 토끼",
+            imageUrl = "https://www.gstatic.com/webp/gallery3/1.sm.png",
+            tier = 1,
+            metBefore = true
+        )
+    )
+    list.add(
+        FlupetCollection(
+            species = "갈색 토끼",
+            imageUrl = "https://www.gstatic.com/webp/gallery3/1.sm.png",
+            tier = 2,
+            metBefore = true
+        )
+    )
+
+    list.add(
+        FlupetCollection(
+            species = "검정 토끼",
+            imageUrl = "https://www.gstatic.com/webp/gallery3/1.sm.png",
+            tier = 1,
+            metBefore = true
+        )
+    )
+    list.add(
+        FlupetCollection(
+            species = "검정 토끼",
+            imageUrl = "https://www.gstatic.com/webp/gallery3/1.sm.png",
+            tier = 2,
+            metBefore = false
+        )
+    )
+
     Box(
         modifier = Modifier.fillMaxSize().background(Color.White)
     ) {
         when (viewState) {
-            is CollectionViewState.Init -> CollectionLoadingView()
+//            is CollectionViewState.Init -> CollectionLoadingView()
+            is CollectionViewState.Init -> CollectionView(list)
             is CollectionViewState.Default -> CollectionView(viewState.collectionList)
         }
 
