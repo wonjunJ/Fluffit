@@ -1,6 +1,2 @@
 server:
   port: 0
-jwt:
-  secret: ${JWT_SECRET}
-security:
-  hmackey: ${HMAC_KEY}
