@@ -3,7 +3,7 @@ package com.kiwa.fluffit.home
 import com.kiwa.fluffit.base.ViewState
 import com.kiwa.fluffit.model.main.Flupet
 
-sealed class  HomeViewState : ViewState {
+sealed class HomeViewState : ViewState {
     abstract val coin: Int
     abstract val flupet: Flupet
     abstract val nextFullnessUpdateTime: Long

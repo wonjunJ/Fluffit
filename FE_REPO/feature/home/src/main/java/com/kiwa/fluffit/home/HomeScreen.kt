@@ -23,7 +23,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.work.WorkManager
 import coil.ImageLoader
 import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
@@ -32,8 +31,6 @@ import coil.size.OriginalSize
 import com.kiwa.fluffit.home.components.CoinDisplay
 import com.kiwa.fluffit.home.components.FlupetAndStatUI
 import com.kiwa.fluffit.home.components.FlupetImageButton
-import com.kiwa.fluffit.home.components.FullnessDisplay
-import com.kiwa.fluffit.home.components.HealthDisplay
 import com.kiwa.fluffit.home.ui.FlupetNameUI
 
 @Composable
@@ -54,8 +51,10 @@ internal fun HomeRoute(
                 )
             )
         },
-        onClickRankingButton = { onNavigateToRankingDialog() },
-        onClickCollectionButton = onNavigateToCollection
+        onClickRankingButton = onNavigateToRankingDialog,
+        onClickCollectionButton = onNavigateToCollection,
+        onUpdateFullness = { viewModel.onTriggerEvent(HomeViewEvent.OnUpdateFullness()) },
+        onUpdateHealth = { viewModel.onTriggerEvent(HomeViewEvent.OnUpdateHealth()) }
     )
 }
 
@@ -65,7 +64,9 @@ internal fun HomeScreen(
     onClickPencilButton: () -> Unit,
     onClickCollectionButton: () -> Unit,
     onClickConfirmButton: (String) -> Unit,
-    onClickRankingButton: () -> Unit
+    onClickRankingButton: () -> Unit,
+    onUpdateFullness: () -> Unit,
+    onUpdateHealth: () -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -76,6 +77,8 @@ internal fun HomeScreen(
                 add(GifDecoder.Factory())
             }
         }.build()
+
+    Log.d("확인", "컴포징")
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -96,7 +99,11 @@ internal fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(24.dp))
-            FlupetAndStatUI(uiState = uiState)
+            FlupetAndStatUI(
+                uiState = uiState,
+                onUpdateFullness = onUpdateFullness,
+                onUpdateHealth = onUpdateHealth
+            )
             Image(
                 painter = rememberImagePainter(
                     imageLoader = imageLoader,

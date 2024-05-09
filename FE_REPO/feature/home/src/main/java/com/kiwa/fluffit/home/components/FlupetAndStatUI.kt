@@ -2,23 +2,20 @@ package com.kiwa.fluffit.home.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
-import androidx.work.WorkManager
 import com.kiwa.fluffit.home.HomeViewState
-import com.kiwa.fluffit.home.enqueueNewRequest
 
 @Composable
-internal fun FlupetAndStatUI(uiState: HomeViewState) {
-    val context = LocalContext.current
-
-    val workManager = WorkManager.getInstance(context)
-
+internal fun FlupetAndStatUI(
+    uiState: HomeViewState,
+    onUpdateFullness: () -> Unit,
+    onUpdateHealth: () -> Unit
+) {
     LaunchedEffect(uiState.nextFullnessUpdateTime) {
-        workManager.enqueueNewRequest("fullness", uiState.nextFullnessUpdateTime)
+        onUpdateFullness()
     }
 
     LaunchedEffect(uiState.nextHealthUpdateTime) {
-        workManager.enqueueNewRequest("health", uiState.nextHealthUpdateTime)
+        onUpdateHealth()
     }
 
     FullnessDisplay(stat = uiState.flupet.fullness)
