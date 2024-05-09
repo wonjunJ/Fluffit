@@ -2,29 +2,29 @@ package com.ssafy.fluffitflupet.service
 
 import com.ssafy.fluffitflupet.client.MemberServiceClient
 import com.ssafy.fluffitflupet.client.MemberServiceClientAsync
-import com.ssafy.fluffitflupet.dto.CollectionResponse
-import com.ssafy.fluffitflupet.dto.FullResponse
-import com.ssafy.fluffitflupet.dto.HealthResponse
-import com.ssafy.fluffitflupet.dto.MainInfoResponse
+import com.ssafy.fluffitflupet.dto.*
 import com.ssafy.fluffitflupet.entity.MemberFlupet
 import com.ssafy.fluffitflupet.error.ErrorType
 import com.ssafy.fluffitflupet.exception.CustomBadRequestException
+import com.ssafy.fluffitflupet.repository.FlupetRepository
 import com.ssafy.fluffitflupet.repository.MemberFlupetRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
-import kotlin.reflect.jvm.internal.impl.descriptors.Visibilities.Private
 
 @Service
 class FlupetService(
     private val memberFlupetRepository: MemberFlupetRepository,
-    private val client: MemberServiceClientAsync
+    private val client: MemberServiceClientAsync,
+    private val flupetRepository: FlupetRepository
 ) {
     //lombok slf4j를 쓰기 위해
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
@@ -67,7 +67,7 @@ class FlupetService(
         }else if(!rgx.matches(nickname)){
             throw CustomBadRequestException(ErrorType.WRONG_CONDITION)
         }else {
-            val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberId(userId) }
+            val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberId(userId).awaitSingleOrNull() }
             if(mflupet == null){
                 throw CustomBadRequestException(ErrorType.INVALID_USERID)
             }
@@ -77,7 +77,7 @@ class FlupetService(
     }
 
     suspend fun getFullness(userId: String): FullResponse {
-        val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberId(userId) }
+        val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberId(userId).awaitSingleOrNull() }
         if(mflupet == null){
             throw CustomBadRequestException(ErrorType.INVALID_USERID)
         }
@@ -89,7 +89,7 @@ class FlupetService(
     }
 
     suspend fun getHealth(userId: String): HealthResponse {
-        val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberId(userId) }
+        val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberId(userId).awaitSingleOrNull() }
         if(mflupet == null){
             throw CustomBadRequestException(ErrorType.INVALID_USERID)
         }
@@ -103,5 +103,36 @@ class FlupetService(
     suspend fun getPetCollection(userId: String): CollectionResponse {
         val flupets = withContext(Dispatchers.IO){ memberFlupetRepository.findFlupetsByUserId(userId).toList() }
         return CollectionResponse(flupets)
+    }
+
+    suspend fun generateFlupet(userId: String): GenFlupetResponse = coroutineScope {
+        launch(Dispatchers.IO) {
+            memberFlupetRepository.save(
+                MemberFlupet(
+                    flupetId = 0,
+                    memberId = userId,
+                    name = "새로운 알"
+                )
+            ).awaitSingle()
+        }
+        val fInfo = async(Dispatchers.IO) { flupetRepository.findById(0) }
+        return@coroutineScope GenFlupetResponse(
+            flupetName = "새로운 알",
+            imageUrl = fInfo.await()?.imgUrl,
+            fullness = 100,
+            health = 100
+        )
+    }
+
+    suspend fun evolveFlupet(userId: String): EvolveResponse = coroutineScope {
+        val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberId(userId).awaitSingleOrNull() }
+        if(mflupet == null){
+            throw CustomBadRequestException(ErrorType.INVALID_USERID)
+        }
+        mflupet.isDead = true
+        launch(Dispatchers.IO) {
+            memberFlupetRepository.save(mflupet)
+        }
+        val flupets = withContext(Dispatchers.IO){ flupetRepository.findByStage() }
     }
 }
