@@ -1,7 +1,7 @@
 package com.kiwa.fluffit.home
 
 import com.kiwa.fluffit.base.ViewState
-import com.kiwa.fluffit.model.Flupet
+import com.kiwa.fluffit.model.main.Flupet
 
 sealed class HomeViewState : ViewState {
     abstract val coin: Int
@@ -16,14 +16,6 @@ sealed class HomeViewState : ViewState {
         override val nextFullnessUpdateTime: Long = 0L,
         override val nextHealthUpdateTime: Long = 0L,
         override val message: String = ""
-    ) : HomeViewState()
-
-    data class Loading(
-        override val coin: Int,
-        override val flupet: Flupet,
-        override val nextFullnessUpdateTime: Long,
-        override val nextHealthUpdateTime: Long,
-        override val message: String
     ) : HomeViewState()
 
     data class FlupetNameEdit(

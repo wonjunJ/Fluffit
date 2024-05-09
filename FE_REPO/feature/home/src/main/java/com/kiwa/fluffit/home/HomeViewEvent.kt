@@ -7,9 +7,9 @@ sealed class HomeViewEvent : ViewEvent {
 
     data class OnClickConfirmEditButton(val name: String) : HomeViewEvent()
 
-    data object OnUpdateFullness : HomeViewEvent()
+    data class OnUpdateFullness(val stat: String = "fullness") : HomeViewEvent()
 
-    data object OnUpdateHealth : HomeViewEvent()
+    data class OnUpdateHealth(val stat: String = "health") : HomeViewEvent()
 
     data object OnClickCollectionButton : HomeViewEvent()
 

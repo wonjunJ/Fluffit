@@ -1,7 +1,7 @@
 package com.kiwa.ranking
 
 import com.kiwa.fluffit.base.ViewState
-import com.kiwa.fluffit.model.RankingInfo
+import com.kiwa.fluffit.model.ranking.RankingInfo
 
 sealed class RankingViewState : ViewState {
 

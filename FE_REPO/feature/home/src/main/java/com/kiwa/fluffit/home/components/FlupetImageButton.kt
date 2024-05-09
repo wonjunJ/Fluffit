@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.home.ui.components
+package com.kiwa.fluffit.home.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
