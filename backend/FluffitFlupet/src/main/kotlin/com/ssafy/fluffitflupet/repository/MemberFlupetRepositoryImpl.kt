@@ -9,6 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import kotlinx.coroutines.withContext
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
@@ -133,11 +135,20 @@ class MemberFlupetRepositoryImpl(
     }
 
     override suspend fun findByMemberIdAndFlupet(userId: String): MyFlupetStateDto? {
-        dslContext
-            .select(
-                MEMBER_FLUPET.ID.`as`("id"),
-                FLUPET.STAGE.`as`("stage")
-            )
+        return Mono.fromCallable{
+            dslContext
+                .select(
+                    MEMBER_FLUPET.ID.`as`("id"),
+                    FLUPET.STAGE.`as`("stage")
+                )
+                .from(MEMBER_FLUPET)
+                .join(FLUPET)
+                .on(MEMBER_FLUPET.FLUPET_ID.eq(FLUPET.ID))
+                .where(MEMBER_FLUPET.MEMBER_ID.eq(userId)
+                    .and(MEMBER_FLUPET.IS_DEAD.isTrue))
+                .limit(1)
+                .fetchOneInto(MyFlupetStateDto::class.java)
+        }.awaitFirstOrNull()
     }
 
 }
