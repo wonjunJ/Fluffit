@@ -19,7 +19,9 @@ public enum ErrorStateCode {
     NO_SUCH_ALGORITHM("4001","요청된 암호화 알고리즘이 시스템에서 지원되지 않거나 존재하지 않습니다."),
     INVALID_HASH_KEY("4002","제공된 키가 암호화 알고리즘에 부적합하거나 규격에 맞지 않습니다"),
     ENCRYPTION_MISMATCH("4003","암호화된 데이터가 서로 다릅니다"),
-
+    NOT_FOUND_MEMBER("400","조회된 사용자가 없습니다"),
+    NOT_VALID_NICKNAME("401","유효한 닉네임이 아닙니다"),
+    DUPLICATE_NICKNAME("402","중복된 닉네임입니다"),
     ;
     private final String code;
     private final String message;
