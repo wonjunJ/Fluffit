@@ -116,7 +116,7 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideMainApi(
-        @FlupetRetrofit
+        @FluffitRetrofit
         retrofit: Retrofit
     ): MainService = retrofit.create(MainService::class.java)
 

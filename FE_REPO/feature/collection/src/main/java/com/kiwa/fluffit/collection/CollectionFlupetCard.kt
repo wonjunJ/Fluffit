@@ -27,7 +27,7 @@ internal fun CollectionFlupetCard(
     collectionList: List<FlupetCollection>,
     index: Int
 ) {
-    val bitmap: MutableState<Bitmap??> = mutableStateOf(null)
+    val bitmap: MutableState<Bitmap?> = mutableStateOf(null)
 
     Glide.with(LocalContext.current)
         .asBitmap()
