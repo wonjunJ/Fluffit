@@ -44,10 +44,13 @@ public class AuthService {
 
         //암호화된 id를 이용해 memberTable에서 데이터를 찾음
         Optional<Member> findMember = memberRepository.findBySocialId(encryptedData);
-        String  memberId = UUID.randomUUID().toString();
+        String  memberId = null;
         //만약 데이터가 없다면 새로 회원가입 진행
         if(findMember.isEmpty()) {
+            memberId = UUID.randomUUID().toString();
             register(loginReqDto,memberId);
+        }else{
+            memberId = findMember.get().getMemberId();
         }
 
         //token 생성 redis 저장
