@@ -1,7 +1,7 @@
 spring:
   cloud:
     config:
-#      uri: https://config.fluffit.shop #http://127.0.0.1:8888
+#      uri: https://config.fluffit.shop #local용
       uri : http://config:8888
       name: member-service
   #Profiles을 사용한 Configuration 적용
