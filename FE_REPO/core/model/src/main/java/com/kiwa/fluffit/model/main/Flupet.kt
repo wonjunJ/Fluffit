@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.model
+package com.kiwa.fluffit.model.main
 
 data class Flupet(
     val fullness: Int,

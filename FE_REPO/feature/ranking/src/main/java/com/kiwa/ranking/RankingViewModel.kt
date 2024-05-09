@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.kiwa.domain.usecase.GetAgeRankingUseCase
 import com.kiwa.domain.usecase.GetBattleRankingUseCase
 import com.kiwa.fluffit.base.BaseViewModel
-import com.kiwa.fluffit.model.RankingUIModel
+import com.kiwa.fluffit.model.ranking.RankingUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

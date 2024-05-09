@@ -2,6 +2,7 @@ package com.kiwa.data.di
 
 import com.kiwa.data.api.AuthService
 import com.kiwa.data.api.CollectionService
+import com.kiwa.data.api.MainService
 import com.kiwa.data.api.NaverAuthService
 import com.kiwa.data.api.NaverLoginService
 import com.kiwa.data.api.RankingService
@@ -25,7 +26,7 @@ object ApiModule {
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
-    annotation class FlupetRetrofit
+    annotation class FluffitRetrofit
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
@@ -41,9 +42,9 @@ object ApiModule {
 
     @Singleton
     @Provides
-    @FlupetRetrofit
-    fun provideCollectionRetrofit(
-        @NetworkModule.FlupetClient
+    @FluffitRetrofit
+    fun provideFluffitRetrofit(
+        @NetworkModule.FluffitClient
         okHttpClient: OkHttpClient,
         gsonConverterFactory: GsonConverterFactory
     ): Retrofit = Retrofit.Builder()
@@ -101,16 +102,23 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideCollectionApi(
-        @FlupetRetrofit
+        @FluffitRetrofit
         retrofit: Retrofit
     ): CollectionService = retrofit.create(CollectionService::class.java)
 
     @Singleton
     @Provides
     fun provideRankingApi(
-        @FlupetRetrofit
+        @FluffitRetrofit
         retrofit: Retrofit
     ): RankingService = retrofit.create(RankingService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideMainApi(
+        @FluffitRetrofit
+        retrofit: Retrofit
+    ): MainService = retrofit.create(MainService::class.java)
 
     @Singleton
     @Provides

@@ -56,6 +56,8 @@ internal class FeatureConventionPlugin : Plugin<Project> {
                 "ksp"(libs.findLibrary("glide.compiler").get())
                 "implementation"(libs.findLibrary("coil").get())
                 "implementation"(libs.findLibrary("coil.gif").get())
+                "implementation"(libs.findLibrary("androidx.work.runtime.ktx").get())
+                "implementation"(libs.findLibrary("kotlinx.coroutines.android").get())
 
                 "implementation"(libs.findBundle("androidx.lifecycle").get())
             }

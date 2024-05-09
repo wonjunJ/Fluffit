@@ -5,7 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,7 +49,7 @@ fun DisplayModeUI(name: String, onClickPencilButton: () -> Unit) {
     Text(
         text = name,
         style = MaterialTheme.typography.bodyMedium,
-        modifier = Modifier.width(128.dp),
+        modifier = Modifier.wrapContentWidth(),
         maxLines = 1
     )
     Image(
@@ -69,8 +69,7 @@ fun EditModeUI(name: String, onClickConfirmButton: (String) -> Unit) {
         textState = textState,
         isSingleLine = true,
         maxLength = 6,
-        modifier = Modifier.width(128.dp)
-
+        modifier = Modifier.wrapContentWidth()
     )
 
     Image(
