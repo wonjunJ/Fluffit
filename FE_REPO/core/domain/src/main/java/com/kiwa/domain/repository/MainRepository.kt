@@ -7,6 +7,6 @@ import com.kiwa.fluffit.model.main.MainUIModel
 interface MainRepository {
     suspend fun getMainUIInfo(): Result<MainUIModel>
 
-    fun updateFullness(): Result<FullnessUpdateInfo>
-    fun updateHealth(): Result<HealthUpdateInfo>
+    suspend fun updateFullness(): Result<FullnessUpdateInfo>
+    suspend fun updateHealth(): Result<HealthUpdateInfo>
 }

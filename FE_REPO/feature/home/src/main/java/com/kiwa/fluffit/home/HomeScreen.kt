@@ -1,7 +1,6 @@
 package com.kiwa.fluffit.home
 
 import android.os.Build.VERSION.SDK_INT
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -78,8 +77,6 @@ internal fun HomeScreen(
             }
         }.build()
 
-    Log.d("확인", "컴포징")
-
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.main_background),
@@ -107,8 +104,7 @@ internal fun HomeScreen(
             Image(
                 painter = rememberImagePainter(
                     imageLoader = imageLoader,
-                    data = "https://github.com/shjung53/algorithm_study/assets/" +
-                        "90888718/4399f85d-7810-464c-ad76-caae980ce047",
+                    data = uiState.flupet.imageUrl,
                     builder = {
                         size(OriginalSize)
                     }

@@ -1,6 +1,5 @@
 package com.kiwa.data.repository
 
-import android.util.Log
 import com.kiwa.data.datasource.MainDataSource
 import com.kiwa.domain.repository.MainRepository
 import com.kiwa.fluffit.model.main.FullnessUpdateInfo
@@ -36,24 +35,33 @@ class MainRepositoryImpl @Inject constructor(private val mainDataSource: MainDat
             onFailure = { Result.failure(it) }
         )
 
-    override fun updateFullness(): Result<FullnessUpdateInfo> {
-        return Result.success(
-            FullnessUpdateInfo(
-                fullness = fullness,
-                nextUpdateTime = System.currentTimeMillis() + 3000,
-                isEvolutionAvailable = true
-            )
+    override suspend fun updateFullness(): Result<FullnessUpdateInfo> =
+        mainDataSource.fetchFullness().fold(
+            onSuccess = {
+                Result.success(
+                    FullnessUpdateInfo(
+                        fullness = fullness,
+                        nextUpdateTime = System.currentTimeMillis() + 3000,
+                        isEvolutionAvailable = true
+                    )
+                )
+//                Result.success(it.data)
+            },
+            onFailure = { Result.failure(it) }
         )
-    }
 
-    override fun updateHealth(): Result<HealthUpdateInfo> {
-        Log.d("확인", "updateHealth")
-        return Result.success(
-            HealthUpdateInfo(
-                health = health,
-                nextUpdateTime = System.currentTimeMillis() + 3000,
-                isEvolutionAvailable = true
-            )
+    override suspend fun updateHealth(): Result<HealthUpdateInfo> =
+        mainDataSource.fetchHealth().fold(
+            onSuccess = {
+                Result.success(
+                    HealthUpdateInfo(
+                        health = health,
+                        nextUpdateTime = System.currentTimeMillis() + 3000,
+                        isEvolutionAvailable = true
+                    )
+                )
+//                Result.success(it.data)
+            },
+            onFailure = { Result.failure(it) }
         )
-    }
 }

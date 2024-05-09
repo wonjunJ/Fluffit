@@ -12,7 +12,15 @@ sealed class HomeViewState : ViewState {
 
     data class Default(
         override val coin: Int = 0,
-        override val flupet: Flupet = Flupet(0, 0, "", "도끼보다토끼", "", "", false),
+        override val flupet: Flupet = Flupet(
+            0,
+            0,
+            "https://github.com/shjung53/algorithm_study/assets/90888718/4399f85d-7810-464c-ad76-caae980ce047",
+            "도끼보다토끼",
+            "",
+            "",
+            false
+        ),
         override val nextFullnessUpdateTime: Long = 0L,
         override val nextHealthUpdateTime: Long = 0L,
         override val message: String = ""

@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.kiwa.domain.usecase.GetMainUIInfoUseCase
 import com.kiwa.domain.usecase.UpdateFullnessUseCase
@@ -193,7 +192,6 @@ class HomeViewModel @Inject constructor(
         }
 
     private suspend fun enqueueNewRequest(tag: String, nextUpdateTime: Long) {
-        Log.d("확인", "stat: $tag")
         when (tag) {
             "fullness" -> {
                 if (::updateFullnessJob.isInitialized) {
@@ -219,7 +217,6 @@ class HomeViewModel @Inject constructor(
                 }
                 updateHealthJob = viewModelScope.launch(Dispatchers.IO) {
                     val delayTime = nextUpdateTime - System.currentTimeMillis()
-                    Log.d("확인", "delayTime: $delayTime")
                     if (delayTime > 0) {
                         delay(delayTime)
                         updateHealthUseCase().fold(
