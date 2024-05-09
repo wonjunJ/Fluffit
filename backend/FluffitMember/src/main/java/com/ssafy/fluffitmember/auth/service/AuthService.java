@@ -30,12 +30,7 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
-
-    @Value("${security.hmacKey}")
-    private static String secretKey;
-
     private final Environment env;
-
 
     @Transactional
     public LoginResDto login(LoginReqDto loginReqDto) throws NoSuchAlgorithmException, InvalidKeyException {
