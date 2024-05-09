@@ -48,6 +48,7 @@ import com.kiwa.fluffit.presentation.screens.BattleScreen
 import com.kiwa.fluffit.presentation.screens.ExerciseScreen
 import com.kiwa.fluffit.presentation.screens.FeedScreen
 import com.kiwa.fluffit.presentation.screens.MainScreen
+import com.kiwa.fluffit.presentation.theme.FluffitTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
@@ -83,8 +84,6 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        setTheme(android.R.style.Theme_DeviceDefault)
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
             // 권한이 승인되지 않았다면 요청
             val REQUEST_CODE_ACTIVITY_RECOGNITION = 1
@@ -92,7 +91,9 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            WearApp()
+            FluffitTheme {
+                WearApp()
+            }
         }
     }
 
