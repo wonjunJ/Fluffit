@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kiwa.fluffit.model.flupet.FlupetCollection
@@ -32,7 +31,7 @@ internal fun CollectionScreen(
 
     ObserveToastMessage(viewState = viewState, snackBarHostState, viewModel = viewModel)
 
-    //테스트용 더미 데이터 코드
+    // 테스트용 더미 데이터 코드
     val list: MutableList<FlupetCollection> = mutableListOf()
 
     list.add(

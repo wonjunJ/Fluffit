@@ -95,7 +95,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun HomeViewState.updateFullness(fullnessUpdateInfo: FullnessUpdateInfo): HomeViewState =
+    private fun HomeViewState.updateFullness(fullnessUpdateInfo: FullnessUpdateInfo):
+        HomeViewState =
         when (this) {
             is HomeViewState.Default -> this.copy(
                 nextFullnessUpdateTime = fullnessUpdateInfo.nextUpdateTime,
