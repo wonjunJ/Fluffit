@@ -7,7 +7,7 @@ import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Date;
@@ -22,12 +22,12 @@ public class JwtUtil {
     private static final long REFRESH_TOKEN_EXPIRE_TIME_IN_MILLISECONDS = 1000L * 60L * 60L * 24L * 14; //refresh token 2week
     private static final long ACCESS_TOKEN_EXPIRE_TIME_IN_MILLISECONDS = 1000 * 60 * 60; //access token 30min
 
-    @Value(value = "${jwt.secret}")
-    private String secret;
+    private final Environment env;
     private Key key;
 
     @PostConstruct
     public void init() {
+        String secret = env.getProperty("jwt.secret");
         byte[] key = Decoders.BASE64URL.decode(secret);
         this.key = Keys.hmacShaKeyFor(key);
     }
