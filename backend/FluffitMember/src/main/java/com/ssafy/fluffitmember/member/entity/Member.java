@@ -63,5 +63,7 @@ public class Member {
                 .mflupetId(mflupetId)
                 .build();
     }
-
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }

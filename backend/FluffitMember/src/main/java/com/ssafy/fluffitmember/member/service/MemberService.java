@@ -1,0 +1,40 @@
+package com.ssafy.fluffitmember.member.service;
+
+import com.ssafy.fluffitmember.exception.DuplicateNickname;
+import com.ssafy.fluffitmember.exception.NotFoundUserException;
+import com.ssafy.fluffitmember.exception.NotValidNickname;
+import com.ssafy.fluffitmember.member.dto.UpdateNicknameReqDto;
+import com.ssafy.fluffitmember.member.entity.Member;
+import com.ssafy.fluffitmember.member.repository.MemberRepository;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class MemberService {
+
+    private final MemberRepository memberRepository;
+
+    @Transactional
+    public void updateNickname(String memberId, UpdateNicknameReqDto updateNicknameReqDto) {
+
+        Optional<Member> member = memberRepository.findByMemberId(memberId);
+        if(member.isEmpty()){
+            throw new NotFoundUserException();
+        }
+        validNickname(updateNicknameReqDto.getNickname());
+        member.get().updateNickname(updateNicknameReqDto.getNickname());
+    }
+
+    private void validNickname(String nickname) {
+
+        if(!nickname.matches("^[a-zA-Z0-9가-힣]{1,8}$")){
+            throw new NotValidNickname();
+        }
+        if(memberRepository.findByNickname(nickname).isPresent()){
+            throw new DuplicateNickname();
+        }
+    }
+}
