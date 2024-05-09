@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface BattleRepository extends JpaRepository<Battle, Long> {
-    <T> Mono<T> findByOrganizerIdOrParticipantId(Long userId);
+//    <T> Mono<T> findByOrganizerIdOrParticipantId(Long userId);
 
 //    Optional<Battle> findByOrganizerIdOrParticipantId(Long id);
 }

@@ -8,13 +8,12 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableRedisRepositories
+//@EnableRedisRepositories(basePackages = "com.ssafy.fluffitbattle.redis")
 public class RedisConfig {
 
     @Value("${spring.data.redis.host}")
@@ -23,15 +22,15 @@ public class RedisConfig {
     @Value("${spring.data.redis.port}")
     private String port;
 
-    @Value("${spring.data.redis.password}")
-    private String password;
+//    @Value("${spring.data.redis.password}")
+//    private String password;
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
         redisStandaloneConfiguration.setHostName(host);
         redisStandaloneConfiguration.setPort(Integer.parseInt(port));
-        redisStandaloneConfiguration.setPassword(password);
+//        redisStandaloneConfiguration.setPassword(password);
         LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
         return lettuceConnectionFactory;
 //        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(host, port));

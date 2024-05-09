@@ -21,7 +21,7 @@ public class NotificationService {
 //    }
 
     public SseEmitter createEmitter(Long userId) {
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+        SseEmitter emitter = new SseEmitter(600000L); // 10분 지나면 타임 아웃
         emitters.put(userId, emitter);
         emitter.onCompletion(() -> emitters.remove(userId));
         emitter.onTimeout(() -> emitters.remove(userId));
@@ -68,17 +68,5 @@ public class NotificationService {
         }
     }
 
-    private void notifyUsersGameStart(Long... userIds) {
-        for (Long userId : userIds) {
-            SseEmitter emitter = emitters.get(userId);
-            if (emitter != null) {
-                try {
-                    emitter.send(SseEmitter.event().name("gameStart").data("Game is starting!"));
-                } catch (IOException e) {
-                    emitters.remove(userId);
-                }
-            }
-        }
-    }
 }
 

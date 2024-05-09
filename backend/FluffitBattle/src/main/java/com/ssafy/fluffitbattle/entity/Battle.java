@@ -1,5 +1,6 @@
 package com.ssafy.fluffitbattle.entity;
 
+//import org.springframework.data.annotation.Id;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
