@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,14 +20,12 @@ import androidx.wear.compose.material.CircularProgressIndicator
 import com.example.wearapp.presentation.HealthViewModel
 import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.components.CoinDisplay
-import com.kiwa.fluffit.presentation.components.MainPetImageDisplay
+import com.kiwa.fluffit.presentation.components.HomePetImageDisplay
 import com.kiwa.fluffit.presentation.components.StepsDisplay
 
 @Composable
 fun MainScreen() {
-    val healthViewModel : HealthViewModel = hiltViewModel()
 
-    val steps by healthViewModel.steps.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         CircularProgressIndicator(
@@ -36,8 +35,8 @@ fun MainScreen() {
             progress = 0.5f,
             startAngle = -88f,
             endAngle = 35f,
-            indicatorColor = Color(0xFF70F150),
-            trackColor = Color(0xFF347923),
+            indicatorColor = colorResource(id = R.color.watchGreen),
+            trackColor = colorResource(id = R.color.watchDarkGreen),
             strokeWidth = 6.dp
         )
 
@@ -46,8 +45,8 @@ fun MainScreen() {
             progress = 0.5f,
             startAngle = -88f,
             endAngle = 35f,
-            indicatorColor = Color(0xFF64B5FF),
-            trackColor = Color(0xFF335E85),
+            indicatorColor = colorResource(id = R.color.watchBlue),
+            trackColor = colorResource(id = R.color.watchDarkBlue),
             strokeWidth = 6.dp
         )
 
@@ -56,19 +55,19 @@ fun MainScreen() {
             modifier = Modifier.align(Alignment.TopCenter)
         ) {
             Spacer(modifier = Modifier.height(18.dp))
-            StepsDisplay(steps = steps)
+            StepsDisplay()
         }
         Box(modifier = Modifier.align(Alignment.Center)){
             val image = painterResource(R.drawable.dog_white)
 //        Spacer(modifier = Modifier.height(16.dp))
-            MainPetImageDisplay(image)
+            HomePetImageDisplay(image)
         }
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             CoinDisplay(coin = 13420)
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(15.dp))
         }
     }
 }

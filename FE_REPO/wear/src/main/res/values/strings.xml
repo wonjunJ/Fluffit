@@ -5,4 +5,6 @@
     values-round/strings.xml for round devices.
     -->
     <string name="feed_button">밥주기</string>
+    <string name="exercise_button">운동하기</string>
+    <string name="exercise_stop_button">그만하기</string>
 </resources>

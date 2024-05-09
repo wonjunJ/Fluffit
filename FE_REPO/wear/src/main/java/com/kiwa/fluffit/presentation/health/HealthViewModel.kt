@@ -13,7 +13,7 @@ import javax.inject.Inject
 class HealthViewModel @Inject constructor(
     private val healthRepository: HealthRepository
 ) : ViewModel() {
-    private val _heartRate = MutableStateFlow<Int?>(null)
+    private val _heartRate = MutableStateFlow<Int?>(0)
     val heartRate: StateFlow<Int?> = _heartRate.asStateFlow()
 
     private val _steps = MutableStateFlow<Long?>(0L)

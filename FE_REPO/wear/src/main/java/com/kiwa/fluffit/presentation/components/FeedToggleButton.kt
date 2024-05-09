@@ -10,8 +10,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.ToggleButton
-import androidx.wear.compose.material.Button
-import com.kiwa.fluffit.presentation.Feed.FeedViewModel
+import com.kiwa.fluffit.presentation.feed.FeedViewModel
 
 @Composable
 fun FeedToggleButton(feedImage : Painter, buttonId : Int) {

@@ -44,6 +44,8 @@ import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Text
 import com.example.wearapp.presentation.HealthViewModel
 import com.kiwa.fluffit.presentation.components.FeedButton
+import com.kiwa.fluffit.presentation.screens.BattleScreen
+import com.kiwa.fluffit.presentation.screens.ExerciseScreen
 import com.kiwa.fluffit.presentation.screens.FeedScreen
 import com.kiwa.fluffit.presentation.screens.MainScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -82,9 +84,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setTheme(android.R.style.Theme_DeviceDefault)
-//
-//        val healthRepository = HealthRepository(this)
-//        healthViewModel = HealthViewModel(healthRepository)
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
             // 권한이 승인되지 않았다면 요청
@@ -93,8 +92,6 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            val heartRate by healthViewModel.heartRate.collectAsState()
-//            val steps by healthViewModel.steps.collectAsState()
             WearApp()
         }
     }
@@ -151,8 +148,8 @@ fun WearApp() {
             when(page){
                 0 -> MainScreen()
                 1 -> FeedScreen()
-                2 -> Greeting(greetingName = "page3")
-                3 -> Greeting(greetingName = "page4")
+                2 -> ExerciseScreen()
+                3 -> BattleScreen()
             }
         }
     }

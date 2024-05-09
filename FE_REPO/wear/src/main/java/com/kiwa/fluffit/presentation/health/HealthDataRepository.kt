@@ -33,7 +33,7 @@ class HealthRepository(private val context: Context) {
                     val stepsDataPoints = dataPoints.getData(DataType.STEPS_DAILY)
 
                     stepsDataPoints.forEach { dataPoint ->
-                        val steps = dataPoint.value as Long
+                        val steps = dataPoint.value
                         onStepsUpdated(steps)
                         Log.d(TAG, "Steps: $steps")
                     }

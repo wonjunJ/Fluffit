@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -19,7 +20,7 @@ import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
 import com.kiwa.fluffit.R
-import com.kiwa.fluffit.presentation.Feed.FeedViewModel
+import com.kiwa.fluffit.presentation.feed.FeedViewModel
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 
 @Composable
@@ -56,6 +57,7 @@ fun FeedDisplay() {
                 painter = painterResource(id = R.drawable.feed_bag),
                 contentDescription = "큰 사료 이미지"
             )
+            Spacer(modifier = Modifier.height(15.dp))
         }
         Spacer(modifier = Modifier.size(38.dp))
     }

@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.presentation.Feed
+package com.kiwa.fluffit.presentation.feed
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,25 +1,22 @@
 package com.kiwa.fluffit.presentation.screens
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.AnchorType
-import androidx.wear.compose.foundation.CurvedAlignment
-import androidx.wear.compose.foundation.CurvedDirection
 import androidx.wear.compose.foundation.CurvedLayout
 import androidx.wear.compose.foundation.curvedComposable
 import androidx.wear.compose.foundation.curvedRow
-import androidx.wear.compose.material.Button
 import com.kiwa.fluffit.R
+import com.kiwa.fluffit.presentation.components.CoinDisplay
 import com.kiwa.fluffit.presentation.components.FeedButton
 import com.kiwa.fluffit.presentation.components.FeedDescriptionBox
 import com.kiwa.fluffit.presentation.components.FeedDisplay
@@ -50,8 +47,18 @@ fun FeedScreen() {
                 }
             }
         }
-        Box(modifier = Modifier.align(Alignment.Center)) {
+        Box(contentAlignment = Alignment.Center) {
             FeedDisplay()
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceAround,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(modifier = Modifier.height(0.dp))
+                Box(modifier = Modifier.padding(top = 5.dp)) {
+                    CoinDisplay(coin = 13420)
+                }
+            }
         }
         FeedButton()
         FeedDescriptionBox()
