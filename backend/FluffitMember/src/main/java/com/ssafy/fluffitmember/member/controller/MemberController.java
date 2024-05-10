@@ -6,6 +6,7 @@ import com.ssafy.fluffitmember.exception.DuplicateNickname;
 import com.ssafy.fluffitmember.exception.NotFoundUserException;
 import com.ssafy.fluffitmember.exception.NotValidNickname;
 import com.ssafy.fluffitmember.member.dto.Request.UpdateNicknameReqDto;
+import com.ssafy.fluffitmember.member.dto.Response.AutoLoginResDto;
 import com.ssafy.fluffitmember.member.dto.Response.GetNicknameResDto;
 import com.ssafy.fluffitmember.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,10 @@ public class MemberController {
 
     @GetMapping("/login")
     public ResponseEntity<Object> autoLogin(){
-        return ResponseEntity.ok().build();
+        AutoLoginResDto autoLoginResDto = new AutoLoginResDto();
+        autoLoginResDto.setStatus("200");
+        autoLoginResDto.setMsg("자동 로그인 성공");
+        return ResponseEntity.ok().body(autoLoginResDto);
     }
 
     @GetMapping("/get-coin")
