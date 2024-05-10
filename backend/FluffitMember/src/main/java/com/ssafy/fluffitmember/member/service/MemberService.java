@@ -56,7 +56,7 @@ public class MemberService {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         log.info("before mapper nickname " + findMember.get().getNickname());
-        GetNicknameResDto getNicknameResDto = mapper.map(findMember.get().getNickname(), GetNicknameResDto.class);
+        GetNicknameResDto getNicknameResDto = mapper.map(findMember.get(), GetNicknameResDto.class);
         log.info("after mapper nickname " + getNicknameResDto.getNickname());
         return getNicknameResDto;
     }
