@@ -4,6 +4,7 @@ package com.ssafy.fluffitmember.auth.controller;
 import com.ssafy.fluffitmember.auth.dto.request.LoginReqDto;
 import com.ssafy.fluffitmember.auth.dto.response.LoginResDto;
 import com.ssafy.fluffitmember.auth.service.AuthService;
+import com.ssafy.fluffitmember.exception.NotValidRefreshToken;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import java.security.InvalidKeyException;
@@ -51,6 +52,8 @@ public class AuthController {
         }catch (ExpiredJwtException e){
             return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.REFRESH_TOKEN_EXPIRE));
         }catch (SignatureException e){
+            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.TOKEN_INVALID));
+        }catch (NotValidRefreshToken e){
             return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.TOKEN_INVALID));
         }
     }

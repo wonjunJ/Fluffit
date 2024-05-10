@@ -3,6 +3,7 @@ package com.ssafy.fluffitmember.auth.service;
 import com.ssafy.fluffitmember.auth.dto.request.LoginReqDto;
 import com.ssafy.fluffitmember.auth.dto.response.LoginResDto;
 import com.ssafy.fluffitmember.exception.EncryptionException;
+import com.ssafy.fluffitmember.exception.NotValidRefreshToken;
 import com.ssafy.fluffitmember.jwt.GeneratedToken;
 import com.ssafy.fluffitmember.jwt.JwtUtil;
 import com.ssafy.fluffitmember.jwt.SavedToken;
@@ -98,12 +99,17 @@ public class AuthService {
 
     public LoginResDto regenerateToken(String refreshToken) throws ExpiredJwtException, SignatureException {
 
-        String memberId = jwtUtil.getUserId(refreshToken.substring(7));
+        String token = refreshToken.substring(7);
+
+        String memberId = jwtUtil.getUserId(token);
 
         Optional<SavedToken> findToken = tokenRepository.findById(memberId);
 
         if(findToken.isEmpty()){
             throw new ExpiredJwtException(null, null, "The token is expired or does not exist.");
+        }
+        if(!token.equals(findToken.get().getRefreshToken())){
+            throw new NotValidRefreshToken();
         }
 
         GeneratedToken generatedToken = jwtUtil.generateToken(memberId);
