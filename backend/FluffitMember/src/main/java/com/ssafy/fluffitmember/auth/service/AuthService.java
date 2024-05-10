@@ -12,6 +12,7 @@ import com.ssafy.fluffitmember.member.entity.Member;
 import com.ssafy.fluffitmember.member.repository.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -23,9 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -77,7 +76,8 @@ public class AuthService {
         Member savedMember = memberRepository.save(member);
     }
 
-    public String encrypt(String data) throws NoSuchAlgorithmException, InvalidKeyException {
+    public String encrypt(String data)
+            throws NoSuchAlgorithmException, InvalidKeyException {
 
         // 시크릿 키로부터 SecretKeySpec 객체 생성
         String hmackey = env.getProperty("security.hmackey");
@@ -89,7 +89,7 @@ public class AuthService {
         mac.init(secretKeySpec);
 
         // 데이터를 암호화
-        byte[] result = mac.doFinal(data.getBytes());
+        byte[] result = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
 
         String encodeData = Base64.getEncoder().encodeToString(result);
         log.info("encodeData = " + encodeData);
