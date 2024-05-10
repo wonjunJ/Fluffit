@@ -43,4 +43,14 @@ class FlupetController(
     suspend fun getPetCollection(@RequestHeader("memberId") userId: String): CollectionResponse {
         return flupetService.getPetCollection(userId)
     }
+
+    @PostMapping("/new-egg")
+    suspend fun generateFlupet(@RequestHeader("memberId") userId: String): GenFlupetResponse {
+        return flupetService.generateFlupet(userId)
+    }
+
+    @PostMapping("/evolution")
+    suspend fun evolveFlupet(@RequestHeader("memberId") userId: String): EvolveResponse {
+        return flupetService.evolveFlupet(userId)
+    }
 }
