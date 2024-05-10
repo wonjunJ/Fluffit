@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class AutoLoginResDto {
-    private String status;
+    private int status;
     private String msg;
 
 }

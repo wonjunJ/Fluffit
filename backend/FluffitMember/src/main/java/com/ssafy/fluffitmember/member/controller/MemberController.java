@@ -55,7 +55,7 @@ public class MemberController {
     @GetMapping("/login")
     public ResponseEntity<Object> autoLogin(){
         AutoLoginResDto autoLoginResDto = new AutoLoginResDto();
-        autoLoginResDto.setStatus("200");
+        autoLoginResDto.setStatus(200);
         autoLoginResDto.setMsg("자동 로그인 성공");
         return ResponseEntity.ok().body(autoLoginResDto);
     }
