@@ -23,7 +23,7 @@ val fluffitTypography = Typography(
         lineHeight = 48.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = Color.Black
+        color = Color.White
     ),
 
     title2 = TextStyle(
@@ -33,7 +33,7 @@ val fluffitTypography = Typography(
         lineHeight = 40.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = Color.Black
+        color = Color.White
     ),
 
     title3 = TextStyle(
@@ -43,7 +43,7 @@ val fluffitTypography = Typography(
         lineHeight = 32.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = Color.Black
+        color = Color.White
     ),
 
     body1 = TextStyle(
@@ -53,7 +53,7 @@ val fluffitTypography = Typography(
         lineHeight = 28.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = Color.Black
+        color = Color.White
     ),
 
     body2 = TextStyle(
@@ -63,7 +63,7 @@ val fluffitTypography = Typography(
         lineHeight = 20.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = Color.Black
+        color = Color.White
     ),
 
     button = TextStyle(
@@ -83,7 +83,7 @@ val fluffitTypography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = Color.Black
+        color = Color.White
     ),
 
     display2 = TextStyle(
@@ -93,7 +93,7 @@ val fluffitTypography = Typography(
         lineHeight = 20.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = Color.Black
+        color = Color.White
     ),
 
     display3 = TextStyle(
@@ -103,6 +103,16 @@ val fluffitTypography = Typography(
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
-        color = Color.Black
+        color = Color.White
+    ),
+
+    caption3 = TextStyle(
+        fontFamily = fluffitWearFontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        lineHeight = 12.sp,
+        letterSpacing = 0.5.sp,
+        textAlign = TextAlign.Center,
+        color = Color.White
     ),
 )
