@@ -2,10 +2,10 @@ package com.ssafy.fluffitflupet.client
 
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestHeader
 
 @FeignClient(name = "member-service")
 interface MemberServiceClient {
-    @GetMapping("/{userId}")
-    fun getUserCoin(@PathVariable("userId") userId: String): Int
+    @GetMapping("/member/get-coin")
+    fun getUserCoin(@RequestHeader("memberId") memberId: String): Int
 }
