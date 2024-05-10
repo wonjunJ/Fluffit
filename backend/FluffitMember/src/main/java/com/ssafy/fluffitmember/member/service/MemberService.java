@@ -9,6 +9,7 @@ import com.ssafy.fluffitmember.member.entity.Member;
 import com.ssafy.fluffitmember.member.repository.MemberRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -53,7 +55,9 @@ public class MemberService {
         }
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        log.info("before mapper nickname " + findMember.get().getNickname());
         GetNicknameResDto getNicknameResDto = mapper.map(findMember.get().getNickname(), GetNicknameResDto.class);
+        log.info("after mapper nickname " + getNicknameResDto.getNickname());
         return getNicknameResDto;
     }
 }
