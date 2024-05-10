@@ -9,5 +9,5 @@ import reactor.core.publisher.Mono
 @Repository
 interface MemberFlupetRepository: ReactiveCrudRepository<MemberFlupet, Long>, MemberFlupetRepositoryCustom {
     fun findAllByIsDeadIsFalse(): Flux<MemberFlupet>
-    fun findByMemberId(memberId: String): Mono<MemberFlupet>
+    fun findByMemberIdAndIsDeadIsFalse(memberId: String): Mono<MemberFlupet>
 }

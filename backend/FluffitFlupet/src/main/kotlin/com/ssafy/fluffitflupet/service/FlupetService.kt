@@ -1,24 +1,25 @@
 package com.ssafy.fluffitflupet.service
 
-import com.ssafy.fluffitflupet.client.MemberServiceClient
 import com.ssafy.fluffitflupet.client.MemberServiceClientAsync
 import com.ssafy.fluffitflupet.dto.*
+import com.ssafy.fluffitflupet.entity.Flupet
 import com.ssafy.fluffitflupet.entity.MemberFlupet
 import com.ssafy.fluffitflupet.error.ErrorType
 import com.ssafy.fluffitflupet.exception.CustomBadRequestException
 import com.ssafy.fluffitflupet.repository.FlupetRepository
 import com.ssafy.fluffitflupet.repository.MemberFlupetRepository
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
+import kotlin.system.measureTimeMillis
 
 @Service
 class FlupetService(
@@ -67,7 +68,7 @@ class FlupetService(
         }else if(!rgx.matches(nickname)){
             throw CustomBadRequestException(ErrorType.WRONG_CONDITION)
         }else {
-            val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberId(userId).awaitSingleOrNull() }
+            val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
             if(mflupet == null){
                 throw CustomBadRequestException(ErrorType.INVALID_USERID)
             }
@@ -77,7 +78,7 @@ class FlupetService(
     }
 
     suspend fun getFullness(userId: String): FullResponse {
-        val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberId(userId).awaitSingleOrNull() }
+        val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         if(mflupet == null){
             throw CustomBadRequestException(ErrorType.INVALID_USERID)
         }
@@ -89,7 +90,13 @@ class FlupetService(
     }
 
     suspend fun getHealth(userId: String): HealthResponse {
-        val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberId(userId).awaitSingleOrNull() }
+        //시간 측정용(임시)
+        val measuredTime = measureTimeMillis {
+            memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull()
+        }
+        log.info(measuredTime.toString())
+
+        val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         if(mflupet == null){
             throw CustomBadRequestException(ErrorType.INVALID_USERID)
         }
@@ -124,15 +131,67 @@ class FlupetService(
         )
     }
 
+    @Transactional
     suspend fun evolveFlupet(userId: String): EvolveResponse = coroutineScope {
-        val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberId(userId).awaitSingleOrNull() }
-        if(mflupet == null){
-            throw CustomBadRequestException(ErrorType.INVALID_USERID)
+        val mypet = async(Dispatchers.IO) { memberFlupetRepository.findByMemberIdAndFlupet(userId) }
+        val mflupet = async(Dispatchers.IO) { memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
+        val mypetRst = mypet.await() ?: throw CustomBadRequestException(ErrorType.INVALID_USERID)
+        //val t = flupetRepository.findByStage(mypetRst.stage+1).toList()
+        val flupets = async(Dispatchers.IO) {
+            if(mypetRst.stage == 1){ //기본 단계인 알을 1단계로 설정
+                flupetRepository.findByStage(mypetRst.stage+1).toList()
+            }else if(mypetRst.stage == 2){
+                flupetRepository.findById(mypetRst.flupetId+1)
+            }else{
+                throw CustomBadRequestException(ErrorType.NOT_AVAILABLE_EVOLVE)
+            }
+            //flupetRepository.findByStage(mypetRst.stage).toList()
         }
-        mflupet.isDead = true
+
+        //진화하기전의 기존의 펫을 죽었다고 처리
+        //mflupet.await()이 null이면 예외 처리
+        val mflupetRst = mflupet.await() ?: throw CustomBadRequestException(ErrorType.INVALID_USERID)
+        mflupetRst.isDead = true
+        mflupetRst.endTime = LocalDateTime.now()
         launch(Dispatchers.IO) {
-            memberFlupetRepository.save(mflupet)
+            memberFlupetRepository.save(mflupetRst)
         }
-        val flupets = withContext(Dispatchers.IO){ flupetRepository.findByStage() }
+
+        var flist: List<Flupet> = listOf() //stage == 1일때 사용
+        var evolveFlupet: Flupet? = null //stage == 2일때 사용
+        var anyrst = flupets.await()
+        if(mypetRst.stage == 1){
+            val tmp = anyrst as List<Flupet>
+            flist = tmp.shuffled() //리스트(List<Flupet>)를 무작위로 썩은 값을 반환한다.
+        }else{
+            evolveFlupet = anyrst as Flupet?
+        }
+        //진화된 새로운 캐릭터(펫)을 지정해서 저장한다.
+        launch(Dispatchers.IO) {
+            memberFlupetRepository.save(
+                MemberFlupet(
+                    flupetId = if(mypetRst.stage == 1) flist[0].id else evolveFlupet!!.id,
+                    memberId = userId,
+                    name = mflupetRst.name,
+                    exp = mflupetRst.exp,
+                    steps = mflupetRst.steps,
+                    createTime = mflupetRst.createTime,
+                    fullness = mflupetRst.fullness,
+                    health = mflupetRst.health,
+                    patCnt = mflupetRst.patCnt,
+                    fullnessUpdateTime = mflupetRst.fullnessUpdateTime,
+                    healthUpdateTime = mflupetRst.healthUpdateTime
+                )
+            )
+        }
+        return@coroutineScope EvolveResponse(
+            flupetName = mflupetRst.name,
+            imageUrl = if(mypetRst.stage == 1) flist[0].imgUrl else evolveFlupet!!.imgUrl,
+            fullness = mflupetRst.fullness,
+            health = mflupetRst.health,
+            isEvolutionAvailable = false,
+            nextFullnessUpdateTime = mflupetRst.fullnessUpdateTime!!.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            nextHealthUpdateTime = mflupetRst.healthUpdateTime!!.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        )
     }
 }

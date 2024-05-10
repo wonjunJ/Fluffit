@@ -27,7 +27,8 @@ CREATE TABLE `member_flupet` (
                                  `fullness_update_time`	datetime(6)	NULL,
                                  `health_update_time`	datetime(6)	NULL,
                                  CONSTRAINT `fk_member_flupet_flupet_id` FOREIGN KEY (`flupet_id`) REFERENCES `flupet` (`id`),
-                                 INDEX `idx_member_id` (`member_id`)
+                                 INDEX `idx_member_id` (`member_id`),
+                                 INDEX `idx_member_id_is_dead` (`member_id`, `is_dead`) -- 복합 인덱스 추가(이게 성능상 더 좋은지 판단 필요)
 );
 
 drop table if exists `food_type`;

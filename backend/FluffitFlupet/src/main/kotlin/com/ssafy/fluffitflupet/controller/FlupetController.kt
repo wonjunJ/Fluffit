@@ -51,6 +51,6 @@ class FlupetController(
 
     @PostMapping("/evolution")
     suspend fun evolveFlupet(@RequestHeader("memberId") userId: String): EvolveResponse {
-
+        return flupetService.evolveFlupet(userId)
     }
 }
