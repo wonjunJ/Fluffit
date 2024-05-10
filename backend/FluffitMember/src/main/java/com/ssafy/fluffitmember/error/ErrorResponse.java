@@ -15,8 +15,8 @@ public class ErrorResponse {
     }
     public static ErrorResponse from(ErrorStateCode errorStateCode) {
         return ErrorResponse.builder()
-                .code(errorStateCode.getCode())
-                .message(errorStateCode.getMessage())
+                .code(errorStateCode.getStatus())
+                .message(errorStateCode.getMsg())
                 .build();
     }
 }
