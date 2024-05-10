@@ -37,4 +37,9 @@ public class MemberService {
             throw new DuplicateNickname();
         }
     }
+
+    public int getUserCoin(String memberId) {
+        Optional<Member> findMember = memberRepository.findByMemberId(memberId);
+        return findMember.map(Member::getCoin).orElse(-1);
+    }
 }
