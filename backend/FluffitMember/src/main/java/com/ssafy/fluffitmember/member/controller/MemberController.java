@@ -51,6 +51,11 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/login")
+    public ResponseEntity<Object> autoLogin(){
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/get-coin")
     public int getUserCoin(@RequestHeader("memberId") String memberId){
         return memberService.getUserCoin(memberId);
