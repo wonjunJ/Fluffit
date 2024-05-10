@@ -5,7 +5,8 @@ import com.ssafy.fluffitmember.error.ErrorStateCode;
 import com.ssafy.fluffitmember.exception.DuplicateNickname;
 import com.ssafy.fluffitmember.exception.NotFoundUserException;
 import com.ssafy.fluffitmember.exception.NotValidNickname;
-import com.ssafy.fluffitmember.member.dto.UpdateNicknameReqDto;
+import com.ssafy.fluffitmember.member.dto.Request.UpdateNicknameReqDto;
+import com.ssafy.fluffitmember.member.dto.Response.GetNicknameResDto;
 import com.ssafy.fluffitmember.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,9 +41,18 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/nickname")
+    public ResponseEntity<Object> getNickname(@RequestHeader("memberId") String memberId){
+        try {
+            GetNicknameResDto getNicknameRes = memberService.getNickname(memberId);
+            return ResponseEntity.ok().body(getNicknameRes);
+        }catch (NotFoundUserException e){
+            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.NOT_FOUND_MEMBER));
+        }
+    }
+
     @GetMapping("/get-coin")
     public int getUserCoin(@RequestHeader("memberId") String memberId){
         return memberService.getUserCoin(memberId);
     }
-
 }
