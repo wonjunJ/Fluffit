@@ -3,8 +3,7 @@ package com.kiwa.data.repository
 import com.kiwa.data.datasource.CollectionDataSource
 import com.kiwa.domain.TokenManager
 import com.kiwa.domain.repository.CollectionRepository
-import com.kiwa.fluffit.model.flupet.FlupetCollection
-import kotlinx.coroutines.runBlocking
+import com.kiwa.fluffit.model.FlupetCollection
 import javax.inject.Inject
 
 class CollectionRepositoryImpl @Inject constructor(
@@ -12,13 +11,8 @@ class CollectionRepositoryImpl @Inject constructor(
     private val tokenManager: TokenManager
 ) : CollectionRepository {
 
-    override suspend fun loadCollection(): Result<List<FlupetCollection>> {
-        val accessToken = tokenManager.getAccessToken()
-        val result = runBlocking {
-            collectionDataSource.loadCollection(accessToken)
-        }
-
-        return result.fold(
+    override suspend fun loadCollection(): Result<List<FlupetCollection>> =
+        collectionDataSource.loadCollection().fold(
             onSuccess = { response ->
                 Result.success(
                     response.data.flupets.map {
@@ -31,9 +25,6 @@ class CollectionRepositoryImpl @Inject constructor(
                     }
                 )
             },
-            onFailure = {
-                Result.failure(it)
-            }
+            onFailure = { Result.failure(it) }
         )
-    }
 }

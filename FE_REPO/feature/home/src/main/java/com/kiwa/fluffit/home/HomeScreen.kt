@@ -1,7 +1,6 @@
 package com.kiwa.fluffit.home
 
 import android.os.Build.VERSION.SDK_INT
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,7 +36,8 @@ import com.kiwa.fluffit.home.ui.FlupetNameUI
 internal fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
     onNavigateToCollection: () -> Unit,
-    onNavigateToRankingDialog: () -> Unit
+    onNavigateToRankingDialog: () -> Unit,
+    onNavigateToMyPage: () -> Unit
 ) {
     val uiState: HomeViewState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -54,7 +54,8 @@ internal fun HomeRoute(
         onClickRankingButton = onNavigateToRankingDialog,
         onClickCollectionButton = onNavigateToCollection,
         onUpdateFullness = { viewModel.onTriggerEvent(HomeViewEvent.OnUpdateFullness()) },
-        onUpdateHealth = { viewModel.onTriggerEvent(HomeViewEvent.OnUpdateHealth()) }
+        onUpdateHealth = { viewModel.onTriggerEvent(HomeViewEvent.OnUpdateHealth()) },
+        onClickMyPage = onNavigateToMyPage
     )
 }
 
@@ -66,7 +67,8 @@ internal fun HomeScreen(
     onClickConfirmButton: (String) -> Unit,
     onClickRankingButton: () -> Unit,
     onUpdateFullness: () -> Unit,
-    onUpdateHealth: () -> Unit
+    onUpdateHealth: () -> Unit,
+    onClickMyPage: () -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -77,9 +79,6 @@ internal fun HomeScreen(
                 add(GifDecoder.Factory())
             }
         }.build()
-
-    Log.d("확인", "컴포징")
-
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.main_background),
@@ -88,7 +87,7 @@ internal fun HomeScreen(
             contentScale = ContentScale.FillHeight
         )
 
-        MainButtons(uiState.coin, onClickCollectionButton, onClickRankingButton)
+        MainButtons(uiState.coin, onClickCollectionButton, onClickRankingButton, onClickMyPage)
 
         Column(
             modifier = Modifier
@@ -127,7 +126,8 @@ internal fun HomeScreen(
 private fun MainButtons(
     coin: Int,
     onClickCollectionButton: () -> Unit,
-    onClickRankingButton: () -> Unit
+    onClickRankingButton: () -> Unit,
+    onClickMyPage: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -144,7 +144,10 @@ private fun MainButtons(
             modifier = Modifier.align(Alignment.BottomStart),
             onNavigateToCollection = onClickCollectionButton
         )
-        UserButton(modifier = Modifier.align(Alignment.BottomEnd))
+        UserButton(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            onNavigateToMyPage = onClickMyPage
+        )
     }
 }
 
@@ -154,8 +157,8 @@ private fun CollectionButton(modifier: Modifier, onNavigateToCollection: () -> U
 }
 
 @Composable
-private fun UserButton(modifier: Modifier) {
-    FlupetImageButton(id = R.drawable.user, modifier = modifier)
+private fun UserButton(modifier: Modifier, onNavigateToMyPage: () -> Unit) {
+    FlupetImageButton(id = R.drawable.user, modifier = modifier, onNavigateToMyPage)
 }
 
 @Composable

@@ -11,3 +11,10 @@ android {
         exclude(group = "com.intellij", module = "annotations")
     }
 }
+dependencies {
+    implementation(project(":feature:home"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:base"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:model")) // jdk 11
+}

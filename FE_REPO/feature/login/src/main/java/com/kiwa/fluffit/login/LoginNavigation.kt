@@ -1,5 +1,6 @@
 package com.kiwa.fluffit.login
 
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 
@@ -13,4 +14,8 @@ fun NavGraphBuilder.loginScreen(
             onNavigationToHome = onNavigateToHome
         )
     }
+}
+
+fun NavController.navigateToLogin() {
+    this.navigate(loginRoute)
 }

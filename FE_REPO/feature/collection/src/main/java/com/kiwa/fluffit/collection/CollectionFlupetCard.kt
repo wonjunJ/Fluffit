@@ -18,7 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
-import com.kiwa.fluffit.model.flupet.FlupetCollection
+import com.kiwa.fluffit.model.FlupetCollection
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -53,7 +53,7 @@ internal fun CollectionFlupetCard(
             modifier = Modifier.fillMaxSize(),
             painter = painterResource(id = R.drawable.background),
             contentDescription = "도감 배경",
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds
         )
         Box(
             modifier = Modifier.fillMaxSize()

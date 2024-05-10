@@ -1,10 +1,11 @@
 package com.kiwa.data.datasource
 
+import com.kiwa.fluffit.model.User
 import com.kiwa.fluffit.model.user.response.TokenResponse
+import com.kiwa.fluffit.model.user.response.UserResponse
 
 interface UserDataSource {
 
-    //    suspend fun autoLogin() : Result<Unit>
     suspend fun autoLogin(accessToken: String): Result<TokenResponse>
 
     suspend fun getNaverLoginId(accessToken: String): Result<String>
@@ -14,4 +15,14 @@ interface UserDataSource {
         signature: String,
         provider: String
     ): Result<TokenResponse>
+
+    suspend fun signOutNaver(
+        naverClientId: String,
+        naverSecret: String,
+        accessToken: String
+    ): Result<Unit>
+
+    suspend fun loadUserName(): Result<UserResponse>
+
+    suspend fun saveNewUserName(name: String): Result<Unit>
 }
