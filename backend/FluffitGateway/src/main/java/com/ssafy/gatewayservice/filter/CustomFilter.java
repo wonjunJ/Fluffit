@@ -6,6 +6,7 @@ import com.ssafy.gatewayservice.jwt.JwtUtil;
 import com.ssafy.gatewayservice.jwt.SavedToken;
 import com.ssafy.gatewayservice.jwt.TokenRepository;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -77,6 +78,10 @@ public class CustomFilter extends AbstractGatewayFilterFactory<CustomFilter.Conf
                 log.info("Custom POST FILTER: response code = {} message = {}",
                     HttpStatus.FORBIDDEN.value(), "토큰 만료");
                 return onError(exchange, "토큰 만료", HttpStatus.FORBIDDEN);
+            }catch(SignatureException e){
+                log.info("Custom POST FILTER: response code = {} message = {}",
+                        HttpStatus.BAD_REQUEST.value(), "잘못된 토큰입니다");
+                return onError(exchange, "잘못된 토큰입니다", HttpStatus.BAD_REQUEST);
             }
 
             // userName으로 된 토큰이 없을 때 -> 만료돼서 redis에서 사라짐
