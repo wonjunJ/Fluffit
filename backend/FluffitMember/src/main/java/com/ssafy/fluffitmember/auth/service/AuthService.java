@@ -91,7 +91,8 @@ public class AuthService {
         // 데이터를 암호화
         byte[] result = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
 
-        String encodeData = Base64.getEncoder().encodeToString(result);
+        String encodeData = Base64.getEncoder().encodeToString(result).toString();
+        log.info("encodeData = " + encodeData);
         log.info("encodeData = " + encodeData);
         // 바이너리 데이터를 Base64로 인코딩하여 문자열로 반환
         return encodeData;
