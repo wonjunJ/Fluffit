@@ -23,8 +23,7 @@ public enum ErrorStateCode {
     NOT_VALID_NICKNAME("401","유효한 닉네임이 아닙니다"),
     DUPLICATE_NICKNAME("402","중복된 닉네임입니다"),
     ;
-    private final String code;
-    private final String message;
-
+    private final String status;
+    private final String msg;
 
 }
