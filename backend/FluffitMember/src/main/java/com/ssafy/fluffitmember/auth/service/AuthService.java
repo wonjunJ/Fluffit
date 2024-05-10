@@ -27,6 +27,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -96,7 +97,8 @@ public class AuthService {
     }
 
     public LoginResDto regenerateToken(String refreshToken) throws ExpiredJwtException, SignatureException {
-        String memberId = jwtUtil.getUserId(refreshToken);
+
+        String memberId = jwtUtil.getUserId(refreshToken.substring(7));
 
         Optional<SavedToken> findToken = tokenRepository.findById(memberId);
 
