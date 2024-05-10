@@ -29,7 +29,6 @@ class CollectionViewModel @Inject constructor(
     private fun collectionViewEvent(event: CollectionViewEvent) {
         when (event) {
             CollectionViewEvent.initLoadingCollections -> tryLoadCollections()
-            CollectionViewEvent.afterLoadingCollections -> TODO()
             CollectionViewEvent.OnFinishToast -> setState { onFinishToast() }
         }
     }

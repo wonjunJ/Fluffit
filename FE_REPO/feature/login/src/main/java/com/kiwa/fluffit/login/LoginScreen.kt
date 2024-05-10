@@ -82,7 +82,7 @@ internal fun LoginScreen(
                 .fillMaxWidth(),
             painter = painterResource(id = R.drawable.login_background),
             contentDescription = "배경화면",
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds
         )
 
         Box(

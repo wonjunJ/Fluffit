@@ -22,9 +22,9 @@ internal fun CollectionScreen(
 ) {
     val viewState = viewModel.uiState.collectAsState().value
 
-//    if (viewState.isLoadingCollected) {
-//        viewModel.onTriggerEvent(CollectionViewEvent.initLoadingCollections)
-//    }
+    if (viewState.isLoadingCollected) {
+        viewModel.onTriggerEvent(CollectionViewEvent.initLoadingCollections)
+    }
 
     val snackBarHostState = remember { SnackbarHostState() }
 

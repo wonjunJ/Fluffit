@@ -5,10 +5,13 @@ import com.kiwa.data.datasource.UserDataSource
 import com.kiwa.data.util.calculateHmac
 import com.kiwa.domain.TokenManager
 import com.kiwa.domain.repository.UserRepository
+import com.kiwa.fluffit.model.User
+import com.kiwa.fluffit.model.user.response.UserResponse
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 private const val TAG = "UserRepositoryImpl_싸피"
+
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
     private val tokenManager: TokenManager
@@ -94,10 +97,44 @@ class UserRepositoryImpl @Inject constructor(
         )
 
     override suspend fun logout(): Result<Unit> {
-        TODO("Not yet implemented")
+        tokenManager.deleteToken()
+        return Result.success(Unit)
     }
 
-    override suspend fun signOut(naverClientId: String, naverSecret: String, accessToken: String) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun signOut(
+        naverClientId: String,
+        naverSecret: String,
+        accessToken: String
+    ): Result<Unit> =
+        userDataSource.signOutNaver(naverClientId, naverSecret, accessToken).fold(
+            onSuccess = {
+                tokenManager.deleteToken()
+                Result.success(Unit)
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+
+    override suspend fun loadUserName(): Result<UserResponse> =
+        userDataSource.loadUserName().fold(
+            onSuccess = {
+                Result.success(it)
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+
+
+    override suspend fun setUserName(name: String): Result<Unit> =
+        userDataSource.saveNewUserName(name).fold(
+            onSuccess = {
+                Result.success(it)
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
+
 }

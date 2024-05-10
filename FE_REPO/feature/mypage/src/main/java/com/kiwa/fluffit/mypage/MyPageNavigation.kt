@@ -6,9 +6,17 @@ import androidx.navigation.compose.composable
 
 const val myPageRoute = "mypage"
 
-fun NavGraphBuilder.myPageScreen() {
+fun NavGraphBuilder.myPageScreen(
+    onNavigateToFlupetHistory : () -> Unit,
+    onNavigateToBattleRecord : () -> Unit,
+    onNavigateToLogout : () -> Unit
+) {
     composable(myPageRoute) {
-        MyPageScreen()
+        MyPageScreen(
+            onClickFlupetHistory = onNavigateToFlupetHistory,
+            onClickBattleRecord = onNavigateToBattleRecord,
+            onClickLogout = onNavigateToLogout
+        )
     }
 }
 

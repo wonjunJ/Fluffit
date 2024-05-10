@@ -12,6 +12,7 @@ android {
     }
 }
 dependencies {
+    implementation("com.navercorp.nid:oauth:5.9.1")
     implementation(project(":feature:home"))
     implementation(project(":core:domain"))
     implementation(project(":core:base"))
