@@ -99,6 +99,9 @@ public class AuthService {
 
     public LoginResDto regenerateToken(String refreshToken) throws ExpiredJwtException, SignatureException {
 
+        if (!StringUtils.hasText(refreshToken) || !refreshToken.startsWith("Bearer ")) {
+            throw new SignatureException(null);
+        }
         String token = refreshToken.substring(7);
 
         String memberId = jwtUtil.getUserId(token);

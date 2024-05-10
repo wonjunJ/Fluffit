@@ -54,7 +54,7 @@ public class AuthController {
         }catch (SignatureException e){
             return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.TOKEN_INVALID));
         }catch (NotValidRefreshToken e){
-            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.TOKEN_INVALID));
+            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.NOT_VALID_REFRESHTOKEN));
         }
     }
 }
