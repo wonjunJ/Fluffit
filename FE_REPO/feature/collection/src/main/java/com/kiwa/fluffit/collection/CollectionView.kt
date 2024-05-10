@@ -19,7 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.kiwa.fluffit.designsystem.theme.fluffitTypography
-import com.kiwa.fluffit.model.FlupetCollection
+import com.kiwa.fluffit.model.main.FlupetCollection
 
 @Composable
 internal fun CollectionView(

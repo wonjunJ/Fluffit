@@ -1,7 +1,7 @@
 package com.kiwa.data.datasource
 
-import com.kiwa.fluffit.model.User
 import com.kiwa.fluffit.model.user.response.TokenResponse
+import com.kiwa.fluffit.model.user.response.Tokens
 import com.kiwa.fluffit.model.user.response.UserResponse
 
 interface UserDataSource {
@@ -12,9 +12,8 @@ interface UserDataSource {
 
     suspend fun signInNaver(
         userCode: String,
-        signature: String,
-        provider: String
-    ): Result<TokenResponse>
+        signature: String
+    ): Result<Tokens>
 
     suspend fun signOutNaver(
         naverClientId: String,

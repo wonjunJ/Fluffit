@@ -18,7 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
-import com.kiwa.fluffit.model.FlupetCollection
+import com.kiwa.fluffit.model.main.FlupetCollection
 
 @SuppressLint("UnrememberedMutableState")
 @Composable

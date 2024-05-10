@@ -23,7 +23,6 @@ class AuthAuthenticator @Inject constructor(
             val result = runCatching {
                 authService.refreshUserToken(
                     refreshToken
-//                    "Bearer $accessToken"
                 )
             }
 
@@ -32,9 +31,9 @@ class AuthAuthenticator @Inject constructor(
                 null
             } else {
                 val tokens = result.getOrThrow()
-                tokenManager.saveToken(tokens.data.accessToken, tokens.data.refreshToken)
+                tokenManager.saveToken(tokens.accessToken, tokens.refreshToken)
                 response.request.newBuilder()
-                    .header("Authorization", "Bearer ${tokens.data.accessToken}")
+                    .header("Authorization", "Bearer ${tokens.accessToken}")
                     .build()
             }
         }

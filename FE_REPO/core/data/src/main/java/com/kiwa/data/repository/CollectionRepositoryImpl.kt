@@ -3,7 +3,7 @@ package com.kiwa.data.repository
 import com.kiwa.data.datasource.CollectionDataSource
 import com.kiwa.domain.TokenManager
 import com.kiwa.domain.repository.CollectionRepository
-import com.kiwa.fluffit.model.FlupetCollection
+import com.kiwa.fluffit.model.main.FlupetCollection
 import javax.inject.Inject
 
 class CollectionRepositoryImpl @Inject constructor(

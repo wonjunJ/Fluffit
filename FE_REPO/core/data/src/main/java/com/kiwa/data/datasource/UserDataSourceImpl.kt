@@ -7,6 +7,7 @@ import com.kiwa.fluffit.model.User
 import com.kiwa.fluffit.model.user.request.NaverLoginRequest
 import com.kiwa.fluffit.model.user.request.UserRequest
 import com.kiwa.fluffit.model.user.response.TokenResponse
+import com.kiwa.fluffit.model.user.response.Tokens
 import com.kiwa.fluffit.model.user.response.UserResponse
 import javax.inject.Inject
 
@@ -25,9 +26,8 @@ class UserDataSourceImpl @Inject constructor(
 
     override suspend fun signInNaver(
         userCode: String,
-        signature: String,
-        provider: String
-    ): Result<TokenResponse> = runCatching {
+        signature: String
+    ): Result<Tokens> = runCatching {
         authService.signInNaver(NaverLoginRequest(userCode, signature))
     }
 

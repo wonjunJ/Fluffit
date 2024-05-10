@@ -53,35 +53,22 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signInNaver(code: String): Result<Unit> {
-        val signature = calculateHmac("$code&NAVER")
+        val signature = calculateHmac("$code")
 
         Log.d(TAG, "signInNaver: code 값 : $code")
+        Log.d(TAG, "signInNaver: signature 값 : $signature")
 
-        // 강제 token 발급 성공 코드
-        val result = runBlocking {
-            Result.success("")
-        }
-
+        // test를 위해 강제 token 발급 성공 process로 대신하여 테스트함. 추후에는 하단 주석코드를 사용하면 됩니다
+        val result = runBlocking { userDataSource.signInNaver(code, signature) }
         return result.fold(
             onSuccess = {
+                tokenManager.saveToken(it.accessToken, it.refreshToken)
                 Result.success(Unit)
             },
             onFailure = {
                 Result.failure(it)
             }
         )
-
-        // test를 위해 강제 token 발급 성공 process로 대신하여 테스트함. 추후에는 하단 주석코드를 사용하면 됩니다
-//        val result = runBlocking { userDataSource.signInNaver(code, signature, "NAVER") }
-//        return result.fold(
-//            onSuccess = {
-//                tokenManager.saveToken(it.accessToken, it.refreshToken)
-//                Result.success(Unit)
-//            },
-//            onFailure = {
-//                Result.failure(it)
-//            }
-//        )
     }
 
     override suspend fun getNaverId(accessToken: String): Result<String> =
@@ -136,5 +123,4 @@ class UserRepositoryImpl @Inject constructor(
                 Result.failure(it)
             }
         )
-
 }
