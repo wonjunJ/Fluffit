@@ -1,6 +1,7 @@
 package com.ssafy.fluffitflupet.repository
 
 import com.ssafy.fluffitflupet.dto.CollectionResponse
+import com.ssafy.fluffitflupet.dto.HistoryResponse
 import com.ssafy.fluffitflupet.dto.MainInfoDto
 import com.ssafy.fluffitflupet.dto.MyFlupetStateDto
 import com.ssafy.jooq.tables.Flupet
@@ -16,6 +17,8 @@ import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 class MemberFlupetRepositoryImpl(
     private val dslContext: DSLContext
@@ -102,11 +105,49 @@ class MemberFlupetRepositoryImpl(
                 .join(FLUPET)
                 .on(MEMBER_FLUPET.FLUPET_ID.eq(FLUPET.ID))
                 .where(MEMBER_FLUPET.MEMBER_ID.eq(userId)
-                    .and(MEMBER_FLUPET.IS_DEAD.isTrue))
+                    .and(MEMBER_FLUPET.IS_DEAD.isFalse))
                 .limit(1)
         )
             .map { record -> record.into(MyFlupetStateDto::class.java) }
             .awaitFirstOrNull()
+    }
+
+    override fun findHistoryByUserId(userId: String): Flow<HistoryResponse.MyPet> {
+        return Flux.from(
+            dslContext
+                .select(
+                    FLUPET.NAME.`as`("species"),
+                    MEMBER_FLUPET.NAME.`as`("name"),
+                    FLUPET.IMG_URL,
+                    MEMBER_FLUPET.CREATE_TIME,
+                    MEMBER_FLUPET.END_TIME,
+                    MEMBER_FLUPET.STEPS
+                )
+                .from(MEMBER_FLUPET)
+                .join(FLUPET)
+                .on(MEMBER_FLUPET.FLUPET_ID.eq(FLUPET.ID))
+                .where(MEMBER_FLUPET.MEMBER_ID.eq(userId)
+                    .and(MEMBER_FLUPET.IS_DEAD.isTrue))
+                .orderBy(
+                    MEMBER_FLUPET.END_TIME.desc()
+                )
+        )
+            .map { record ->
+                HistoryResponse.MyPet(
+                    species = record.get("species", String::class.java),
+                    name = record.get("name", String::class.java),
+                    imageUrl = record.get(FLUPET.IMG_URL, String::class.java).split(","),
+                    birthDay = record.get(MEMBER_FLUPET.CREATE_TIME, LocalDateTime::class.java).toLocalDate(),
+                    endDay = record.get(MEMBER_FLUPET.END_TIME, LocalDateTime::class.java).toLocalDate(),
+                    age = "${ChronoUnit.DAYS.between(
+                        record.get(MEMBER_FLUPET.CREATE_TIME, LocalDateTime::class.java), 
+                        record.get(MEMBER_FLUPET.END_TIME, LocalDateTime::class.java))}일 ${ChronoUnit.HOURS.between(
+                        record.get(MEMBER_FLUPET.CREATE_TIME, LocalDateTime::class.java),
+                        record.get(MEMBER_FLUPET.END_TIME, LocalDateTime::class.java))}시간",
+                    steps = record.get(MEMBER_FLUPET.STEPS, Long::class.java)
+                )
+            }
+            .asFlow()
     }
 
 }
