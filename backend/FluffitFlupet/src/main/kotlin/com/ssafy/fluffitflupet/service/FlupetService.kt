@@ -56,7 +56,7 @@ class FlupetService(
                 flupetName = dto.flupetName,
                 imageUrl = dto.imageUrl.split(","),
                 birthDay = dto.birthDay.toLocalDate(),
-                age = "${ChronoUnit.DAYS.between(dto.birthDay, LocalDate.now())}일 ${ChronoUnit.HOURS.between(dto.birthDay, LocalDate.now())}",
+                age = "${ChronoUnit.DAYS.between(dto.birthDay, LocalDateTime.now())}일 ${ChronoUnit.HOURS.between(dto.birthDay, LocalDateTime.now())}",
                 isEvolutionAvailable = if(dto.exp == 100) true else false,
                 nextFullnessUpdateTime = (dto.nextFullnessUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                 nextHealthUpdateTime = (dto.nextHealthUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
