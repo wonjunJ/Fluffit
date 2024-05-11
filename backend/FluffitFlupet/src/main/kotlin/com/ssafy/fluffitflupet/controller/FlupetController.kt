@@ -53,4 +53,9 @@ class FlupetController(
     suspend fun evolveFlupet(@RequestHeader("memberId") userId: String): EvolveResponse {
         return flupetService.evolveFlupet(userId)
     }
+
+    @GetMapping("/history")
+    suspend fun getMyPetHistory(@RequestHeader("memberId") userId: String): HistoryResponse {
+        return flupetService.getMyPetHistory(userId)
+    }
 }

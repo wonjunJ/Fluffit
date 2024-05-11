@@ -12,12 +12,10 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
-import org.apache.http.HttpStatus
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
@@ -56,7 +54,7 @@ class FlupetService(
                 flupetName = dto.flupetName,
                 imageUrl = dto.imageUrl.split(","),
                 birthDay = dto.birthDay.toLocalDate(),
-                age = "${ChronoUnit.DAYS.between(dto.birthDay, LocalDateTime.now())}일 ${ChronoUnit.HOURS.between(dto.birthDay, LocalDateTime.now())}",
+                age = "${ChronoUnit.DAYS.between(dto.birthDay, LocalDateTime.now())}일 ${ChronoUnit.HOURS.between(dto.birthDay, LocalDateTime.now())}시간",
                 isEvolutionAvailable = if(dto.exp == 100) true else false,
                 nextFullnessUpdateTime = (dto.nextFullnessUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                 nextHealthUpdateTime = (dto.nextHealthUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
@@ -81,7 +79,7 @@ class FlupetService(
                 throw CustomBadRequestException(ErrorType.INVALID_USERID)
             }
             mflupet.name = nickname
-            memberFlupetRepository.save(mflupet)
+            memberFlupetRepository.save(mflupet).awaitSingle()
         }
     }
 
@@ -172,7 +170,7 @@ class FlupetService(
         mflupetRst.isDead = true
         mflupetRst.endTime = LocalDateTime.now()
         launch(Dispatchers.IO) {
-            memberFlupetRepository.save(mflupetRst)
+            memberFlupetRepository.save(mflupetRst).awaitSingle()
         }
 
         var flist: List<Flupet> = listOf() //stage == 1일때 사용
@@ -200,7 +198,7 @@ class FlupetService(
                     fullnessUpdateTime = mflupetRst.fullnessUpdateTime,
                     healthUpdateTime = mflupetRst.healthUpdateTime
                 )
-            )
+            ).awaitSingle()
         }
         return@coroutineScope EvolveResponse(
             flupetName = mflupetRst.name,
@@ -211,5 +209,15 @@ class FlupetService(
             nextFullnessUpdateTime = mflupetRst.fullnessUpdateTime!!.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
             nextHealthUpdateTime = mflupetRst.healthUpdateTime!!.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         )
+    }
+
+    suspend fun getMyPetHistory(userId: String): HistoryResponse {
+        log.info("펫 키웠던 내역 조회")
+        val flupets = withContext(Dispatchers.IO){
+            memberFlupetRepository.findHistoryByUserId(userId)
+                .toList()
+                .distinctBy { it.birthDay }
+        }
+        return HistoryResponse(flupets.subList(1, flupets.size))
     }
 }
