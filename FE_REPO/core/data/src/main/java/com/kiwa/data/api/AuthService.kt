@@ -2,7 +2,7 @@ package com.kiwa.data.api
 
 import com.kiwa.fluffit.model.user.request.NaverLoginRequest
 import com.kiwa.fluffit.model.user.request.UserRequest
-import com.kiwa.fluffit.model.user.response.TokenResponse
+import com.kiwa.fluffit.model.user.response.AutoLoginResponse
 import com.kiwa.fluffit.model.user.response.Tokens
 import com.kiwa.fluffit.model.user.response.UserModificationResponse
 import com.kiwa.fluffit.model.user.response.UserResponse
@@ -20,20 +20,20 @@ interface AuthService {
         @Header("refreshToken") refreshToken: String
     ): Tokens
 
-    @POST("member-service/autoLogin")
+    @GET("member-service/member/login")
     suspend fun autoLogin(
         @Header("Authorization") accessToken: String
-    ): TokenResponse
+    ): AutoLoginResponse
 
     @POST("member-service/auth/login")
     suspend fun signInNaver(
         @Body naverLoginRequest: NaverLoginRequest
     ): Tokens
 
-    @GET("members/nickname")
+    @GET("member-service/nickname")
     suspend fun loadUserName(): UserResponse
 
-    @PUT("api/members/nickname")
+    @PUT("member-service/member/update-nickname")
     suspend fun saveNewUserName(
         @Body nickname : UserRequest
     ) : UserModificationResponse

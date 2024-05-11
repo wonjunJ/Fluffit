@@ -10,8 +10,6 @@ import com.kiwa.fluffit.model.user.response.UserResponse
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-private const val TAG = "UserRepositoryImpl_싸피"
-
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
     private val tokenManager: TokenManager
@@ -43,7 +41,6 @@ class UserRepositoryImpl @Inject constructor(
 
         return result.fold(
             onSuccess = {
-                tokenManager.saveToken(it.data.accessToken, it.data.refreshToken)
                 Result.success(Unit)
             },
             onFailure = {
@@ -54,12 +51,8 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun signInNaver(code: String): Result<Unit> {
         val signature = calculateHmac("$code")
-
-        Log.d(TAG, "signInNaver: code 값 : $code")
-        Log.d(TAG, "signInNaver: signature 값 : $signature")
-
-        // test를 위해 강제 token 발급 성공 process로 대신하여 테스트함. 추후에는 하단 주석코드를 사용하면 됩니다
         val result = runBlocking { userDataSource.signInNaver(code, signature) }
+
         return result.fold(
             onSuccess = {
                 tokenManager.saveToken(it.accessToken, it.refreshToken)
@@ -74,11 +67,9 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getNaverId(accessToken: String): Result<String> =
         userDataSource.getNaverLoginId(accessToken).fold(
             onSuccess = {
-                Log.d(TAG, "getNaverId: 네이버 ID 값 성공 : $it")
                 Result.success(it)
             },
             onFailure = {
-                Log.d(TAG, "getNaverId: 네이버 ID 값 실패 : $it")
                 Result.failure(it)
             }
         )

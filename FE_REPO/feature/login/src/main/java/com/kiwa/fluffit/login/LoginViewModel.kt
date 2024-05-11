@@ -11,8 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "LoginViewModel 싸피"
-
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val checkAccessTokenUseCase: CheckAccessTokenUseCase,
@@ -54,11 +52,9 @@ class LoginViewModel @Inject constructor(
     private suspend fun checkAccessToken() {
         checkAccessTokenUseCase().fold(
             onSuccess = {
-                Log.d(TAG, "checkAccessToken: AccessToken 확인 성공")
                 onTriggerEvent(LoginViewEvent.TryAutoLogin)
             },
             onFailure = {
-                Log.d(TAG, "checkAccessToken: AccessToken 확인 실패")
                 setState { LoginViewState.Default() }
             }
         )
@@ -67,11 +63,9 @@ class LoginViewModel @Inject constructor(
     private suspend fun tryAutoLogin() {
         tryAutoLoginUseCase().fold(
             onSuccess = {
-                Log.d(TAG, "tryAutoLogin: AutoLogin 성공")
-                setState { LoginViewState.AutoLogin() }
+                setState { LoginViewState.LoginSuccess() }
             },
             onFailure = {
-                Log.d(TAG, "tryAutoLogin: AutoLogin 실패")
                 setState { LoginViewState.Default() }
             }
         )
@@ -80,11 +74,9 @@ class LoginViewModel @Inject constructor(
     private suspend fun fetchUserNaverId(accessToken: String) {
         getNaverIdUseCase(accessToken).fold(
             onSuccess = {
-                Log.d(TAG, "fetchUserNaverId: 네이버 ID 가져오기 성공")
                 tryToLogin(it)
             },
             onFailure = {
-                Log.d(TAG, "fetchUserNaverId: 네이버 ID 가져오기 실패")
                 setState { showToast(it.message ?: "네이버 접속 실패") }
             }
         )
@@ -93,12 +85,9 @@ class LoginViewModel @Inject constructor(
     private suspend fun tryToLogin(naverId: String) {
         signInNaverUseCase(naverId).fold(
             onSuccess = {
-                Log.d(TAG, "tryToLogin: 네이버ID 값 : $naverId")
-                Log.d(TAG, "tryToLogin: 로그인 시도 성공")
                 setState { LoginViewState.LoginSuccess() }
             },
             onFailure = {
-                Log.d(TAG, "tryToLogin: 로그인 시도 실패")
                 setState { showToast(it.message ?: "네트워크 에러") }
                 setState { LoginViewState.Default() }
             }

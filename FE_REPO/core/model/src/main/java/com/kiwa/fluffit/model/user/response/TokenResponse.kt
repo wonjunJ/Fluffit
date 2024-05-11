@@ -1,9 +1,8 @@
 package com.kiwa.fluffit.model.user.response
 
-data class TokenResponse(
+data class AutoLoginResponse(
     val status: Int,
-    val message: String,
-    val data: Tokens
+    val message: String
 )
 
 data class Tokens(

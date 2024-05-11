@@ -3,10 +3,9 @@ package com.kiwa.data.datasource
 import com.kiwa.data.api.AuthService
 import com.kiwa.data.api.NaverAuthService
 import com.kiwa.data.api.NaverLoginService
-import com.kiwa.fluffit.model.User
 import com.kiwa.fluffit.model.user.request.NaverLoginRequest
 import com.kiwa.fluffit.model.user.request.UserRequest
-import com.kiwa.fluffit.model.user.response.TokenResponse
+import com.kiwa.fluffit.model.user.response.AutoLoginResponse
 import com.kiwa.fluffit.model.user.response.Tokens
 import com.kiwa.fluffit.model.user.response.UserResponse
 import javax.inject.Inject
@@ -16,7 +15,7 @@ class UserDataSourceImpl @Inject constructor(
     private val naverAuthService: NaverAuthService,
     private val naverLoginService: NaverLoginService
 ) : UserDataSource {
-    override suspend fun autoLogin(accessToken: String): Result<TokenResponse> = runCatching {
+    override suspend fun autoLogin(accessToken: String): Result<AutoLoginResponse> = runCatching {
         authService.autoLogin(accessToken)
     }
 

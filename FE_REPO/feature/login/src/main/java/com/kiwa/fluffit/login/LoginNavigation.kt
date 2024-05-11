@@ -17,5 +17,7 @@ fun NavGraphBuilder.loginScreen(
 }
 
 fun NavController.navigateToLogin() {
-    this.navigate(loginRoute)
+    this.navigate(loginRoute) {
+        popUpTo("mypage") { inclusive = true }
+    }
 }
