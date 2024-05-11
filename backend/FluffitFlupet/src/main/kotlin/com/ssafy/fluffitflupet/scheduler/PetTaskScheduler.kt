@@ -5,6 +5,7 @@ import com.ssafy.fluffitflupet.repository.MemberFlupetRepository
 import com.ssafy.fluffitflupet.service.FlupetService
 import jakarta.annotation.PreDestroy
 import kotlinx.coroutines.*
+import kotlinx.coroutines.reactor.awaitSingle
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -66,7 +67,7 @@ class PetTaskScheduler(
             }
             log.info("스케쥴링에서의 현재 포만감은 ${data.fullness}")
             withContext(Dispatchers.IO){
-                memberFlupetRepository.save(data)
+                memberFlupetRepository.save(data).awaitSingle()
             }
         }
     }
