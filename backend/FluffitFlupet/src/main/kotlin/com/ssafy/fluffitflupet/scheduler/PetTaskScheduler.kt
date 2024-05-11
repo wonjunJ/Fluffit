@@ -25,7 +25,7 @@ class PetTaskScheduler(
     var dropList = ArrayList<MemberFlupet>()
 
     //2시간마다 스케쥴링을 돈다(초기 딜레이를 얼마로 할지)
-    @Scheduled(fixedDelay = 1000 * 60 * 60 * 2L, initialDelay = 1000 * 60 * 2L)
+    @Scheduled(fixedDelay = 1000 * 60, initialDelay = 1000 * 60 * 2L)
     fun run() {
         memberFlupetRepository.findAllByIsDeadIsFalse()
             .onBackpressureBuffer(256,
@@ -72,17 +72,18 @@ class PetTaskScheduler(
         var hoursDiff = ChronoUnit.HOURS.between(data.fullnessUpdateTime, LocalDateTime.now())
         var tmp = 0
         var fullness = data.fullness
-        for (hour in 1..hoursDiff step 1) {
-            val checkTime = data.fullnessUpdateTime?.plusHours(hour)
-            if (checkTime?.hour in 0..7) {
-                if ((checkTime?.hour?.minus(tmp) ?: 0) >= 2) {
-                    fullness -= 5
-                    tmp += 2
-                }
-            } else {
-                fullness -= 5
-            }
-        }
+//        for (hour in 1..hoursDiff step 1) {
+//            val checkTime = data.fullnessUpdateTime?.plusHours(hour)
+//            if (checkTime?.hour in 0..7) {
+//                if ((checkTime?.hour?.minus(tmp) ?: 0) >= 2) {
+//                    fullness -= 5
+//                    tmp += 2
+//                }
+//            } else {
+//                fullness -= 5
+//            }
+//        }
+        fullness -= 3
         data.fullness = fullness
         data.fullnessUpdateTime = LocalDateTime.now()
     }
