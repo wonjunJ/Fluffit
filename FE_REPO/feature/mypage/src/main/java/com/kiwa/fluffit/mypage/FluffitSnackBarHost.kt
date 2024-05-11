@@ -20,7 +20,8 @@ import com.kiwa.fluffit.designsystem.theme.fluffitTypography
 
 @Composable
 internal fun FluffitSnackBarHost(
-    modifier: Modifier, snackBarHostState: SnackbarHostState
+    modifier: Modifier,
+    snackBarHostState: SnackbarHostState
 ) {
     SnackbarHost(
         modifier = modifier,

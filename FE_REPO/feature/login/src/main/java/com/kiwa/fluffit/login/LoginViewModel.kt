@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.login
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.kiwa.domain.usecase.CheckAccessTokenUseCase
 import com.kiwa.domain.usecase.GetNaverIdUseCase

@@ -38,7 +38,11 @@ internal fun MyPageScreen(
 
     if (viewState.isTryingSignOut) {
         SignOutDialog(
-            { viewModel.onTriggerEvent(MyPageViewEvent.OnClickSignOutConfirm(fetchNaverAccessToken())) },
+            {
+                viewModel.onTriggerEvent(
+                    MyPageViewEvent.OnClickSignOutConfirm(fetchNaverAccessToken())
+                )
+            },
             { viewModel.onTriggerEvent(MyPageViewEvent.OnCancelSignOut) }
         )
     }
@@ -50,12 +54,15 @@ internal fun MyPageScreen(
     ObserveToastMessage(viewState, snackBarHostState, viewModel)
 
     Box {
-        //ui 확인용 코드
-        if (viewState is MyPageViewState.Default || viewState is MyPageViewState.Init || viewState is MyPageViewState.EditName) {
+        // ui 확인용 코드
+        if (viewState is MyPageViewState.Default ||
+            viewState is MyPageViewState.Init ||
+            viewState is MyPageViewState.EditName
+        ) {
             MyPageView(viewState, viewModel, onClickFlupetHistory, onClickBattleRecord)
         }
 
-        //실제 코드
+        // 실제 코드
 //        if (viewState is MyPageViewState.Default) {
 //            MyPageView(viewState, viewModel, onClickFlupetHistory, onClickBattleRecord)
 //        }

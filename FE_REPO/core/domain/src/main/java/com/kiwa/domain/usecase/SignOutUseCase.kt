@@ -11,6 +11,8 @@ class SignOutUseCase @Inject constructor(
         naverSecret: String,
         accessToken: String
     ) = userRepository.signOut(
-        naverClientId, naverSecret, accessToken
+        naverClientId,
+        naverSecret,
+        accessToken
     )
 }

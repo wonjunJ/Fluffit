@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.kiwa.fluffit.designsystem.theme.fluffitTypography
 
 private const val TAG = "UserNameUI_싸피"
+
 @Composable
 fun UserNameUI(
     viewState: MyPageViewState,
@@ -42,12 +42,12 @@ fun UserNameUI(
     ) {
         when (viewState) {
             is MyPageViewState.EditName -> EditModeUI(name) {
-                Log.d(TAG, "UserNameUI:display -> edit ${it}")
+                Log.d(TAG, "UserNameUI:display -> edit $it")
                 onClickConfirmButton(it)
             }
 
             else -> DisplayModeUI(name = name) {
-                Log.d(TAG, "UserNameUI: edit -> display ${name}")
+                Log.d(TAG, "UserNameUI: edit -> display $name")
                 onClickPencilButton()
             }
         }

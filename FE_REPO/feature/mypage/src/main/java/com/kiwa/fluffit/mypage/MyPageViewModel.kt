@@ -6,7 +6,6 @@ import com.kiwa.domain.usecase.LogOutUseCase
 import com.kiwa.domain.usecase.SaveNewUserNameUseCase
 import com.kiwa.domain.usecase.SignOutUseCase
 import com.kiwa.fluffit.base.BaseViewModel
-import com.kiwa.fluffit.home.HomeViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,7 +24,11 @@ class MyPageViewModel @Inject constructor(
             MyPageViewEvent.Initialize -> tryLoadUserName()
 
             MyPageViewEvent.OnClickPencil -> setState { onStartEditUserName() }
-            is MyPageViewEvent.OnClickModifyUserName -> setState { onFinishEditUserName(event.newName) }
+            is MyPageViewEvent.OnClickModifyUserName -> setState {
+                onFinishEditUserName(
+                    event.newName
+                )
+            }
 
             MyPageViewEvent.OnClickLogout -> logout()
             is MyPageViewEvent.OnClickSignOut -> setState { tryingSignOut() }

@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.flupet_history
+package com.kiwa.fluffit.flupet.history
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -6,12 +6,12 @@ import androidx.navigation.compose.composable
 
 const val flupetHistoryRoute = "flupet-history"
 
-fun NavGraphBuilder.flupetHistoryScreen(){
-    composable(flupetHistoryRoute){
+fun NavGraphBuilder.flupetHistoryScreen() {
+    composable(flupetHistoryRoute) {
         FlupetHistoryScreen()
     }
 }
 
-fun NavController.navigateToFlupetHistory(){
+fun NavController.navigateToFlupetHistory() {
     this.navigate(flupetHistoryRoute)
 }

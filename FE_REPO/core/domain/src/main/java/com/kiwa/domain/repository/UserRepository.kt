@@ -21,5 +21,5 @@ interface UserRepository {
 
     suspend fun loadUserName(): Result<UserResponse>
 
-    suspend fun setUserName(name: String) : Result<Unit>
+    suspend fun setUserName(name: String): Result<Unit>
 }

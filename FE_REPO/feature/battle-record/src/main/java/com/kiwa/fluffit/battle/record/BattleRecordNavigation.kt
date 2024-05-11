@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.battle_record
+package com.kiwa.fluffit.battle.record
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

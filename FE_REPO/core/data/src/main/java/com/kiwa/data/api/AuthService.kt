@@ -35,6 +35,6 @@ interface AuthService {
 
     @PUT("member-service/member/update-nickname")
     suspend fun saveNewUserName(
-        @Body nickname : UserRequest
-    ) : UserModificationResponse
+        @Body nickname: UserRequest
+    ): UserModificationResponse
 }

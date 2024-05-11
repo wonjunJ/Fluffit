@@ -1,11 +1,9 @@
 package com.kiwa.data.repository
 
-import android.util.Log
 import com.kiwa.data.datasource.UserDataSource
 import com.kiwa.data.util.calculateHmac
 import com.kiwa.domain.TokenManager
 import com.kiwa.domain.repository.UserRepository
-import com.kiwa.fluffit.model.User
 import com.kiwa.fluffit.model.user.response.UserResponse
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -103,7 +101,6 @@ class UserRepositoryImpl @Inject constructor(
                 Result.failure(it)
             }
         )
-
 
     override suspend fun setUserName(name: String): Result<Unit> =
         userDataSource.saveNewUserName(name).fold(
