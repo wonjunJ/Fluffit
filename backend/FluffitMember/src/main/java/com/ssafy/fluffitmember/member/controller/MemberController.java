@@ -8,6 +8,7 @@ import com.ssafy.fluffitmember.exception.NotValidNickname;
 import com.ssafy.fluffitmember.member.dto.Request.UpdateNicknameReqDto;
 import com.ssafy.fluffitmember.member.dto.Response.AutoLoginResDto;
 import com.ssafy.fluffitmember.member.dto.Response.GetNicknameResDto;
+import com.ssafy.fluffitmember.member.dto.Response.GetRankResDto;
 import com.ssafy.fluffitmember.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,6 +61,15 @@ public class MemberController {
         return ResponseEntity.ok().body(autoLoginResDto);
     }
 
+    @GetMapping("/rank")
+    public ResponseEntity<Object> getRank(@RequestHeader("memberId") String memberId){
+        try {
+            GetRankResDto getRankResDto = memberService.getRank(memberId);
+            return ResponseEntity.ok().body(getRankResDto);
+        }catch (NotFoundUserException e){
+            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.NOT_FOUND_MEMBER));
+        }
+    }
     @GetMapping("/get-coin")
     public int getUserCoin(@RequestHeader("memberId") String memberId){
         return memberService.getUserCoin(memberId);

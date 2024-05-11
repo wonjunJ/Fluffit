@@ -5,6 +5,7 @@ import com.ssafy.fluffitmember.exception.NotFoundUserException;
 import com.ssafy.fluffitmember.exception.NotValidNickname;
 import com.ssafy.fluffitmember.member.dto.Request.UpdateNicknameReqDto;
 import com.ssafy.fluffitmember.member.dto.Response.GetNicknameResDto;
+import com.ssafy.fluffitmember.member.dto.Response.GetRankResDto;
 import com.ssafy.fluffitmember.member.entity.Member;
 import com.ssafy.fluffitmember.member.repository.MemberRepository;
 import java.util.Optional;
@@ -59,5 +60,13 @@ public class MemberService {
         GetNicknameResDto getNicknameResDto = mapper.map(findMember.get(), GetNicknameResDto.class);
         log.info("after mapper nickname " + getNicknameResDto.getNickname());
         return getNicknameResDto;
+    }
+
+    public GetRankResDto getRank(String memberId) {
+        Optional<Member> findMember = memberRepository.findByMemberId(memberId);
+        if (findMember.isEmpty()){
+            throw new NotFoundUserException();
+        }
+        return null;
     }
 }
