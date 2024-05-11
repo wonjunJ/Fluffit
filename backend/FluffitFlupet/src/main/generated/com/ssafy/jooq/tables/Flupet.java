@@ -64,7 +64,7 @@ public class Flupet extends TableImpl<FlupetRecord> {
     /**
      * The column <code>fluffit_flupet.flupet.img_url</code>.
      */
-    public final TableField<FlupetRecord, String> IMG_URL = createField(DSL.name("img_url"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<FlupetRecord, String> IMG_URL = createField(DSL.name("img_url"), SQLDataType.CLOB.nullable(false), this, "");
 
     /**
      * The column <code>fluffit_flupet.flupet.stage</code>.

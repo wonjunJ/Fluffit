@@ -4,7 +4,7 @@ CREATE TABLE `flupet` (
                           `id`	int unsigned auto_increment
                               primary key,
                           `name`	varchar(10)	NOT NULL,
-                          `img_url`	varchar(255)	NOT NULL,
+                          `img_url`	MEDIUMTEXT	NOT NULL, -- 터지면 MEDIUMTEXT로 설정
                           `stage`	int	NOT NULL
 );
 
@@ -43,6 +43,12 @@ CREATE TABLE `food_type` (
                              `stock`	int	NOT NULL    DEFAULT 30,
                              `description`	varchar(255)	NOT NULL
 );
+
+INSERT INTO flupet (`name`, `img_url`, `stage`) VALUES
+                                                    ('알', 'https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/egg.gif', 1),
+                                                    ('흰토끼', 'https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/rabbit_white1.png,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/rabbit_white2.gif,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/rabbit_white_sleep.gif,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/rabbit_white_happy.gif', 2),
+                                                    ('네로', 'https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/cat_gray.png,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/gray_cat_head_banging.gif,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/cat_gray_sleep.gif,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/cat_gray_happy.gif', 2),
+                                                    ('코기', 'https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/dog_corgi.png,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/dog_corgi2.gif,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/dog_corgi_sleep.gif,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/dog_corgi_happy.gif', 2);
 
 -- ALTER TABLE `members` ADD CONSTRAINT `PK_MEMBERS` PRIMARY KEY (
 -- 	`id`
