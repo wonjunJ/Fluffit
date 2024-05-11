@@ -5,7 +5,7 @@ data class CollectionResponse(
 ){
     data class Flupet(
         var species: String,
-        var imageUrl: String,
+        var imageUrl: List<String>,
         var tier: Int,
         var metBefore: Boolean //유저가 이 플러펫을 가지고 있는지 여부
     )

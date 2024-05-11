@@ -23,4 +23,5 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     public static final Index MEMBER_FLUPET_IDX_MEMBER_ID = Internal.createIndex(DSL.name("idx_member_id"), MemberFlupet.MEMBER_FLUPET, new OrderField[] { MemberFlupet.MEMBER_FLUPET.MEMBER_ID }, false);
+    public static final Index MEMBER_FLUPET_IDX_MEMBER_ID_IS_DEAD = Internal.createIndex(DSL.name("idx_member_id_is_dead"), MemberFlupet.MEMBER_FLUPET, new OrderField[] { MemberFlupet.MEMBER_FLUPET.MEMBER_ID, MemberFlupet.MEMBER_FLUPET.IS_DEAD }, false);
 }

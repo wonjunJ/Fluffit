@@ -174,7 +174,7 @@ public class MemberFlupet extends TableImpl<MemberFlupetRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.MEMBER_FLUPET_IDX_MEMBER_ID);
+        return Arrays.asList(Indexes.MEMBER_FLUPET_IDX_MEMBER_ID, Indexes.MEMBER_FLUPET_IDX_MEMBER_ID_IS_DEAD);
     }
 
     @Override
