@@ -13,7 +13,7 @@ CREATE TABLE `member_flupet` (
                                  `id`	int unsigned auto_increment
                                      primary key,
                                  `flupet_id`	int unsigned	NOT NULL,
-                                 `member_id`	varchar(64)	NOT NULL,
+                                 `member_id`	varchar(255)	NOT NULL,
                                  `name`	varchar(10)    NOT NULL,
                                  `exp`	int	NOT NULL	DEFAULT 0,
                                  `steps`	int unsigned	NOT NULL	DEFAULT 0,
