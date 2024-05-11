@@ -81,7 +81,7 @@ class MemberFlupetRepositoryImpl(
             .map { record ->
                 CollectionResponse.Flupet(
                     species = record.get("species", String::class.java),
-                    imageUrl = record.get(FLUPET.IMG_URL, String::class.java),
+                    imageUrl = record.get(FLUPET.IMG_URL, String::class.java).split(","),
                     tier = record.get("tier", Int::class.java),
                     metBefore = record.get("metBefore", Boolean::class.java)
                 )

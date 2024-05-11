@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.slf4j.LoggerFactory
+import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
@@ -25,7 +26,8 @@ import kotlin.system.measureTimeMillis
 class FlupetService(
     private val memberFlupetRepository: MemberFlupetRepository,
     private val client: MemberServiceClientAsync,
-    private val flupetRepository: FlupetRepository
+    private val flupetRepository: FlupetRepository,
+    private val env: Environment
 ) {
     //lombok slf4j를 쓰기 위해
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
@@ -47,7 +49,7 @@ class FlupetService(
                 fullness = dto.fullness,
                 health = dto.health,
                 flupetName = dto.flupetName,
-                imageUrl = dto.imageUrl,
+                imageUrl = dto.imageUrl.split(","),
                 birthDay = dto.birthDay.toLocalDate(),
                 age = "${ChronoUnit.DAYS.between(dto.birthDay, LocalDate.now())}일 ${ChronoUnit.HOURS.between(dto.birthDay, LocalDate.now())}",
                 isEvolutionAvailable = if(dto.exp == 100) true else false,
@@ -90,9 +92,9 @@ class FlupetService(
     }
 
     suspend fun getHealth(userId: String): HealthResponse {
-        //시간 측정용(임시)
+        //시간 측정용(임시)-운영시에는 주석 처리
         val measuredTime = measureTimeMillis {
-            memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull()
+            withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         }
         log.info(measuredTime.toString())
 
@@ -113,16 +115,20 @@ class FlupetService(
     }
 
     suspend fun generateFlupet(userId: String): GenFlupetResponse = coroutineScope {
+        val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
+        if(mflupet != null){
+            throw CustomBadRequestException(ErrorType.NOT_AVAILABLE_GEN_PET)
+        }
         launch(Dispatchers.IO) {
             memberFlupetRepository.save(
                 MemberFlupet(
-                    flupetId = 0,
+                    flupetId = 1,
                     memberId = userId,
                     name = "새로운 알"
                 )
             ).awaitSingle()
         }
-        val fInfo = async(Dispatchers.IO) { flupetRepository.findById(0) }
+        val fInfo = async(Dispatchers.IO) { flupetRepository.findById(1) }
         return@coroutineScope GenFlupetResponse(
             flupetName = "새로운 알",
             imageUrl = fInfo.await()?.imgUrl,
@@ -136,11 +142,13 @@ class FlupetService(
         val mypet = async(Dispatchers.IO) { memberFlupetRepository.findByMemberIdAndFlupet(userId) }
         val mflupet = async(Dispatchers.IO) { memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         val mypetRst = mypet.await() ?: throw CustomBadRequestException(ErrorType.INVALID_USERID)
+
         //val t = flupetRepository.findByStage(mypetRst.stage+1).toList()
+        log.info("전체 진화 단계 수는 ${env.getProperty("total.stage")}")
         val flupets = async(Dispatchers.IO) {
-            if(mypetRst.stage == 1){ //기본 단계인 알을 1단계로 설정
+            if(mypetRst.stage == 1){ //기본 단계인 알을 1단계로 설정(알에서 그 다음으로 진화할때는 있는 캐릭터 중 랜덤으로 설정)
                 flupetRepository.findByStage(mypetRst.stage+1).toList()
-            }else if(mypetRst.stage == 2){
+            }else if(mypetRst.stage < (env.getProperty("total.stage")?.toInt() ?: 3)){
                 flupetRepository.findById(mypetRst.flupetId+1)
             }else{
                 throw CustomBadRequestException(ErrorType.NOT_AVAILABLE_EVOLVE)
@@ -159,7 +167,7 @@ class FlupetService(
 
         var flist: List<Flupet> = listOf() //stage == 1일때 사용
         var evolveFlupet: Flupet? = null //stage == 2일때 사용
-        var anyrst = flupets.await()
+        val anyrst = flupets.await() ?: throw CustomBadRequestException(ErrorType.NOT_FOUND_NEXT_FLUPET)
         if(mypetRst.stage == 1){
             val tmp = anyrst as List<Flupet>
             flist = tmp.shuffled() //리스트(List<Flupet>)를 무작위로 썩은 값을 반환한다.
@@ -186,7 +194,7 @@ class FlupetService(
         }
         return@coroutineScope EvolveResponse(
             flupetName = mflupetRst.name,
-            imageUrl = if(mypetRst.stage == 1) flist[0].imgUrl else evolveFlupet!!.imgUrl,
+            imageUrl = if(mypetRst.stage == 1) flist[0].imgUrl.split(",") else evolveFlupet!!.imgUrl.split(","),
             fullness = mflupetRst.fullness,
             health = mflupetRst.health,
             isEvolutionAvailable = false,
