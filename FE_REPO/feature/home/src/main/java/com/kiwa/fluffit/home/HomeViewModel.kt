@@ -5,7 +5,6 @@ import com.kiwa.domain.usecase.GetMainUIInfoUseCase
 import com.kiwa.domain.usecase.UpdateFullnessUseCase
 import com.kiwa.domain.usecase.UpdateHealthUseCase
 import com.kiwa.fluffit.base.BaseViewModel
-import com.kiwa.fluffit.model.main.Flupet
 import com.kiwa.fluffit.model.main.FullnessUpdateInfo
 import com.kiwa.fluffit.model.main.HealthUpdateInfo
 import com.kiwa.fluffit.model.main.MainUIModel
@@ -13,7 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +20,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getMainUIInfoUseCase: GetMainUIInfoUseCase,
     private val updateFullnessUseCase: UpdateFullnessUseCase,
-    private val updateHealthUseCase: UpdateHealthUseCase
+    private val updateHealthUseCase: UpdateHealthUseCase,
 ) : BaseViewModel<HomeViewState, HomeViewEvent>() {
     override fun createInitialState(): HomeViewState =
         HomeViewState.Default()
@@ -33,11 +32,11 @@ class HomeViewModel @Inject constructor(
     private lateinit var updateFullnessJob: Job
     private lateinit var updateHealthJob: Job
 
-    private val fullnessUpdateState: MutableSharedFlow<FullnessUpdateInfo> =
-        MutableSharedFlow()
+    private val fullnessUpdateState: MutableStateFlow<FullnessUpdateInfo> =
+        MutableStateFlow(FullnessUpdateInfo(0, 0L, false))
 
-    private val healthUpdateState: MutableSharedFlow<HealthUpdateInfo> =
-        MutableSharedFlow()
+    private val healthUpdateState: MutableStateFlow<HealthUpdateInfo> =
+        MutableStateFlow(HealthUpdateInfo(0, 0L, false))
 
     init {
         viewModelScope.launch {
@@ -54,14 +53,19 @@ class HomeViewModel @Inject constructor(
         getMainUIInfo()
         viewModelScope.launch {
             updateFullnessUseCase().fold(
-                onSuccess = { fullnessUpdateState.emit(it) },
-                onFailure = {}
+                onSuccess = {
+                    fullnessUpdateState.emit(it)
+                },
+                onFailure = {
+                }
             )
         }
 
         viewModelScope.launch {
             updateHealthUseCase().fold(
-                onSuccess = { healthUpdateState.emit(it) },
+                onSuccess = {
+                    healthUpdateState.emit(it)
+                },
                 onFailure = {}
             )
         }
@@ -94,7 +98,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun HomeViewState.updateFullness(fullnessUpdateInfo: FullnessUpdateInfo): HomeViewState =
+    private fun HomeViewState.updateFullness(fullnessUpdateInfo: FullnessUpdateInfo):
+        HomeViewState =
         when (this) {
             is HomeViewState.Default -> this.copy(
                 nextFullnessUpdateTime = fullnessUpdateInfo.nextUpdateTime,
@@ -134,29 +139,29 @@ class HomeViewModel @Inject constructor(
 
     private fun getMainUIInfo() {
         viewModelScope.launch {
-            setState {
-                showMainUIInfo(
-                    MainUIModel(
-                        uiState.value.coin,
-                        Flupet(
-                            uiState.value.flupet.fullness,
-                            uiState.value.flupet.health,
-                            uiState.value.flupet.imageUrl,
-                            uiState.value.flupet.name,
-                            uiState.value.flupet.birthDay,
-                            uiState.value.flupet.age,
-                            uiState.value.flupet.evolutionAvailable
-                        ),
-                        nextFullnessUpdateTime = uiState.value.nextFullnessUpdateTime,
-                        nextHealthUpdateTime = uiState.value.nextHealthUpdateTime
+            getMainUIInfoUseCase().fold(
+                onSuccess = {
+                    healthUpdateState.tryEmit(
+                        HealthUpdateInfo(
+                            it.flupet.health,
+                            it.nextHealthUpdateTime,
+                            it.flupet.evolutionAvailable
+                        )
                     )
-                )
-            }
+                    fullnessUpdateState.tryEmit(
+                        FullnessUpdateInfo(
+                            it.flupet.fullness,
+                            it.nextFullnessUpdateTime,
+                            it.flupet.evolutionAvailable
+                        )
+                    )
+                    setState {
+                        showMainUIInfo(it)
+                    }
+                },
+                onFailure = {}
+            )
         }
-//        getMainUIInfoUseCase().fold(
-//            onSuccess = { setState { showMainUIInfo(it) } },
-//            onFailure = {}
-//        )
     }
 
     private fun showMainUIInfo(mainUIModel: MainUIModel): HomeViewState =

@@ -1,6 +1,5 @@
 package com.kiwa.data.di
 
-import androidx.media3.ui.BuildConfig
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.kiwa.data.util.AuthAuthenticator
@@ -21,11 +20,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private val loggingInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        if (BuildConfig.DEBUG) {
-            setLevel(HttpLoggingInterceptor.Level.HEADERS)
-        } else {
-            setLevel(HttpLoggingInterceptor.Level.NONE)
-        }
+        setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
     @Qualifier

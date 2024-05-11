@@ -7,11 +7,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -90,9 +89,7 @@ internal fun HomeScreen(
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
-                .fillMaxWidth()
-                .padding(horizontal = 80.dp)
-                .wrapContentHeight(),
+                .wrapContentSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(24.dp))
@@ -104,7 +101,7 @@ internal fun HomeScreen(
             Image(
                 painter = rememberImagePainter(
                     imageLoader = imageLoader,
-                    data = uiState.flupet.imageUrl,
+                    data = uiState.flupet.imageUrls.standard,
                     builder = {
                         size(OriginalSize)
                     }
@@ -114,7 +111,7 @@ internal fun HomeScreen(
                     .size(200.dp)
                     .padding(top = 32.dp)
             )
-            FlupetNameUI(uiState, onClickPencilButton, onClickConfirmButton, uiState.flupet.name)
+            FlupetNameUI(uiState, onClickPencilButton, onClickConfirmButton)
         }
     }
 }

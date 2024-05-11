@@ -6,5 +6,5 @@ import javax.inject.Inject
 class UpdateHealthUseCase @Inject constructor(
     private val mainRepository: MainRepository
 ) {
-    operator fun invoke() = mainRepository.updateHealth()
+    suspend operator fun invoke() = mainRepository.updateHealth()
 }

@@ -6,5 +6,5 @@ import javax.inject.Inject
 class UpdateFullnessUseCase @Inject constructor(
     private val mainRepository: MainRepository
 ) {
-    operator fun invoke() = mainRepository.updateFullness()
+    suspend operator fun invoke() = mainRepository.updateFullness()
 }
