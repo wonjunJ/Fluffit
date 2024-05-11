@@ -46,6 +46,7 @@ public class MemberController {
     @GetMapping("/nickname")
     public ResponseEntity<Object> getNickname(@RequestHeader("memberId") String memberId){
         try {
+            log.info("////////memberID = "+memberId);
             GetNicknameResDto getNicknameRes = memberService.getNickname(memberId);
             return ResponseEntity.ok().body(getNicknameRes);
         }catch (NotFoundUserException e){
