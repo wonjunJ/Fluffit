@@ -42,7 +42,7 @@ class PetTaskScheduler(
             val job2 = launch { updateHealth(memberFlupet) }
             launch {
                 joinAll(job1, job2)
-                if(memberFlupet.fullness == 0 || memberFlupet.health == 0) {
+                if(memberFlupet.fullness <= 0 || memberFlupet.health <= 0) {
                     memberFlupet.isDead = true
                     memberFlupet.endTime = LocalDateTime.now()
                 }
@@ -61,12 +61,13 @@ class PetTaskScheduler(
         val job2 = launch { updateHealth(data) }
         launch {
             joinAll(job1, job2)
-            if(data.fullness == 0 || data.health == 0){
+            if(data.fullness <= 0 || data.health <= 0){
                 data.isDead = true
                 data.endTime = LocalDateTime.now()
             }
             log.info("스케쥴링에서의 현재 포만감은 ${data.fullness}")
             withContext(Dispatchers.IO){
+                //코루틴을 사용할때 Mono로 리턴이 되는거에는 뒤에 .awaitSingle()을 붙혀줘야 작동이 된다.
                 memberFlupetRepository.save(data).awaitSingle()
             }
         }
