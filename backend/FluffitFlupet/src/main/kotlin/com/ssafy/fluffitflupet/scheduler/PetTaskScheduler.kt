@@ -27,6 +27,7 @@ class PetTaskScheduler(
     //2시간마다 스케쥴링을 돈다(초기 딜레이를 얼마로 할지)
     @Scheduled(fixedDelay = 1000 * 60, initialDelay = 1000 * 60 * 2L)
     fun run() {
+        log.info("스케쥴링")
         memberFlupetRepository.findAllByIsDeadIsFalse()
             .onBackpressureBuffer(256,
                 {dropped -> dropList.add(dropped)},
@@ -52,6 +53,7 @@ class PetTaskScheduler(
     }
 
     fun handleData(data: MemberFlupet){
+        log.info("handleData")
         //포만감 업데이트
         val job1 = launch { updateFullness(data) }
         //건강 업데이트
@@ -62,6 +64,7 @@ class PetTaskScheduler(
                 data.isDead = true
                 data.endTime = LocalDateTime.now()
             }
+            log.info("스케쥴링에서의 현재 포만감은 ${data.fullness}")
             withContext(Dispatchers.IO){
                 memberFlupetRepository.save(data)
             }
