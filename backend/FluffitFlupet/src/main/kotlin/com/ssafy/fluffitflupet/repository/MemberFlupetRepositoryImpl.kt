@@ -26,13 +26,13 @@ class MemberFlupetRepositoryImpl(
     override suspend fun findMainInfoByUserId(userId: String): MainInfoDto? {
         //return null
         return withContext(Dispatchers.IO) {
-            Mono.fromCallable {
+            Mono.from(
                 dslContext
                     .select( //fetch~into는 뒤에 as를 빼도되나??나중에 한번 테스트
                         MEMBER_FLUPET.FULLNESS.`as`("fullness"),
                         MEMBER_FLUPET.HEALTH.`as`("health"),
                         MEMBER_FLUPET.NAME.`as`("flupetName"),
-                        MEMBER_FLUPET.EXP,
+                        MEMBER_FLUPET.EXP.`as`("exp"),
                         FLUPET.IMG_URL.`as`("imageUrl"),
                         MEMBER_FLUPET.CREATE_TIME.`as`("birthDay"),
                         MEMBER_FLUPET.FULLNESS_UPDATE_TIME.`as`("nextFullnessUpdateTime"),
@@ -48,8 +48,8 @@ class MemberFlupetRepositoryImpl(
                         MEMBER_FLUPET.END_TIME.desc()
                     )
                     .limit(1)
-                    .fetchOneInto(MainInfoDto::class.java)
-            }
+            )
+                .map { record -> record.into(MainInfoDto::class.java) }
                 .awaitFirstOrNull()
         }
     }
@@ -91,7 +91,7 @@ class MemberFlupetRepositoryImpl(
     }
 
     override suspend fun findByMemberIdAndFlupet(userId: String): MyFlupetStateDto? {
-        return Mono.fromCallable{
+        return Mono.from(
             dslContext
                 .select(
                     MEMBER_FLUPET.ID.`as`("id"),
@@ -104,8 +104,8 @@ class MemberFlupetRepositoryImpl(
                 .where(MEMBER_FLUPET.MEMBER_ID.eq(userId)
                     .and(MEMBER_FLUPET.IS_DEAD.isTrue))
                 .limit(1)
-                .fetchOneInto(MyFlupetStateDto::class.java)
-        }
+        )
+            .map { record -> record.into(MyFlupetStateDto::class.java) }
             .awaitFirstOrNull()
     }
 

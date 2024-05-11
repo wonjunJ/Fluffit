@@ -69,7 +69,7 @@ public class MemberFlupet extends TableImpl<MemberFlupetRecord> {
     /**
      * The column <code>fluffit_flupet.member_flupet.member_id</code>.
      */
-    public final TableField<MemberFlupetRecord, String> MEMBER_ID = createField(DSL.name("member_id"), SQLDataType.VARCHAR(64).nullable(false), this, "");
+    public final TableField<MemberFlupetRecord, String> MEMBER_ID = createField(DSL.name("member_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>fluffit_flupet.member_flupet.name</code>.

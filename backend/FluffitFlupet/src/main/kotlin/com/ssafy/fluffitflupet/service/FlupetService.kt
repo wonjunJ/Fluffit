@@ -12,6 +12,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
+import org.apache.http.HttpStatus
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Service
@@ -37,9 +38,13 @@ class FlupetService(
         println("여기왔나?")
         val mainInfoDto = async { memberFlupetRepository.findMainInfoByUserId(userId) }
         //ErrorDecoder로 오류 처리를 할지, 아니면 try~catch로 오류처리를 할지
+        log.info("여긴가??")
         val coinWait = async { client.getUserCoin(userId) }
+        log.info("여긴가??22")
         val dto = mainInfoDto.await()
+        log.info("db조회 상태는 ${dto.toString()}")
         val coin = coinWait.await()
+        log.info("coin은 ${coin}")
         if(dto == null){ //현재 플러펫이 없다(mainInfoDto 연산이 완료될때까지 '블로킹되지 않고' 기다리게 된다)
             val response = MainInfoResponse()
             response.coin = coin
@@ -53,8 +58,8 @@ class FlupetService(
                 birthDay = dto.birthDay.toLocalDate(),
                 age = "${ChronoUnit.DAYS.between(dto.birthDay, LocalDate.now())}일 ${ChronoUnit.HOURS.between(dto.birthDay, LocalDate.now())}",
                 isEvolutionAvailable = if(dto.exp == 100) true else false,
-                nextFullnessUpdateTime = dto.nextFullnessUpdateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-                nextHealthUpdateTime = dto.nextHealthUpdateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                nextFullnessUpdateTime = dto.nextFullnessUpdateTime.plusHours(2).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                nextHealthUpdateTime = dto.nextHealthUpdateTime.plusHours(2).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                 coin = coin
             )
             return@coroutineScope response
@@ -62,6 +67,7 @@ class FlupetService(
     }
 
     suspend fun updateNickname(userId: String, nickname: String?){
+        log.info("업데이트 닉네임")
         val rgx = Regex("^[가-힣a-zA-Z0-9]+$") //한글 범위, 영어 대소문자 범위 및 숫자 범위를 포함하는 정규 표현식
         if(nickname.isNullOrEmpty()){
             throw CustomBadRequestException(ErrorType.TOO_SHORT_NICKNAME)
@@ -80,6 +86,7 @@ class FlupetService(
     }
 
     suspend fun getFullness(userId: String): FullResponse {
+        log.info("포만감 조회")
         val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         if(mflupet == null){
             throw CustomBadRequestException(ErrorType.INVALID_USERID)
@@ -96,7 +103,7 @@ class FlupetService(
         val measuredTime = measureTimeMillis {
             withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         }
-        log.info(measuredTime.toString())
+        log.info("측정된 시간은 " + measuredTime.toString())
 
         val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         if(mflupet == null){
@@ -110,11 +117,13 @@ class FlupetService(
     }
 
     suspend fun getPetCollection(userId: String): CollectionResponse {
+        log.info("도감 조회")
         val flupets = withContext(Dispatchers.IO){ memberFlupetRepository.findFlupetsByUserId(userId).toList() }
         return CollectionResponse(flupets)
     }
 
     suspend fun generateFlupet(userId: String): GenFlupetResponse = coroutineScope {
+        log.info("플러펫 생성")
         val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         if(mflupet != null){
             throw CustomBadRequestException(ErrorType.NOT_AVAILABLE_GEN_PET)
@@ -139,6 +148,7 @@ class FlupetService(
 
     @Transactional
     suspend fun evolveFlupet(userId: String): EvolveResponse = coroutineScope {
+        log.info("진화하기")
         val mypet = async(Dispatchers.IO) { memberFlupetRepository.findByMemberIdAndFlupet(userId) }
         val mflupet = async(Dispatchers.IO) { memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         val mypetRst = mypet.await() ?: throw CustomBadRequestException(ErrorType.INVALID_USERID)
