@@ -1,10 +1,12 @@
 package com.ssafy.fluffitmember.member.controller;
 
-import com.ssafy.fluffitmember.error.ErrorResponse;
-import com.ssafy.fluffitmember.error.ErrorStateCode;
-import com.ssafy.fluffitmember.exception.DuplicateNickname;
-import com.ssafy.fluffitmember.exception.NotFoundUserException;
-import com.ssafy.fluffitmember.exception.NotValidNickname;
+import com.ssafy.fluffitmember._common.error.ErrorResponse;
+import com.ssafy.fluffitmember._common.error.ErrorType;
+import com.ssafy.fluffitmember._common.exception.DuplicateNickname;
+import com.ssafy.fluffitmember._common.exception.NotFoundUserException;
+import com.ssafy.fluffitmember._common.exception.NotValidNickname;
+import com.ssafy.fluffitmember._common.success.SuccessResponse;
+import com.ssafy.fluffitmember._common.success.SuccessType;
 import com.ssafy.fluffitmember.member.dto.Response.GetCoinResDto;
 import com.ssafy.fluffitmember.member.dto.Request.UpdateNicknameReqDto;
 import com.ssafy.fluffitmember.member.dto.Response.AutoLoginResDto;
@@ -32,35 +34,30 @@ public class MemberController {
     @PutMapping("/update-nickname")
     public ResponseEntity<Object> updateNickname(@RequestHeader("memberId") String memberId, @RequestBody UpdateNicknameReqDto updateNicknameReqDto){
         try {
-            log.info("memberId" + memberId);
             memberService.updateNickname(memberId,updateNicknameReqDto);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(SuccessResponse.from(SuccessType.UPDATE_USER_NICKNAME_SUCCESSFULLY));
         } catch (NotFoundUserException e){
-            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.NOT_FOUND_MEMBER));
+            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.NOT_FOUND_MEMBER));
         } catch (NotValidNickname e) {
-            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.NOT_VALID_NICKNAME));
+            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.NOT_VALID_NICKNAME));
         } catch (DuplicateNickname e) {
-            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.DUPLICATE_NICKNAME));
+            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.DUPLICATE_NICKNAME));
         }
     }
 
     @GetMapping("/nickname")
     public ResponseEntity<Object> getNickname(@RequestHeader("memberId") String memberId){
         try {
-            log.info("////////memberID = "+memberId);
             GetNicknameResDto getNicknameRes = memberService.getNickname(memberId);
             return ResponseEntity.ok().body(getNicknameRes);
         }catch (NotFoundUserException e){
-            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.NOT_FOUND_MEMBER));
+            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.NOT_FOUND_MEMBER));
         }
     }
 
     @GetMapping("/login")
     public ResponseEntity<Object> autoLogin(){
-        AutoLoginResDto autoLoginResDto = new AutoLoginResDto();
-        autoLoginResDto.setStatus(200);
-        autoLoginResDto.setMsg("자동 로그인 성공");
-        return ResponseEntity.ok().body(autoLoginResDto);
+        return ResponseEntity.ok().body(SuccessResponse.from(SuccessType.LOGIN_SUCCESSFULLY));
     }
 
     @GetMapping("/rank")
@@ -69,7 +66,7 @@ public class MemberController {
             GetRankResDto getRankResDto = memberService.getRank(memberId);
             return ResponseEntity.ok().body(getRankResDto);
         }catch (NotFoundUserException e){
-            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorStateCode.NOT_FOUND_MEMBER));
+            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.NOT_FOUND_MEMBER));
         }
     }
     @GetMapping("/get-coin")

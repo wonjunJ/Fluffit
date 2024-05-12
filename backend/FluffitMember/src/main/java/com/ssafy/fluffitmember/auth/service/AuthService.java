@@ -2,12 +2,12 @@ package com.ssafy.fluffitmember.auth.service;
 
 import com.ssafy.fluffitmember.auth.dto.request.LoginReqDto;
 import com.ssafy.fluffitmember.auth.dto.response.LoginResDto;
-import com.ssafy.fluffitmember.exception.EncryptionException;
-import com.ssafy.fluffitmember.exception.NotValidRefreshToken;
-import com.ssafy.fluffitmember.jwt.GeneratedToken;
-import com.ssafy.fluffitmember.jwt.JwtUtil;
-import com.ssafy.fluffitmember.jwt.SavedToken;
-import com.ssafy.fluffitmember.jwt.TokenRepository;
+import com.ssafy.fluffitmember._common.exception.EncryptionException;
+import com.ssafy.fluffitmember._common.exception.NotValidRefreshToken;
+import com.ssafy.fluffitmember._common.jwt.GeneratedToken;
+import com.ssafy.fluffitmember._common.jwt.JwtUtil;
+import com.ssafy.fluffitmember._common.jwt.SavedToken;
+import com.ssafy.fluffitmember._common.jwt.TokenRepository;
 import com.ssafy.fluffitmember.member.entity.Member;
 import com.ssafy.fluffitmember.member.repository.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
