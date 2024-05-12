@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "CollectionViewModel_싸피"
+
 @HiltViewModel
 class CollectionViewModel @Inject constructor(
     private val loadCollectionUseCase: LoadCollectionUseCase,
@@ -40,7 +41,7 @@ class CollectionViewModel @Inject constructor(
     private fun tryLoadCollections() {
         viewModelScope.launch {
             val accessToken = tokenManager.getAccessToken()
-            Log.d(TAG, "tryLoadCollections: Bearer ${accessToken}")
+            Log.d(TAG, "tryLoadCollections: Bearer $accessToken")
             loadCollectionUseCase().fold(
                 onSuccess = { collectionList ->
                     setState { CollectionViewState.Default(collectionList) }

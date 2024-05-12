@@ -2,7 +2,6 @@ package com.kiwa.fluffit.model.flupet.response
 
 import com.google.gson.annotations.SerializedName
 
-
 data class Flupets(
     @SerializedName("flupets") val flupets: List<Collections>
 )

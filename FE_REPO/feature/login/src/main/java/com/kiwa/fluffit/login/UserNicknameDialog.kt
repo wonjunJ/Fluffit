@@ -38,26 +38,24 @@ fun UserNicknameDialog(
     initialText: String?,
     onClickConfirm: (text: String) -> Unit
 ) {
-
     val text = remember { mutableStateOf(initialText ?: "") }
 
     Dialog(
-        onDismissRequest = { },
+        onDismissRequest = { }
     ) {
         Card(
-            shape = RoundedCornerShape(8.dp), // Card의 모든 꼭지점에 8.dp의 둥근 모서리 적용
+            shape = RoundedCornerShape(8.dp) // Card의 모든 꼭지점에 8.dp의 둥근 모서리 적용
         ) {
             Column(
                 modifier = Modifier
                     .width(300.dp)
                     .wrapContentHeight()
                     .background(
-                        color = Color.White,
+                        color = Color.White
                     )
                     .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 Text(text = "닉네임을\n입력해주세요.")
 
                 Spacer(modifier = Modifier.height(15.dp))
@@ -70,7 +68,7 @@ fun UserNicknameDialog(
                     textStyle = TextStyle(
                         color = Color.Black,
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal,
+                        fontWeight = FontWeight.Normal
                     ),
                     decorationBox = { innerTextField ->
                         Row(
@@ -81,24 +79,24 @@ fun UserNicknameDialog(
                                     shape = RoundedCornerShape(size = 16.dp)
                                 )
                                 .padding(all = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Create,
                                 contentDescription = "",
-                                tint = Color.DarkGray,
+                                tint = Color.DarkGray
                             )
                             Spacer(modifier = Modifier.width(width = 8.dp))
                             innerTextField()
                         }
-                    },
+                    }
                 )
 
                 Spacer(modifier = Modifier.height(15.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Box(
                         modifier = Modifier

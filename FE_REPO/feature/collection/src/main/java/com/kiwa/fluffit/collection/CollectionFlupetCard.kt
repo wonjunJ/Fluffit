@@ -71,8 +71,7 @@ internal fun CollectionFlupetCard(
                             .fillMaxSize(0.6f)
                             .align(Alignment.Center)
                     )
-                }
-                else {
+                } else {
                     Image(
                         bitmap = it,
                         contentScale = ContentScale.FillBounds,

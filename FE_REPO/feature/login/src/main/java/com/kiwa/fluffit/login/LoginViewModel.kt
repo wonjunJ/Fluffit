@@ -80,7 +80,7 @@ class LoginViewModel @Inject constructor(
     private suspend fun fetchUserNaverId(accessToken: String) {
         getNaverIdUseCase(accessToken).fold(
             onSuccess = {
-                Log.d(TAG, "fetchUserNaverId: ${it}")
+                Log.d(TAG, "fetchUserNaverId: $it")
                 tryToLogin(it)
             },
             onFailure = {

@@ -6,5 +6,5 @@ import javax.inject.Inject
 class CheckUserProfileUseCase @Inject constructor(
     private val repository: UserRepository
 ) {
-    suspend operator fun invoke(accessToken:String) = repository.loadUserName(accessToken)
+    suspend operator fun invoke(accessToken: String) = repository.loadUserName(accessToken)
 }

@@ -55,14 +55,12 @@ internal fun LoginScreen(
         viewModel.onTriggerEvent(LoginViewEvent.AttemptAutoLogin)
     }
 
-    if(viewState.isNewUser){
+    if (viewState.isNewUser) {
         UserNicknameDialog(initialText = "닉네임입력") {
-
         }
     }
-    
+
     LaunchedEffect(key1 = viewState.userName) {
-        
     }
 
     ObserveLoginAttempt(viewState, context, viewModel)

@@ -51,8 +51,8 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun signInNaver(code: String): Result<Unit> {
         val signature = calculateHmac("$code")
-        Log.d(TAG, "code : ${code}")
-        Log.d(TAG, "signature: ${signature}")
+        Log.d(TAG, "code : $code")
+        Log.d(TAG, "signature: $signature")
         val result = runBlocking { userDataSource.signInNaver(code, signature) }
 
         return result.fold(

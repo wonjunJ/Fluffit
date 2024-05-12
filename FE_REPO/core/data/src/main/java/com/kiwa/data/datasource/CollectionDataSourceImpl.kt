@@ -1,6 +1,5 @@
 package com.kiwa.data.datasource
 
-import android.util.Log
 import com.kiwa.data.api.CollectionService
 import com.kiwa.fluffit.model.flupet.response.Flupets
 import javax.inject.Inject
