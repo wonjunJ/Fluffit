@@ -1,6 +1,7 @@
 package com.kiwa.fluffit.mypage
 
 import androidx.lifecycle.viewModelScope
+import com.kiwa.domain.TokenManager
 import com.kiwa.domain.usecase.LoadUserNameUseCase
 import com.kiwa.domain.usecase.LogOutUseCase
 import com.kiwa.domain.usecase.SaveNewUserNameUseCase
@@ -15,7 +16,8 @@ class MyPageViewModel @Inject constructor(
     private val logOutUseCase: LogOutUseCase,
     private val signOutUseCase: SignOutUseCase,
     private val loadUserNameUseCase: LoadUserNameUseCase,
-    private val saveNewUserNameUseCase: SaveNewUserNameUseCase
+    private val saveNewUserNameUseCase: SaveNewUserNameUseCase,
+    private val tokenManager: TokenManager
 ) : BaseViewModel<MyPageViewState, MyPageViewEvent>() {
     override fun createInitialState(): MyPageViewState = MyPageViewState.Init()
 
@@ -90,7 +92,8 @@ class MyPageViewModel @Inject constructor(
 
     private fun tryLoadUserName() {
         viewModelScope.launch {
-            loadUserNameUseCase().fold(
+            val accessToken = tokenManager.getAccessToken()
+            loadUserNameUseCase(accessToken).fold(
                 onSuccess = { user ->
                     setState { MyPageViewState.Default(name = user.userName) }
                 },

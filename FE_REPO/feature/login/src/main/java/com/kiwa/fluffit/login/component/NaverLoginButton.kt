@@ -37,7 +37,6 @@ internal fun NaverLoginButton(
                     indication = null
                 ) {
                     viewModel.onTriggerEvent(LoginViewEvent.OnClickNaverLoginButton)
-                    Log.d(TAG, "NaverLoginButton: 클릭된듯")
                 },
             painter = painterResource(id = R.drawable.naver_login_white),
             contentDescription = "네이버 로그인"

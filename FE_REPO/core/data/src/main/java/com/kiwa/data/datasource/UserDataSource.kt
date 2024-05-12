@@ -21,7 +21,7 @@ interface UserDataSource {
         accessToken: String
     ): Result<Unit>
 
-    suspend fun loadUserName(): Result<UserResponse>
+    suspend fun loadUserName(accessToken: String): Result<UserResponse>
 
     suspend fun saveNewUserName(name: String): Result<Unit>
 }

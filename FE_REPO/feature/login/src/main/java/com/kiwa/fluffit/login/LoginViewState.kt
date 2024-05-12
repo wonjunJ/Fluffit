@@ -10,6 +10,8 @@ sealed class LoginViewState : ViewState {
     abstract val navigateToHome: Boolean
     abstract val lastBackPressedTime: Long
     abstract val shouldExit: Boolean
+    abstract val isNewUser: Boolean
+    abstract val userName: String
 
     // 초기 자동 로그인을 위한 accesstoken 보유 확인 상태
     data class Splash(
@@ -19,7 +21,9 @@ sealed class LoginViewState : ViewState {
         override val clickLoginButton: Boolean = false,
         override val navigateToHome: Boolean = false,
         override val lastBackPressedTime: Long = 0,
-        override val shouldExit: Boolean = false
+        override val shouldExit: Boolean = false,
+        override val isNewUser: Boolean = false,
+        override val userName: String = ""
     ) : LoginViewState()
 
     // auto login 시도 상태
@@ -30,7 +34,9 @@ sealed class LoginViewState : ViewState {
         override val clickLoginButton: Boolean = false,
         override val navigateToHome: Boolean = false,
         override val lastBackPressedTime: Long = 0,
-        override val shouldExit: Boolean = false
+        override val shouldExit: Boolean = false,
+        override val isNewUser: Boolean = false,
+        override val userName: String = ""
     ) : LoginViewState()
 
     // auto login 실패 후 로그인 버튼 등장 상태
@@ -41,7 +47,9 @@ sealed class LoginViewState : ViewState {
         override val clickLoginButton: Boolean = false,
         override val navigateToHome: Boolean = false,
         override val lastBackPressedTime: Long = 0,
-        override val shouldExit: Boolean = false
+        override val shouldExit: Boolean = false,
+        override val isNewUser: Boolean = false,
+        override val userName: String = ""
     ) : LoginViewState()
 
     // 로그인 버튼 클릭 후 상태
@@ -52,7 +60,21 @@ sealed class LoginViewState : ViewState {
         override val clickLoginButton: Boolean = true,
         override val navigateToHome: Boolean = false,
         override val lastBackPressedTime: Long = 0,
-        override val shouldExit: Boolean = false
+        override val shouldExit: Boolean = false,
+        override val isNewUser: Boolean = false,
+        override val userName: String = ""
+    ) : LoginViewState()
+
+    data class SignIn(
+        override val isTryingAutoLogin: Boolean = false,
+        override val shouldDoLogin: Boolean = false,
+        override val toastMessage: String = "",
+        override val clickLoginButton: Boolean = true,
+        override val navigateToHome: Boolean = false,
+        override val lastBackPressedTime: Long = 0,
+        override val shouldExit: Boolean = false,
+        override val isNewUser: Boolean = true,
+        override val userName: String = ""
     ) : LoginViewState()
 
     data class LoginSuccess(
@@ -62,6 +84,8 @@ sealed class LoginViewState : ViewState {
         override val clickLoginButton: Boolean = true,
         override val navigateToHome: Boolean = true,
         override val lastBackPressedTime: Long = 0,
-        override val shouldExit: Boolean = false
+        override val shouldExit: Boolean = false,
+        override val isNewUser: Boolean = false,
+        override val userName: String = ""
     ) : LoginViewState()
 }

@@ -12,7 +12,7 @@ data class Flupet(
 
 data class FlupetCollection(
     val species: String,
-    val imageUrl: String,
+    val imageUrl: List<String>,
     val tier: Int,
     val metBefore: Boolean
 

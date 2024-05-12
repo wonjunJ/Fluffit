@@ -42,9 +42,9 @@ class UserDataSourceImpl @Inject constructor(
         )
     }
 
-    override suspend fun loadUserName(): Result<UserResponse> =
+    override suspend fun loadUserName(accessToken: String): Result<UserResponse> =
         runCatching {
-            authService.loadUserName()
+            authService.loadUserName(accessToken)
         }
 
     override suspend fun saveNewUserName(name: String): Result<Unit> = runCatching {

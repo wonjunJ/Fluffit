@@ -19,7 +19,7 @@ interface UserRepository {
         accessToken: String
     ): Result<Unit>
 
-    suspend fun loadUserName(): Result<UserResponse>
+    suspend fun loadUserName(accessToken: String): Result<UserResponse>
 
     suspend fun setUserName(name: String): Result<Unit>
 }

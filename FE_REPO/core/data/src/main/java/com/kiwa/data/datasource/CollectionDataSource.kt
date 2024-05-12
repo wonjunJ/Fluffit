@@ -1,8 +1,7 @@
 package com.kiwa.data.datasource
 
-import com.kiwa.fluffit.model.flupet.response.CollectionResponse
+import com.kiwa.fluffit.model.flupet.response.Flupets
 
 interface CollectionDataSource {
-//    suspend fun loadCollection(accessToken: String): Result<CollectionResponse>
-    suspend fun loadCollection(): Result<CollectionResponse>
+    suspend fun loadCollection(): Result<Flupets>
 }

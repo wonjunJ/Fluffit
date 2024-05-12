@@ -12,26 +12,29 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
-import com.kiwa.fluffit.model.main.FlupetCollection
+import com.kiwa.fluffit.model.flupet.response.Collections
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
 internal fun CollectionFlupetCard(
     modifier: Modifier = Modifier,
-    collectionList: List<FlupetCollection>,
+    collectionList: List<Collections>,
     index: Int
 ) {
     val bitmap: MutableState<Bitmap?> = mutableStateOf(null)
 
     Glide.with(LocalContext.current)
         .asBitmap()
-        .load(collectionList.get(index).imageUrl)
+        .load(collectionList.get(index).imageUrl[0])
         .into(object : CustomTarget<Bitmap>() {
             override fun onResourceReady(
                 resource: Bitmap,
@@ -59,14 +62,27 @@ internal fun CollectionFlupetCard(
             modifier = Modifier.fillMaxSize()
         ) {
             bitmap.value?.asImageBitmap()?.let {
-                Image(
-                    bitmap = it,
-                    contentScale = ContentScale.FillBounds,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize(0.6f)
-                        .align(Alignment.Center)
-                )
+                if (collectionList.get(index).metBefore) {
+                    Image(
+                        bitmap = it,
+                        contentScale = ContentScale.FillBounds,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize(0.6f)
+                            .align(Alignment.Center)
+                    )
+                }
+                else {
+                    Image(
+                        bitmap = it,
+                        contentScale = ContentScale.FillBounds,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize(0.6f)
+                            .align(Alignment.Center),
+                        colorFilter = ColorFilter.tint(Color.Black, BlendMode.SrcIn)
+                    )
+                }
             } ?: Image(
                 painter = painterResource(id = R.drawable.rabbit_white),
                 contentScale = ContentScale.Fit,

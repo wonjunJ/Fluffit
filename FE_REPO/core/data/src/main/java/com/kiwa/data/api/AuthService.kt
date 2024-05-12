@@ -31,7 +31,9 @@ interface AuthService {
     ): Tokens
 
     @GET("member-service/nickname")
-    suspend fun loadUserName(): UserResponse
+    suspend fun loadUserName(
+        @Header("Authorization") accessToken: String
+    ): UserResponse
 
     @PUT("member-service/member/update-nickname")
     suspend fun saveNewUserName(
