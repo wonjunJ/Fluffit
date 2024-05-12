@@ -19,7 +19,7 @@ public class Steps {
     private Integer Id;
 
     @ManyToOne(fetch = FetchType.LAZY) // 성능 최적화를 위해 LAZY 로딩 설정
-    @JoinColumn(name = "member_id") // 외래 키 이름 설정
+    @JoinColumn(name = "member_pid") // 외래 키 이름 설정
     private Member member;
 
     @Column(nullable = false)
