@@ -15,7 +15,7 @@ import androidx.wear.compose.material.Text
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 
 @Composable
-internal fun BasicButton(onClickButton: () -> Unit, buttonText: String) {
+internal fun BasicButton(buttonText: String, onClickButton: () -> Unit) {
     Box(modifier = Modifier
         .padding(5.dp)
         .fillMaxSize()) {
