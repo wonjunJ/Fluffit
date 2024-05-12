@@ -1,13 +1,14 @@
 package com.ssafy.fluffitmember.member.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.ssafy.fluffitmember.exercise.entity.Running;
+import com.ssafy.fluffitmember.exercise.entity.Steps;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,6 +48,12 @@ public class Member {
     @Column(nullable = false)
     private int mflupet_id;
 
+    @OneToMany(mappedBy = "member") // Running 엔티티 내 member 필드에 매핑됨
+    private List<Running> runnings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member") // Running 엔티티 내 member 필드에 매핑됨
+    private List<Steps> steps = new ArrayList<>();
+
     @Builder
     public Member(String memberId,String socialId, String nickname, int coin, int battlePoint, int mflupetId) {
         this.memberId = memberId;
@@ -68,5 +75,9 @@ public class Member {
     }
     public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void updateCoin(int coin) {
+        this.coin = coin;
     }
 }
