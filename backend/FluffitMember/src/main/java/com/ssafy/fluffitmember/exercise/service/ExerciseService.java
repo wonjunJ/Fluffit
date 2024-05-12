@@ -36,7 +36,7 @@ public class ExerciseService {
             throw new NotFoundUserException();
         }
         Member member = findMember.get();
-        Running running = Running.of(member,runningReqDto.getStartTime(),runningReqDto.getEndTime(),runningReqDto.getDistance());
+        Running running = Running.of(member,runningReqDto.getStartTime(),runningReqDto.getEndTime(),runningReqDto.getDistance(),memberId);
         exerciseRepository.save(running);
 
         int reword = calculateRunningReward(runningReqDto);
@@ -91,7 +91,7 @@ public class ExerciseService {
         int currentSteps = 0;
         Steps steps = null;
         if(findSteps.isEmpty()){
-            steps = Steps.of(member,stepsReqDto.getDate(),stepsReqDto.getStepCount());
+            steps = Steps.of(member,stepsReqDto.getDate(),stepsReqDto.getStepCount(),memberId);
             stepsRepository.save(steps);
         }else{
             steps = findSteps.get();

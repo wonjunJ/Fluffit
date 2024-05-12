@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface StepsRepository extends JpaRepository<Steps,Integer> {
-    @Query("SELECT s FROM Steps s WHERE s.member.id = :memberId AND s.date = :date")
+    @Query("SELECT s FROM Steps s WHERE s.memberId = :memberId AND s.date = :date")
     Optional<Steps> findByMemberIdAndDate(String memberId, LocalDate date);
 }

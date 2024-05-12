@@ -28,18 +28,23 @@ public class Steps {
     @Column(nullable = false)
     private int stepCount;
 
+    @Column(name = "member_id",nullable = false)
+    private String memberId;
+
     @Builder
-    public Steps(Member member, LocalDate date, int stepCount){
+    public Steps(Member member, LocalDate date, int stepCount, String memberId){
         this.member = member;
         this.date = date;
         this.stepCount = stepCount;
+        this.memberId = memberId;
     }
 
-    public static Steps of(Member member, LocalDate date, int stepCount){
+    public static Steps of(Member member, LocalDate date, int stepCount, String memberId){
         return builder()
                 .member(member)
                 .date(date)
                 .stepCount(stepCount)
+                .memberId(memberId)
                 .build();
     }
 }
