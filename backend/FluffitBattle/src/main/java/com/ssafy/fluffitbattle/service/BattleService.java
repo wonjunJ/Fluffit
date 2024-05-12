@@ -1,38 +1,54 @@
 package com.ssafy.fluffitbattle.service;
 
 import com.ssafy.fluffitbattle.entity.Battle;
-import com.ssafy.fluffitbattle.entity.BattleRecord;
 import com.ssafy.fluffitbattle.entity.BattleType;
+import com.ssafy.fluffitbattle.entity.dto.BattleMatchingResponseDto;
+import com.ssafy.fluffitbattle.entity.dto.BattleResultRequestDto;
+import com.ssafy.fluffitbattle.entity.dto.BattleResultResponseDto;
 import com.ssafy.fluffitbattle.repository.BattleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.redis.core.HashOperations;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-@EnableJpaRepositories
+//@EnableJpaRepositories
 @Slf4j
 public class BattleService {
 
     private final BattleRepository battleRepository;
     private final NotificationService notificationService;
+    @Qualifier("stringRedisTemplate")
     private final RedisTemplate<String, String> redisTemplate;
+    @Qualifier("battleRedisTemplate")
+    private final RedisTemplate<String, Battle> battleRedisTemplate;
+//    @Qualifier("longStringRedisTemplate")
+//    private final RedisTemplate<Long, String> longStringRedisTemplate;
+    @Qualifier("waitingQueueRedisTemplate")
+    private final RedisTemplate<Long, LocalDateTime> waitingQueueRedisTemplate;
 
-    private final Map<Long, Boolean> userReadyStatus = new ConcurrentHashMap<>();
-    private final Map<Long, Battle> userBattle = new ConcurrentHashMap<>();
+    private static final String USER_BATTLE_KEY = "user_battle";
+    private static final String BATTLE_QUEUE_KEY = "battle_queue";
+    private static final String BATTLE_LIST_KEY = "battle_list";
+
+    private static final String WAIT_MATCHING_EVENTNAME = "wait_matching";
+    private static final String ALREADY_IN_MATCHING_EVENTNAME = "already_in_matching";
+    private static final String JUST_NOW_MATCHED_EVENTNAME = "just_now_matched";
+    private static final String BATTLE_RESULT_EVENTNAME = "battle_result";
+
+//    private final Map<Long, Boolean> userReadyStatus = new ConcurrentHashMap<>();
+//    private final Map<Long, Battle> userBattle = new ConcurrentHashMap<>();
 
 
     private Random random = new Random();
@@ -41,98 +57,155 @@ public class BattleService {
     // 매칭 요청 처리
     public void requestBattle(Long userId) {
         ListOperations<String, String> listOps = redisTemplate.opsForList();
-        String opponentId = listOps.leftPop("battleQueue");
+        String opponentId = listOps.leftPop(BATTLE_QUEUE_KEY);
 
         if (opponentId == null) {
-            listOps.rightPush("battleQueue", userId.toString());
-            notificationService.notifyUser(userId, "Waiting for an opponent...");
+            listOps.rightPush(BATTLE_QUEUE_KEY, userId.toString());
+            redisTemplate.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
+            notificationService.notifyUser(userId, WAIT_MATCHING_EVENTNAME,
+                    BattleMatchingResponseDto.builder().result(false).build());
+        } else if (userId == Long.parseLong(opponentId)) {
+            notificationService.notifyUser(userId, WAIT_MATCHING_EVENTNAME,
+                    BattleMatchingResponseDto.builder().result(false).build());
+        } else if (getUserBattle(userId) != null) {
+            notificationService.notifyUser(userId, ALREADY_IN_MATCHING_EVENTNAME,
+                    BattleMatchingResponseDto.builder().result(false).build());
         } else {
+//            notificationService.removeUserEmitter(userId);
+//            notificationService.removeUserEmitter(Long.parseLong(opponentId));
+//            notificationService.createBattleEmitter(userId);
+//            notificationService.createBattleEmitter(Long.parseLong(opponentId));
+
             BattleType battleType = BattleType.values()[random.nextInt(BattleType.values().length)];
             Battle battle = Battle.builder()
                     .organizerId(Long.parseLong(opponentId))
                     .participantId(userId)
                     .battleType(battleType)
                     .build();
-            Battle theBattle = battleRepository.save(battle); // 게임 설명도 보내야하는지
-            notificationService.notifyUser(userId, "Your " + battleType + " battle with User " + opponentId + " is ready!");
-            notificationService.notifyUser(Long.parseLong(opponentId), "Your " + battleType + " battle with User " + userId + " is ready!");
-            userReadyStatus.put(userId, false);
-            userReadyStatus.put(Long.parseLong(opponentId), false);
-            userBattle.put(userId, theBattle);
-            userBattle.put(Long.parseLong(opponentId), theBattle);
-//            notificationService.notifyMatching(battle);
+            Battle theBattle = battleRepository.save(battle);
+            Long battleId = theBattle.getId();
+
+            notifyJustMatched(userId, opponentId, theBattle);
+            notifyJustMatched(Long.parseLong(opponentId), userId + "", theBattle);
+
+            setUser(userId, battleId);
+            setUser(Long.parseLong(opponentId), battleId);
+
+            setBattle(theBattle);
         }
     }
 
-    /* TODO
-        1. 배틀 대기 유효 시간 정하기
-            레디스 키 만료 시간이랑 sse 세션 연결 시간이랑 맞추고
-        2. 키(유저 아이디) 중복 방지, 따닥 방지 - 이를 위해서는 대기 큐 말고 따로 저장 공간이 필요할 듯, 분산 락 사용
-        3. 연결 상태 감지해서 연결 끊기거나 네트워크 불안정으로 배틀 참여 어려우면 대기 큐에서 빼기
-        4. 동시에 배틀 여러개 진행 못하게 하기 (유효 기간 지났더라도 컨펌을 동시에 할 수도 있으니)
-            대결 중이거나 컨펌 대기 중인 유저 : 배틀 아이디 저장하는 곳도 있어야 할 듯
-        + ) 레디 상태 관련 테스트
-        5. 랭킹 산출은 스프링 배치 - 분산 처리 반드시
-        6. 빨리 해내면 reactive
-     */
-
-    // 둘 다 레디 상태면 배틀 시작
-    private void startBattle(Long userId1, Long userId2) {
-//        userReadyStatus.put(userId1, false);
-//        userReadyStatus.put(userId2, false);
-//
-//        notificationService.notifyUser(userId1, "Your opponent is ready! Confirm to start the battle.");
-//        notificationService.notifyUser(userId2, "Your opponent is ready! Confirm to start the battle.");
-        notificationService.notifyUser(userId1, "game started");
-        notificationService.notifyUser(userId2, "game started");
-
+    private void notifyJustMatched(Long userId, String opponentId, Battle battle) {
+        notificationService.notifyUser(userId, JUST_NOW_MATCHED_EVENTNAME,
+                BattleMatchingResponseDto.builder()
+                        .result(true)
+                        .opponentName(opponentId)
+                        .battleId(battle.getId())
+                        .battleType(battle.getBattleType())
+                        .build());
     }
 
-    // 레디 상태 눌렀는지
-    public void confirmBattle(Long userId) {
-        userReadyStatus.put(userId, true);
-        Battle battle = userBattle.get(userId);
-        Long opponentId = battle.getOrganizerId();
-        if (opponentId == userId) opponentId = battle.getParticipantId();
-        if (userReadyStatus.get(opponentId)) startBattle(userId, opponentId);
+    private String getUserBattle(Long userId) {
+        Object result = redisTemplate.opsForHash().get(USER_BATTLE_KEY, userId.toString());
+        return result != null ? result.toString() : null;
     }
 
-    public void submitBattleRecord(Long userId, Long record) {
-        BattleRecord battleRecord = new BattleRecord(userId, record);
-        Long battleId = userBattle.get(userId).getId();
-        String key = "battle:" + battleId;
-        HashOperations<String, Long, BattleRecord> hashOps = redisTemplate.opsForHash();
-        hashOps.put(key, userId, battleRecord);
+    private Battle getBattle(String battleKey) {
+        Object result = battleRedisTemplate.opsForValue().get(battleKey);
+        return result != null ? (Battle) result : null;
+    }
 
-        if (hashOps.size(key) == 2) { // 두 사용자의 결과가 모두 도착했을 때
-            Map<Long, BattleRecord> records = hashOps.entries(key);
-            processBattleResult(battleId, new HashMap<>(records));
-            redisTemplate.delete(key); // 처리 후 레코드 삭제
+//    private String getUser(Long userId) {
+//        Object result = redisTemplate.opsForValue().get("User:" + userId);
+//        return result != null ? result.toString() : null;
+//    }
+
+    private void setUser(Long userId, Long battleId) {
+        redisTemplate.opsForValue().set("User:" + userId, "Battle:" + battleId, 80, TimeUnit.SECONDS);
+        redisTemplate.opsForHash().put(USER_BATTLE_KEY, userId.toString(), "Battle:" + battleId);
+    }
+
+    private void setBattle(Battle battle) {
+        battleRedisTemplate.opsForValue().set("Battle:" + battle.getId(), battle, 1, TimeUnit.HOURS);
+    }
+
+
+
+
+    private void writeRecord(String battleKey, Long userId, Integer score) {
+        Battle battle = getBattle(battleKey);
+        boolean isOpponentSubmitted = false;
+        if (userId == battle.getOrganizerId()) {
+            battle.setOrganizerScore(score);
+            isOpponentSubmitted = battle.getParticipantScore() != null;
+        } else {
+            battle.setParticipantScore(score);
+            isOpponentSubmitted = battle.getOrganizerScore() != null;
         }
+        battleRedisTemplate.opsForValue().set(battleKey, battle);
+        if (isOpponentSubmitted) calculateWinnerAndNotifyResult(battleKey);
     }
 
-    // 배틀 결과 저장 및 알림
-    private void processBattleResult(Long battleId, Map<Long, BattleRecord> records) {
-        Battle battle = battleRepository.findById(battleId).orElseThrow();
-        BattleRecord record1 = records.values().stream().findFirst().get();
-        BattleRecord record2 = records.values().stream().skip(1).findFirst().get();
+    public void submitBattleRecord(Long userId, BattleResultRequestDto requestDto) {
+        String battleKey = "Battle:" + requestDto.getBattleId();
+        writeRecord(battleKey, userId, requestDto.getScore());
+    }
 
-        // 승자 결정 로직
-        Long winnerId = record1.getScore() > record2.getScore() ? record1.getUserId() : record2.getUserId();
-        battle.setWinnerId(winnerId);
-        battle.setBattleDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
-        battleRepository.save(battle);
+    private void calculateWinnerAndNotifyResult(String battleKey) {
+        Battle battle = getBattle(battleKey);
+
+        Long organizerId = battle.getOrganizerId();
+        Long participantId = battle.getParticipantId();
 
         /* TODO
-            랭킹에 적용
+            1. winner 배틀 점수 더해주기
          */
 
-        // 사용자에게 결과 알림
-        notificationService.notifyUser(record1.getUserId(), "Battle result: " + (winnerId.equals(record1.getUserId()) ? "Win!" : "Lose!"));
-        notificationService.notifyUser(record2.getUserId(), "Battle result: " + (winnerId.equals(record2.getUserId()) ? "Win!" : "Lose!"));
+        if (battle.getOrganizerScore() > battle.getParticipantScore()) {
+            battle.setWinnerId(organizerId);
+
+        } else if (battle.getOrganizerScore() < battle.getParticipantScore()) {
+            battle.setWinnerId(participantId);
+        }
+
+        battle.setBattleDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        battleRepository.save(battle);
+        redisTemplate.delete(battleKey);
+
+        redisTemplate.delete("User:" + organizerId);
+        redisTemplate.delete("User:" + participantId);
+
+        redisTemplate.opsForHash().delete(USER_BATTLE_KEY, organizerId.toString());
+        redisTemplate.opsForHash().delete(USER_BATTLE_KEY, participantId.toString());
+
+        notifyBattleResult(organizerId, battle);
+        notifyBattleResult(participantId, battle);
+    }
+
+    private void notifyBattleResult(Long userId, Battle battle) {
+        boolean isWin = Objects.equals(battle.getWinnerId(), userId);
+        notificationService.notifyUser(userId, BATTLE_RESULT_EVENTNAME,
+                BattleResultResponseDto.builder()
+                .isWin(isWin)
+                .myBattleScore(battle.getOrganizerId() == userId ? battle.getOrganizerScore() : battle.getParticipantScore())
+                .opponentBattleScore(battle.getOrganizerId() == userId ? battle.getParticipantScore() : battle.getOrganizerScore())
+                .build());
     }
 
 
+    public void handleTimeout(Long userId) {
+        String battleKey = getUserBattle(userId);
 
+        if (battleKey == null) return;
+        Battle battle = getBattle(battleKey);
 
+        boolean battleNull = battle == null;
+        boolean organizer = battle.getOrganizerId() == userId && battle.getOrganizerScore() != null;
+        boolean participant = battle.getParticipantId() == userId && battle.getParticipantScore() != null;
+        if (!battleNull && !organizer && !participant) {
+            writeRecord(battleKey, userId, -1);
+        }
+
+        redisTemplate.opsForHash().delete(USER_BATTLE_KEY, userId.toString());
+    }
 }

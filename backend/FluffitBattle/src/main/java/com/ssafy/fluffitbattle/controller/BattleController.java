@@ -1,5 +1,6 @@
 package com.ssafy.fluffitbattle.controller;
 
+import com.ssafy.fluffitbattle.entity.dto.BattleResultRequestDto;
 import com.ssafy.fluffitbattle.service.BattleService;
 import com.ssafy.fluffitbattle.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -25,17 +26,25 @@ public class BattleController {
         return ResponseEntity.ok(sseEmitter);
     }
 
-    // 게임 레디
-    @PostMapping("/ready")
-    public ResponseEntity<SseEmitter> readyBattle(@RequestParam Long userId) {
-        battleService.confirmBattle(userId);
+    // 대기 취소
+    @PostMapping("/cancel")
+    public ResponseEntity<Void> cancelWaiting(@RequestParam Long userId) {
+        notificationService.ridOfUserFromWaitingQueue(userId);
         return ResponseEntity.ok().build();
     }
 
+//    // 게임 레디
+//    @PostMapping("/ready")
+//    public ResponseEntity<SseEmitter> readyBattle(@RequestParam Long userId) {
+//        battleService.confirmBattle(userId);
+//        return ResponseEntity.ok().build();
+//    }
+
     // 배틀 결과 처리
-    @PostMapping("/finish")
-    public ResponseEntity<Void> finishBattle(@RequestParam Long battleId, @RequestParam Long record) {
-        battleService.submitBattleRecord(battleId, record);
-        return ResponseEntity.ok().build();
+    @PostMapping("/result")
+    public ResponseEntity<SseEmitter> finishBattle(@RequestParam Long userId, @RequestBody BattleResultRequestDto battleResultRequestDto) {
+        SseEmitter sseEmitter = notificationService.createEmitter(userId);
+        battleService.submitBattleRecord(userId, battleResultRequestDto);
+        return ResponseEntity.ok(sseEmitter);
     }
 }

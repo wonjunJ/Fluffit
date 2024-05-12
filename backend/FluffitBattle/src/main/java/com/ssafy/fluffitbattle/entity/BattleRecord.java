@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BattleRecord {
     private Long userId;
-    private Long score;
+    private Integer score;
 }

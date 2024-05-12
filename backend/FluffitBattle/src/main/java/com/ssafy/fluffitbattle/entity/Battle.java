@@ -27,6 +27,9 @@ public class Battle {
     @Enumerated(EnumType.STRING)
     private BattleType battleType;
 
+    private Integer organizerScore;
+    private Integer participantScore;
+
     @Builder
     public Battle(Long organizerId, Long participantId, BattleType battleType) {
         this.organizerId = organizerId;
