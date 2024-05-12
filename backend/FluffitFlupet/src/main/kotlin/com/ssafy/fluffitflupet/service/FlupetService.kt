@@ -219,7 +219,11 @@ class FlupetService(
                 .toList()
                 .distinctBy { it.birthDay }
         }
-        return HistoryResponse(flupets.subList(1, flupets.size))
+        if(flupets.isEmpty()){
+            throw CustomBadRequestException(ErrorType.INVALID_USERID)
+        }
+        return HistoryResponse(flupets.subList(
+            if(memberFlupetRepository.existsByMemberIdAndIsDeadIsFalse(userId).awaitSingle()) 1 else 0, flupets.size))
     }
 
     suspend fun getFlupetRank(userId: String): RankingResponse = coroutineScope {
@@ -243,7 +247,7 @@ class FlupetService(
             flag++
         }
 
-        if(mrank.size == 0){
+        if(mrank.isEmpty()){
             throw CustomBadRequestException(ErrorType.INVALID_USERID)
         }
         if(mrank[0].rank in 1..3){ //내 순위가 1~3위안에 포함되어 있다.(nick4 요청을 취소시킬 수 있다.)
