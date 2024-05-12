@@ -2,6 +2,7 @@ package com.kiwa.fluffit.mypage
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -59,7 +60,7 @@ internal fun MyPageScreen(
         FluffitSnackBarHost(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp),
+                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp).wrapContentSize(),
             snackBarHostState = snackBarHostState
         )
     }

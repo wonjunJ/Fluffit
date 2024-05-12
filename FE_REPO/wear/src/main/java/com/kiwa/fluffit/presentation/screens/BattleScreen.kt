@@ -1,45 +1,65 @@
 package com.kiwa.fluffit.presentation.screens
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.unit.dp
-import androidx.wear.compose.material.CircularProgressIndicator
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import com.kiwa.fluffit.R
-import com.kiwa.fluffit.presentation.battle.BattleButton
+import com.kiwa.fluffit.presentation.battle.BattleType
+import com.kiwa.fluffit.presentation.battle.BattleViewEvent
+import com.kiwa.fluffit.presentation.battle.BattleViewModel
+import com.kiwa.fluffit.presentation.battle.BattleViewState
+import com.kiwa.fluffit.presentation.battle.ui.MatchingCompletedUI
+import com.kiwa.fluffit.presentation.battle.ui.BreakStoneGameUI
+import com.kiwa.fluffit.presentation.battle.ui.DefaultUI
+import com.kiwa.fluffit.presentation.battle.ui.LoadingUI
+import com.kiwa.fluffit.presentation.battle.ui.RaisingHeartBeatUI
 
 @Composable
-fun BattleScreen() {
+fun BattleScreen(viewModel: BattleViewModel = hiltViewModel<BattleViewModel>()) {
     Box(modifier = Modifier.fillMaxSize()) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .fillMaxSize(),
-            progress = 0.6f,
-            startAngle = -211f,
-            endAngle = 35f,
-            indicatorColor = colorResource(id = R.color.watchBlue),
-            trackColor = colorResource(id = R.color.watchRed),
-            strokeWidth = 6.dp
-        )
+        val uiState = viewModel.uiState.collectAsState().value
+        when (uiState) {
+            is BattleViewState.Default -> DefaultUI(
+                Modifier.align(Alignment.Center),
+                if (uiState.findMatching) "취소" else "배틀하기",
+                uiState.battleLogModel
+            ) {
+                if (uiState.findMatching)
+                    viewModel.onTriggerEvent(BattleViewEvent.OnClickCancelBattleButton)
+                else
+                    viewModel.onTriggerEvent(BattleViewEvent.OnClickBattleButton)
+            }
 
-        Column(
-            modifier = Modifier
-                .wrapContentSize()
-                .align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "10승 8패", style = MaterialTheme.typography.button)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "1,800", style = MaterialTheme.typography.button)
+            is BattleViewState.MatchingCompleted -> MatchingCompletedUI(
+                uiState
+            ) { viewModel.onTriggerEvent(BattleViewEvent.OnReadyForBattle) }
+
+            is BattleViewState.Battle -> when (uiState.battleType) {
+                is BattleType.BreakStone -> BreakStoneGameUI()
+                is BattleType.RaisingHeartBeat -> RaisingHeartBeatUI()
+            }
+
+            is BattleViewState.BattleResult -> TODO()
         }
-        BattleButton {}
+
+        when (uiState.loading) {
+            true ->
+                LoadingUI(Modifier.align(Alignment.Center)) {
+                    if (uiState is BattleViewState.Default && uiState.findMatching) Text(
+                        text = "상대를 찾는 중입니다.",
+                        style = MaterialTheme.typography.caption3
+                    )
+                }
+
+            false -> {
+            }
+        }
+
     }
 }
+

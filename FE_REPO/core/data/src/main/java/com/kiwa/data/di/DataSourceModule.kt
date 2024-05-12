@@ -2,8 +2,8 @@ package com.kiwa.data.di
 
 import com.kiwa.data.datasource.CollectionDataSource
 import com.kiwa.data.datasource.CollectionDataSourceImpl
-import com.kiwa.data.datasource.MainDataSource
-import com.kiwa.data.datasource.MainDataSourceImpl
+import com.kiwa.data.datasource.FlupetDataSource
+import com.kiwa.data.datasource.FlupetDataSourceImpl
 import com.kiwa.data.datasource.RankingDataSource
 import com.kiwa.data.datasource.RankingDataSourceImpl
 import com.kiwa.data.datasource.UserDataSource
@@ -33,6 +33,6 @@ abstract class DataSourceModule {
 
     @Binds
     @Singleton
-    abstract fun bindMainDataSource(mainDataSourceImpl: MainDataSourceImpl):
-        MainDataSource
+    abstract fun bindMainDataSource(mainDataSourceImpl: FlupetDataSourceImpl):
+        FlupetDataSource
 }

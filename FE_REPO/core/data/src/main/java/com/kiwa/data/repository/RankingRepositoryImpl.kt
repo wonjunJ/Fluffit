@@ -12,7 +12,7 @@ class RankingRepositoryImpl @Inject constructor(
     override suspend fun getBattleRanking(): Result<RankingUIModel> =
         rankingDataSource.fetchBattleRanking().fold(
             onSuccess = {
-                val rankingList = it.data.ranking.map { info ->
+                val rankingList = it.ranking.map { info ->
                     RankingInfo(
                         info.rank,
                         info.userName,
@@ -22,11 +22,11 @@ class RankingRepositoryImpl @Inject constructor(
                     )
                 }
                 val myRank = RankingInfo(
-                    it.data.myRank.rank,
-                    it.data.myRank.userName,
-                    "${it.data.myRank.battlePoint}점",
-                    it.data.myRank.petName,
-                    it.data.myRank.petImageUrl
+                    it.myRank.rank,
+                    it.myRank.userName,
+                    "${it.myRank.battlePoint}점",
+                    it.myRank.petName,
+                    it.myRank.petImageUrl
                 )
                 Result.success(RankingUIModel(rankingList, myRank))
             },
@@ -36,7 +36,7 @@ class RankingRepositoryImpl @Inject constructor(
     override suspend fun getAgeRanking(): Result<RankingUIModel> =
         rankingDataSource.fetchAgeRanking().fold(
             onSuccess = {
-                val rankingList = it.data.ranking.map { info ->
+                val rankingList = it.ranking.map { info ->
                     RankingInfo(
                         info.rank,
                         info.userName,
@@ -46,11 +46,11 @@ class RankingRepositoryImpl @Inject constructor(
                     )
                 }
                 val myRank = RankingInfo(
-                    it.data.myRank.rank,
-                    it.data.myRank.userName,
-                    "${it.data.myRank.lifeTime}시간",
-                    it.data.myRank.petName,
-                    it.data.myRank.petImageUrl
+                    it.myRank.rank,
+                    it.myRank.userName,
+                    "${it.myRank.lifeTime}시간",
+                    it.myRank.petName,
+                    it.myRank.petImageUrl
                 )
                 Result.success(RankingUIModel(rankingList, myRank))
             },

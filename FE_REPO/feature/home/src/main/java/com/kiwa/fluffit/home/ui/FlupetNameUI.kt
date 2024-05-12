@@ -21,10 +21,9 @@ import com.kiwa.fluffit.home.components.CustomTextField
 
 @Composable
 fun FlupetNameUI(
-    viewState: HomeViewState,
+    uiState: HomeViewState,
     onClickPencilButton: () -> Unit,
-    onClickConfirmButton: (String) -> Unit,
-    name: String
+    onClickConfirmButton: (String) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -32,12 +31,12 @@ fun FlupetNameUI(
             .padding(start = 32.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        when (viewState) {
-            is HomeViewState.FlupetNameEdit -> EditModeUI(name) {
+        when (uiState) {
+            is HomeViewState.FlupetNameEdit -> EditModeUI(uiState.flupet.name) {
                 onClickConfirmButton(it)
             }
 
-            else -> DisplayModeUI(name = name) {
+            else -> DisplayModeUI(name = uiState.flupet.name) {
                 onClickPencilButton()
             }
         }

@@ -2,9 +2,8 @@ package com.kiwa.fluffit.mypage
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -41,9 +40,7 @@ internal fun FluffitSnackBarHost(
             content = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
-                        modifier = Modifier
-                            .width(32.dp)
-                            .height(32.dp),
+                        modifier = Modifier.size(32.dp),
                         painter = painterResource(id = R.drawable.rabbit_white),
                         contentDescription = null
                     )
