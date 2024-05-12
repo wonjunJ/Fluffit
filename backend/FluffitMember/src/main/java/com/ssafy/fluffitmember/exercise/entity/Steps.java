@@ -47,4 +47,7 @@ public class Steps {
                 .memberId(memberId)
                 .build();
     }
+    public void updateStepCount(int stepCount) {
+        this.stepCount = stepCount;
+    }
 }

@@ -101,6 +101,7 @@ public class ExerciseService {
         int stepsReword = calculateStepsReward(currentSteps,stepsReqDto.getStepCount());
         int coin = member.getCoin();
         member.updateCoin(coin + stepsReword);
+        steps.updateStepCount(stepsReqDto.getStepCount());
         return new StepsResDto(stepsReword);
     }
 
