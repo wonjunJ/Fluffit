@@ -5,6 +5,7 @@ import com.kiwa.domain.usecase.GetMainUIInfoUseCase
 import com.kiwa.domain.usecase.UpdateFullnessUseCase
 import com.kiwa.domain.usecase.UpdateHealthUseCase
 import com.kiwa.fluffit.base.BaseViewModel
+import com.kiwa.fluffit.model.flupet.FlupetStatus
 import com.kiwa.fluffit.model.main.FullnessUpdateInfo
 import com.kiwa.fluffit.model.main.HealthUpdateInfo
 import com.kiwa.fluffit.model.main.MainUIModel
@@ -20,7 +21,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getMainUIInfoUseCase: GetMainUIInfoUseCase,
     private val updateFullnessUseCase: UpdateFullnessUseCase,
-    private val updateHealthUseCase: UpdateHealthUseCase,
+    private val updateHealthUseCase: UpdateHealthUseCase
 ) : BaseViewModel<HomeViewState, HomeViewEvent>() {
     override fun createInitialState(): HomeViewState =
         HomeViewState.Default()
@@ -33,10 +34,10 @@ class HomeViewModel @Inject constructor(
     private lateinit var updateHealthJob: Job
 
     private val fullnessUpdateState: MutableStateFlow<FullnessUpdateInfo> =
-        MutableStateFlow(FullnessUpdateInfo(0, 0L, false))
+        MutableStateFlow(FullnessUpdateInfo(0, 0L, false, FlupetStatus.None))
 
     private val healthUpdateState: MutableStateFlow<HealthUpdateInfo> =
-        MutableStateFlow(HealthUpdateInfo(0, 0L, false))
+        MutableStateFlow(HealthUpdateInfo(0, 0L, false, FlupetStatus.None))
 
     init {
         viewModelScope.launch {
@@ -66,7 +67,8 @@ class HomeViewModel @Inject constructor(
                 onSuccess = {
                     healthUpdateState.emit(it)
                 },
-                onFailure = {}
+                onFailure = {
+                }
             )
         }
     }
@@ -145,14 +147,16 @@ class HomeViewModel @Inject constructor(
                         HealthUpdateInfo(
                             it.flupet.health,
                             it.nextHealthUpdateTime,
-                            it.flupet.evolutionAvailable
+                            it.flupet.evolutionAvailable,
+                            it.flupetStatus
                         )
                     )
                     fullnessUpdateState.tryEmit(
                         FullnessUpdateInfo(
                             it.flupet.fullness,
                             it.nextFullnessUpdateTime,
-                            it.flupet.evolutionAvailable
+                            it.flupet.evolutionAvailable,
+                            it.flupetStatus
                         )
                     )
                     setState {
@@ -169,7 +173,8 @@ class HomeViewModel @Inject constructor(
             coin = mainUIModel.coin,
             flupet = mainUIModel.flupet,
             nextFullnessUpdateTime = mainUIModel.nextFullnessUpdateTime,
-            nextHealthUpdateTime = mainUIModel.nextHealthUpdateTime
+            nextHealthUpdateTime = mainUIModel.nextHealthUpdateTime,
+            flupetStatus = mainUIModel.flupetStatus
         )
 
     private fun HomeViewState.onStartEditName(): HomeViewState =
@@ -179,7 +184,8 @@ class HomeViewModel @Inject constructor(
                 flupet = this.flupet,
                 nextFullnessUpdateTime = this.nextFullnessUpdateTime,
                 nextHealthUpdateTime = this.nextHealthUpdateTime,
-                message = this.message
+                message = this.message,
+                flupetStatus = this.flupetStatus
             )
 
             is HomeViewState.FlupetNameEdit -> this
@@ -192,7 +198,8 @@ class HomeViewModel @Inject constructor(
                 coin = this.coin,
                 flupet = this.flupet.copy(name = name),
                 nextFullnessUpdateTime = this.nextFullnessUpdateTime,
-                nextHealthUpdateTime = this.nextHealthUpdateTime
+                nextHealthUpdateTime = this.nextHealthUpdateTime,
+                flupetStatus = this.flupetStatus
             )
         }
 

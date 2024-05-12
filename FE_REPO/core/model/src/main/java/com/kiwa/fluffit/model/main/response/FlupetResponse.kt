@@ -1,5 +1,6 @@
 package com.kiwa.fluffit.model.main.response
 
+import com.kiwa.fluffit.model.flupet.FlupetStatus
 import com.kiwa.fluffit.model.main.Flupet
 import com.kiwa.fluffit.model.main.ImageUrls
 import com.kiwa.fluffit.model.main.MainUIModel
@@ -30,6 +31,13 @@ fun FlupetResponse.toMainUIModel(): MainUIModel {
             else -> feelingGood = s
         }
     }
+
+    val flupetStatus = when {
+        this.flupetName.isEmpty() -> FlupetStatus.None
+        this.fullness <= 0 || this.health <= 0 -> FlupetStatus.Dead
+        else -> FlupetStatus.Alive
+    }
+
     return MainUIModel(
         coin = this.coin,
         flupet = Flupet(
@@ -37,11 +45,12 @@ fun FlupetResponse.toMainUIModel(): MainUIModel {
             this.health,
             ImageUrls(standard, nodding, sleeping, feelingGood),
             this.flupetName,
-            this.birthDay,
+            this.birthDay ?: "",
             this.age,
             this.isEvolutionAvailable
         ),
         nextFullnessUpdateTime,
-        nextHealthUpdateTime
+        nextHealthUpdateTime,
+        flupetStatus
     )
 }

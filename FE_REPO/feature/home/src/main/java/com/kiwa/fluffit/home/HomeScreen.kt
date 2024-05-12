@@ -3,14 +3,10 @@ package com.kiwa.fluffit.home
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -22,14 +18,15 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.ImageLoader
-import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.size.OriginalSize
 import com.kiwa.fluffit.home.components.CoinDisplay
-import com.kiwa.fluffit.home.components.FlupetAndStatUI
 import com.kiwa.fluffit.home.components.FlupetImageButton
-import com.kiwa.fluffit.home.ui.FlupetNameUI
+import com.kiwa.fluffit.home.ui.FlupetUI
+import com.kiwa.fluffit.home.ui.NoFlupetUI
+import com.kiwa.fluffit.home.ui.TombStoneUI
+import com.kiwa.fluffit.model.flupet.FlupetStatus
 
 @Composable
 internal fun HomeRoute(
@@ -38,7 +35,6 @@ internal fun HomeRoute(
     onNavigateToRankingDialog: () -> Unit
 ) {
     val uiState: HomeViewState by viewModel.uiState.collectAsStateWithLifecycle()
-
     HomeScreen(
         uiState = uiState,
         onClickPencilButton = { viewModel.onTriggerEvent(HomeViewEvent.OnClickPencilButton) },
@@ -86,32 +82,29 @@ internal fun HomeScreen(
 
         MainButtons(uiState.coin, onClickCollectionButton, onClickRankingButton)
 
-        Column(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .wrapContentSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            FlupetAndStatUI(
-                uiState = uiState,
-                onUpdateFullness = onUpdateFullness,
-                onUpdateHealth = onUpdateHealth
+        when (uiState.flupetStatus) {
+            FlupetStatus.Alive -> FlupetUI(
+                uiState,
+                Modifier
+                    .align(Alignment.Center),
+                onUpdateFullness,
+                onUpdateHealth,
+                imageLoader,
+                OriginalSize,
+                onClickPencilButton,
+                onClickConfirmButton
             )
-            Image(
-                painter = rememberImagePainter(
-                    imageLoader = imageLoader,
-                    data = uiState.flupet.imageUrls.standard,
-                    builder = {
-                        size(OriginalSize)
-                    }
-                ),
-                contentDescription = null,
+
+            FlupetStatus.Dead -> TombStoneUI(
                 modifier = Modifier
-                    .size(200.dp)
-                    .padding(top = 32.dp)
+                    .align(Alignment.Center),
+                name = uiState.flupet.name
             )
-            FlupetNameUI(uiState, onClickPencilButton, onClickConfirmButton)
+
+            FlupetStatus.None -> NoFlupetUI(
+                modifier = Modifier
+                    .align(Alignment.Center)
+            )
         }
     }
 }
