@@ -1,15 +1,13 @@
 package com.kiwa.data.repository
 
-import android.util.Log
 import com.kiwa.data.datasource.UserDataSource
 import com.kiwa.data.util.calculateHmac
 import com.kiwa.domain.TokenManager
 import com.kiwa.domain.repository.UserRepository
-import com.kiwa.fluffit.model.user.response.UserResponse
+import com.kiwa.fluffit.model.user.response.UserModificationResponse
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-private const val TAG = "UserRepositoryImpl_싸피"
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
     private val tokenManager: TokenManager
@@ -51,8 +49,6 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun signInNaver(code: String): Result<Unit> {
         val signature = calculateHmac("$code")
-        Log.d(TAG, "code : $code")
-        Log.d(TAG, "signature: $signature")
         val result = runBlocking { userDataSource.signInNaver(code, signature) }
 
         return result.fold(
@@ -96,18 +92,21 @@ class UserRepositoryImpl @Inject constructor(
             }
         )
 
-    override suspend fun loadUserName(accessToken: String): Result<UserResponse> =
+    override suspend fun loadUserName(accessToken: String): Result<String> =
         userDataSource.loadUserName(accessToken).fold(
             onSuccess = {
-                Result.success(it)
+                Result.success(it.nickName)
             },
             onFailure = {
                 Result.failure(it)
             }
         )
 
-    override suspend fun setUserName(name: String): Result<Unit> =
-        userDataSource.saveNewUserName(name).fold(
+    override suspend fun updateUserName(
+        accessToken: String,
+        name: String
+    ): Result<UserModificationResponse> =
+        userDataSource.updateUserName(accessToken, name).fold(
             onSuccess = {
                 Result.success(it)
             },

@@ -7,6 +7,7 @@ sealed class MyPageViewState : ViewState {
     abstract val isLogin: Boolean
     abstract val isTryingSignOut: Boolean
     abstract val isLoadingUserName: Boolean
+    abstract val isEditUserName: Boolean
     abstract val name: String
 
     data class Init(
@@ -14,6 +15,7 @@ sealed class MyPageViewState : ViewState {
         override val isLogin: Boolean = true,
         override val isTryingSignOut: Boolean = false,
         override val isLoadingUserName: Boolean = true,
+        override val isEditUserName: Boolean = false,
         override val name: String = ""
     ) : MyPageViewState()
 
@@ -22,6 +24,7 @@ sealed class MyPageViewState : ViewState {
         override val isLogin: Boolean = true,
         override val isTryingSignOut: Boolean = false,
         override val isLoadingUserName: Boolean = false,
+        override val isEditUserName: Boolean = false,
         override val name: String
     ) : MyPageViewState()
 
@@ -30,6 +33,7 @@ sealed class MyPageViewState : ViewState {
         override val isLogin: Boolean = true,
         override val isTryingSignOut: Boolean = false,
         override val isLoadingUserName: Boolean = false,
+        override val isEditUserName: Boolean = true,
         override val name: String
     ) : MyPageViewState()
 }

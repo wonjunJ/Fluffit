@@ -27,8 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kiwa.fluffit.designsystem.theme.fluffitTypography
 
-private const val TAG = "MyPageView_싸피"
-
 @Composable
 internal fun MyPageView(
     viewState: MyPageViewState,

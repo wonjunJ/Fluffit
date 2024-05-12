@@ -2,6 +2,7 @@ package com.kiwa.data.datasource
 
 import com.kiwa.fluffit.model.user.response.AutoLoginResponse
 import com.kiwa.fluffit.model.user.response.Tokens
+import com.kiwa.fluffit.model.user.response.UserModificationResponse
 import com.kiwa.fluffit.model.user.response.UserResponse
 
 interface UserDataSource {
@@ -23,5 +24,5 @@ interface UserDataSource {
 
     suspend fun loadUserName(accessToken: String): Result<UserResponse>
 
-    suspend fun saveNewUserName(name: String): Result<Unit>
+    suspend fun updateUserName(accessToken: String, name: String): Result<UserModificationResponse>
 }

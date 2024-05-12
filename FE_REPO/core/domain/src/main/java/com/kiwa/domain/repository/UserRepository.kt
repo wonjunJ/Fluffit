@@ -1,6 +1,6 @@
 package com.kiwa.domain.repository
 
-import com.kiwa.fluffit.model.user.response.UserResponse
+import com.kiwa.fluffit.model.user.response.UserModificationResponse
 
 interface UserRepository {
     suspend fun checkAccessToken(): Result<Boolean>
@@ -19,7 +19,7 @@ interface UserRepository {
         accessToken: String
     ): Result<Unit>
 
-    suspend fun loadUserName(accessToken: String): Result<UserResponse>
+    suspend fun loadUserName(accessToken: String): Result<String>
 
-    suspend fun setUserName(name: String): Result<Unit>
+    suspend fun updateUserName(accessToken: String, name: String): Result<UserModificationResponse>
 }

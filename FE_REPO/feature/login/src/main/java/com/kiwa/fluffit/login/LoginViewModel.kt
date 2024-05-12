@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.login
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.kiwa.domain.TokenManager
 import com.kiwa.domain.usecase.CheckAccessTokenUseCase
@@ -8,12 +7,11 @@ import com.kiwa.domain.usecase.CheckUserProfileUseCase
 import com.kiwa.domain.usecase.GetNaverIdUseCase
 import com.kiwa.domain.usecase.SignInNaverUseCase
 import com.kiwa.domain.usecase.TryAutoLoginUseCase
+import com.kiwa.domain.usecase.TryNicknameModifyUseCase
 import com.kiwa.fluffit.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-private const val TAG = "LoginViewModel_싸피"
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -22,6 +20,7 @@ class LoginViewModel @Inject constructor(
     private val getNaverIdUseCase: GetNaverIdUseCase,
     private val signInNaverUseCase: SignInNaverUseCase,
     private val checkUserProfileUseCase: CheckUserProfileUseCase,
+    private val tryNicknameModifyUseCase: TryNicknameModifyUseCase,
     private val tokenManager: TokenManager
 ) : BaseViewModel<LoginViewState, LoginViewEvent>() {
     override fun createInitialState(): LoginViewState =
@@ -52,6 +51,10 @@ class LoginViewModel @Inject constructor(
                     event.backPressedTime
                 )
             }
+
+            is LoginViewEvent.TryNicknameSetting -> setState { LoginViewState.SignIn() }
+            is LoginViewEvent.AttempToModifyNickname -> tryNicknameModify(event.name)
+            LoginViewEvent.FinishProfileCheck -> setState { LoginViewState.LoginSuccess() }
         }
     }
 
@@ -69,7 +72,8 @@ class LoginViewModel @Inject constructor(
     private suspend fun tryAutoLogin() {
         tryAutoLoginUseCase().fold(
             onSuccess = {
-                setState { LoginViewState.LoginSuccess() }
+                checkUserProfile()
+//                setState { LoginViewState.LoginSuccess() }
             },
             onFailure = {
                 setState { LoginViewState.Default() }
@@ -80,7 +84,6 @@ class LoginViewModel @Inject constructor(
     private suspend fun fetchUserNaverId(accessToken: String) {
         getNaverIdUseCase(accessToken).fold(
             onSuccess = {
-                Log.d(TAG, "fetchUserNaverId: $it")
                 tryToLogin(it)
             },
             onFailure = {
@@ -105,12 +108,23 @@ class LoginViewModel @Inject constructor(
         val accessToken = tokenManager.getAccessToken()
         checkUserProfileUseCase(accessToken).fold(
             onSuccess = {
-                Log.d(TAG, "checkUserProfile: 성공")
+                setState { LoginViewState.ProfileCheck(userName = it) }
+            },
+            onFailure = {
+                setState { showToast(it.message ?: "네트워크 에러") }
+            }
+        )
+    }
+
+    private suspend fun tryNicknameModify(name: String) {
+        val accessToken = tokenManager.getAccessToken()
+
+        tryNicknameModifyUseCase("Bearer $accessToken", name).fold(
+            onSuccess = {
                 setState { LoginViewState.LoginSuccess() }
             },
             onFailure = {
-                Log.d(TAG, "checkUserProfile: 실패")
-                setState { LoginViewState.SignIn() }
+                setState { showToast(it.message ?: "중복이거나\n유효하지 않은 닉네임입니다.") }
             }
         )
     }
@@ -127,6 +141,7 @@ class LoginViewModel @Inject constructor(
             is LoginViewState.AutoLogin -> copy(toastMessage = message)
             is LoginViewState.SignIn -> copy(toastMessage = message)
             is LoginViewState.LoginSuccess -> copy(toastMessage = message)
+            is LoginViewState.ProfileCheck -> copy(toastMessage = message)
         }
     }
 
@@ -138,6 +153,7 @@ class LoginViewModel @Inject constructor(
             is LoginViewState.AutoLogin -> copy(toastMessage = "")
             is LoginViewState.SignIn -> copy(toastMessage = "")
             is LoginViewState.LoginSuccess -> copy(toastMessage = "")
+            is LoginViewState.ProfileCheck -> copy(toastMessage = "")
         }
     }
 
@@ -150,6 +166,7 @@ class LoginViewModel @Inject constructor(
                 is LoginViewState.AutoLogin -> copy(shouldExit = true)
                 is LoginViewState.SignIn -> copy(shouldExit = true)
                 is LoginViewState.LoginSuccess -> copy(shouldExit = true)
+                is LoginViewState.ProfileCheck -> copy(shouldExit = true)
             }
         }
 
@@ -180,6 +197,11 @@ class LoginViewModel @Inject constructor(
             )
 
             is LoginViewState.LoginSuccess -> copy(
+                lastBackPressedTime = backPressedTime,
+                toastMessage = "한번 더 누르면 종료됩니다."
+            )
+
+            is LoginViewState.ProfileCheck -> copy(
                 lastBackPressedTime = backPressedTime,
                 toastMessage = "한번 더 누르면 종료됩니다."
             )

@@ -16,8 +16,6 @@ import com.kiwa.fluffit.login.LoginViewEvent
 import com.kiwa.fluffit.login.LoginViewModel
 import com.kiwa.fluffit.login.R
 
-private const val TAG = "NaverLoginButton_싸피"
-
 @Composable
 internal fun NaverLoginButton(
     viewModel: LoginViewModel

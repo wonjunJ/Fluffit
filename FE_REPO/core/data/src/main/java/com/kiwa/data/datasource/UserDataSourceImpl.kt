@@ -7,6 +7,7 @@ import com.kiwa.fluffit.model.user.request.NaverLoginRequest
 import com.kiwa.fluffit.model.user.request.UserRequest
 import com.kiwa.fluffit.model.user.response.AutoLoginResponse
 import com.kiwa.fluffit.model.user.response.Tokens
+import com.kiwa.fluffit.model.user.response.UserModificationResponse
 import com.kiwa.fluffit.model.user.response.UserResponse
 import javax.inject.Inject
 
@@ -44,10 +45,14 @@ class UserDataSourceImpl @Inject constructor(
 
     override suspend fun loadUserName(accessToken: String): Result<UserResponse> =
         runCatching {
-            authService.loadUserName(accessToken)
+            authService.loadUserName("Bearer $accessToken")
         }
 
-    override suspend fun saveNewUserName(name: String): Result<Unit> = runCatching {
-        authService.saveNewUserName(UserRequest(name))
-    }
+    override suspend fun updateUserName(
+        accessToken: String,
+        name: String
+    ): Result<UserModificationResponse> =
+        runCatching {
+            authService.updateUserName(accessToken = accessToken, nickname = UserRequest(name))
+        }
 }

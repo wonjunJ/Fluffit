@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.mypage
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,8 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kiwa.fluffit.designsystem.theme.fluffitTypography
 
-private const val TAG = "UserNameUI_싸피"
-
 @Composable
 fun UserNameUI(
     viewState: MyPageViewState,
@@ -42,12 +39,10 @@ fun UserNameUI(
     ) {
         when (viewState) {
             is MyPageViewState.EditName -> EditModeUI(name) {
-                Log.d(TAG, "UserNameUI:display -> edit $it")
                 onClickConfirmButton(it)
             }
 
             else -> DisplayModeUI(name = name) {
-                Log.d(TAG, "UserNameUI: edit -> display $name")
                 onClickPencilButton()
             }
         }
@@ -75,7 +70,6 @@ fun DisplayModeUI(name: String, onClickPencilButton: () -> Unit) {
             .size(32.dp)
             .padding(start = 4.dp)
             .clickable {
-                Log.d(TAG, "DisplayModeUI: 클릭됨")
                 onClickPencilButton()
             }
     )
@@ -98,7 +92,6 @@ fun EditModeUI(name: String, onClickConfirmButton: (String) -> Unit) {
             .size(32.dp)
             .padding(start = 4.dp)
             .clickable {
-                Log.d(TAG, "EditModeUI: 클릭됨 ${textState.value}")
                 onClickConfirmButton(textState.value)
             }
     )

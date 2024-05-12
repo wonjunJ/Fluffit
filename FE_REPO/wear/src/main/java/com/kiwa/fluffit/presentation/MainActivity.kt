@@ -52,8 +52,6 @@ import com.kiwa.fluffit.presentation.theme.FluffitTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
-private const val TAG = "MainActivity"
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val healthViewModel: HealthViewModel by viewModels()
@@ -72,7 +70,6 @@ class MainActivity : ComponentActivity() {
                 } else if (delta < 0) {
                     MainActivityViewModel.previousPage()
                 }
-                Log.d(TAG, "onGenericMotionEvent: 회전 ${MainActivityViewModel.currentPage.value}")
 
                 return true
             }

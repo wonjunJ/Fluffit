@@ -2,10 +2,10 @@ package com.kiwa.fluffit.mypage
 
 import androidx.lifecycle.viewModelScope
 import com.kiwa.domain.TokenManager
-import com.kiwa.domain.usecase.LoadUserNameUseCase
+import com.kiwa.domain.usecase.CheckUserProfileUseCase
 import com.kiwa.domain.usecase.LogOutUseCase
-import com.kiwa.domain.usecase.SaveNewUserNameUseCase
 import com.kiwa.domain.usecase.SignOutUseCase
+import com.kiwa.domain.usecase.TryNicknameModifyUseCase
 import com.kiwa.fluffit.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,22 +15,30 @@ import javax.inject.Inject
 class MyPageViewModel @Inject constructor(
     private val logOutUseCase: LogOutUseCase,
     private val signOutUseCase: SignOutUseCase,
-    private val loadUserNameUseCase: LoadUserNameUseCase,
-    private val saveNewUserNameUseCase: SaveNewUserNameUseCase,
+    private val checkUserProfileUseCase: CheckUserProfileUseCase,
+    private val tryNicknameModifyUseCase: TryNicknameModifyUseCase,
     private val tokenManager: TokenManager
 ) : BaseViewModel<MyPageViewState, MyPageViewEvent>() {
     override fun createInitialState(): MyPageViewState = MyPageViewState.Init()
 
     override fun onTriggerEvent(event: MyPageViewEvent) {
+        setEvent(event)
+    }
+
+    init {
+        viewModelScope.launch {
+            uiEvent.collect { event ->
+                myPageViewEvent(event)
+            }
+        }
+    }
+
+    private suspend fun myPageViewEvent(event: MyPageViewEvent) {
         when (event) {
             MyPageViewEvent.Initialize -> tryLoadUserName()
 
             MyPageViewEvent.OnClickPencil -> setState { onStartEditUserName() }
-            is MyPageViewEvent.OnClickModifyUserName -> setState {
-                onFinishEditUserName(
-                    event.newName
-                )
-            }
+            is MyPageViewEvent.OnClickModifyUserName -> startSaveNewUserName(event.newName)
 
             MyPageViewEvent.OnClickLogout -> logout()
             is MyPageViewEvent.OnClickSignOut -> setState { tryingSignOut() }
@@ -45,57 +53,34 @@ class MyPageViewModel @Inject constructor(
     private fun MyPageViewState.onStartEditUserName(): MyPageViewState =
         when (this) {
             is MyPageViewState.Default -> MyPageViewState.EditName(
-                toastMessage = this.toastMessage,
-                isLogin = this.isLogin,
-                isTryingSignOut = this.isTryingSignOut,
-                isLoadingUserName = this.isLoadingUserName,
                 name = this.name
             )
 
             is MyPageViewState.EditName -> this
             is MyPageViewState.Init -> MyPageViewState.EditName(
-                toastMessage = this.toastMessage,
-                isLogin = this.isLogin,
-                isTryingSignOut = this.isTryingSignOut,
-                isLoadingUserName = this.isLoadingUserName,
                 name = this.name
             )
         }
 
-    private fun MyPageViewState.onFinishEditUserName(name: String): MyPageViewState =
-        when (this) {
-            is MyPageViewState.Default -> this
-            is MyPageViewState.EditName -> MyPageViewState.Default(
-                toastMessage = this.toastMessage,
-                isLogin = this.isLogin,
-                isTryingSignOut = this.isTryingSignOut,
-                isLoadingUserName = this.isLoadingUserName,
-                name = name
-            )
+    private suspend fun startSaveNewUserName(name: String) {
+        val accessToken = tokenManager.getAccessToken()
 
-            is MyPageViewState.Init -> this
-        }
-
-    private fun startSaveNewUserName(name: String) {
-        viewModelScope.launch {
-            saveNewUserNameUseCase(name).fold(
-                onSuccess = {
-                    setState { showToast("이름 변경에 성공했습니다.") }
-                },
-                onFailure = {
-                    setState { showToast("이름 변경에 실패했습니다.") }
-                    tryLoadUserName()
-                }
-            )
-        }
+        tryNicknameModifyUseCase("Bearer $accessToken", name).fold(
+            onSuccess = {
+                setState { MyPageViewState.Init() }
+            },
+            onFailure = {
+                setState { showToast(it.message ?: "중복이거나\n유효하지 않은 닉네임입니다.") }
+            }
+        )
     }
 
     private fun tryLoadUserName() {
         viewModelScope.launch {
             val accessToken = tokenManager.getAccessToken()
-            loadUserNameUseCase(accessToken).fold(
+            checkUserProfileUseCase(accessToken).fold(
                 onSuccess = { user ->
-                    setState { MyPageViewState.Default(name = user.userName) }
+                    setState { MyPageViewState.Default(name = user) }
                 },
                 onFailure = {
                     setState { showToast("유저 이름을 가져오는 데 실패했습니다.") }

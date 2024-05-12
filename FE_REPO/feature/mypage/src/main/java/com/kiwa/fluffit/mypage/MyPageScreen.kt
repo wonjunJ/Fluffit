@@ -28,10 +28,6 @@ internal fun MyPageScreen(
         if (!viewState.isLogin) onClickLogout()
     }
 
-    LaunchedEffect(key1 = viewState.name) {
-        viewModel.onTriggerEvent(MyPageViewEvent.SetChangedUserName(viewState.name))
-    }
-
     if (viewState.isLoadingUserName) {
         viewModel.onTriggerEvent(MyPageViewEvent.Initialize)
     }
@@ -54,18 +50,11 @@ internal fun MyPageScreen(
     ObserveToastMessage(viewState, snackBarHostState, viewModel)
 
     Box {
-        // ui 확인용 코드
         if (viewState is MyPageViewState.Default ||
-            viewState is MyPageViewState.Init ||
             viewState is MyPageViewState.EditName
         ) {
             MyPageView(viewState, viewModel, onClickFlupetHistory, onClickBattleRecord)
         }
-
-        // 실제 코드
-//        if (viewState is MyPageViewState.Default) {
-//            MyPageView(viewState, viewModel, onClickFlupetHistory, onClickBattleRecord)
-//        }
 
         FluffitSnackBarHost(
             modifier = Modifier

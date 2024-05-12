@@ -2,7 +2,6 @@ package com.kiwa.fluffit.login
 
 import android.app.Activity
 import android.content.Context
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.activity.compose.BackHandler
@@ -39,8 +38,6 @@ import com.navercorp.nid.oauth.OAuthLoginCallback
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-private const val TAG = "LoginScreen_싸피"
-
 @Composable
 internal fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel<LoginViewModel>(),
@@ -55,8 +52,17 @@ internal fun LoginScreen(
         viewModel.onTriggerEvent(LoginViewEvent.AttemptAutoLogin)
     }
 
+    if (viewState.checkProfile) {
+        if (viewState.userName.length >= 7) {
+            viewModel.onTriggerEvent(LoginViewEvent.TryNicknameSetting)
+        } else {
+            viewModel.onTriggerEvent(LoginViewEvent.FinishProfileCheck)
+        }
+    }
+
     if (viewState.isNewUser) {
-        UserNicknameDialog(initialText = "닉네임입력") {
+        UserNicknameDialog(initialText = "닉네임입력(최대 6글자)") { name ->
+            viewModel.onTriggerEvent(LoginViewEvent.AttempToModifyNickname(name))
         }
     }
 
@@ -75,7 +81,6 @@ internal fun LoginScreen(
 
     BackHandler {
         val backPressedTime = System.currentTimeMillis()
-        Log.d(TAG, "LoginScreen: backPressedTime : $backPressedTime")
         viewModel.onTriggerEvent(LoginViewEvent.OnClickBackButton(backPressedTime))
     }
 
@@ -155,7 +160,6 @@ private fun ObserveLoginAttempt(
                     viewModel.onTriggerEvent(LoginViewEvent.AttemptToFetchNaverId(it))
                 },
                 onFailure = { _ ->
-                    Log.d(TAG, "ObserveLoginAttempt: 실패")
                 }
             )
         }
@@ -169,7 +173,6 @@ private fun ObserveToastMessage(
     viewModel: LoginViewModel
 ) {
     LaunchedEffect(key1 = viewState.toastMessage) {
-        Log.d(TAG, "ObserveToastMessage: ${viewState.toastMessage}")
         if (viewState.toastMessage.isNotEmpty()) {
             snackBarHostState.currentSnackbarData?.dismiss()
             snackBarHostState.showSnackbar(
@@ -188,7 +191,6 @@ private fun ObserveNavigate(
     viewState: LoginViewState
 ) {
     if (viewState.navigateToHome) {
-        Log.d(TAG, "ObserveNavigate: 이동합니다 ${viewState.navigateToHome}")
         onNavigationToHome()
     }
 }

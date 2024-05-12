@@ -1,9 +1,12 @@
 package com.kiwa.fluffit.model.user.response
 
+import com.google.gson.annotations.SerializedName
+
 data class UserResponse(
-    val userName: String
+    @SerializedName("nickname") val nickName: String
 )
 
 data class UserModificationResponse(
-    val resultCode: String
+    @SerializedName("status") val status: Int,
+    @SerializedName("msg") val resultCode: String
 )

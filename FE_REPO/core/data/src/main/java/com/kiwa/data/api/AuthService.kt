@@ -30,13 +30,14 @@ interface AuthService {
         @Body naverLoginRequest: NaverLoginRequest
     ): Tokens
 
-    @GET("member-service/nickname")
+    @GET("member-service/member/nickname")
     suspend fun loadUserName(
         @Header("Authorization") accessToken: String
     ): UserResponse
 
     @PUT("member-service/member/update-nickname")
-    suspend fun saveNewUserName(
+    suspend fun updateUserName(
+        @Header("Authorization") accessToken: String,
         @Body nickname: UserRequest
     ): UserModificationResponse
 }

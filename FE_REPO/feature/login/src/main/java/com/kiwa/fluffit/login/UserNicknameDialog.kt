@@ -44,15 +44,13 @@ fun UserNicknameDialog(
         onDismissRequest = { }
     ) {
         Card(
-            shape = RoundedCornerShape(8.dp) // Card의 모든 꼭지점에 8.dp의 둥근 모서리 적용
+            shape = RoundedCornerShape(8.dp)
         ) {
             Column(
                 modifier = Modifier
                     .width(300.dp)
                     .wrapContentHeight()
-                    .background(
-                        color = Color.White
-                    )
+                    .background(color = Color.White)
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -60,7 +58,6 @@ fun UserNicknameDialog(
 
                 Spacer(modifier = Modifier.height(15.dp))
 
-                // TextField
                 BasicTextField(
                     value = text.value,
                     onValueChange = { text.value = it },

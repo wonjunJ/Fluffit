@@ -1,13 +1,11 @@
 package com.kiwa.data.repository
 
-import android.util.Log
 import com.kiwa.data.datasource.CollectionDataSource
 import com.kiwa.domain.TokenManager
 import com.kiwa.domain.repository.CollectionRepository
 import com.kiwa.fluffit.model.flupet.response.Collections
 import javax.inject.Inject
 
-private const val TAG = "CollectionRepositoryImp_싸피"
 class CollectionRepositoryImpl @Inject constructor(
     private val collectionDataSource: CollectionDataSource,
     private val tokenManager: TokenManager
@@ -18,7 +16,6 @@ class CollectionRepositoryImpl @Inject constructor(
             onSuccess = { response ->
                 Result.success(
                     response.flupets.map {
-                        Log.d(TAG, "loadCollection: $it")
                         Collections(
                             it.species,
                             it.imageUrl,
@@ -29,9 +26,6 @@ class CollectionRepositoryImpl @Inject constructor(
                 )
             },
             onFailure = {
-//                Log.d(TAG, "loadCollection: ${accessToken}")
-                Log.d(TAG, "loadCollection: $it")
-                Log.d(TAG, "loadCollection: 실패")
                 Result.failure(it)
             }
         )
