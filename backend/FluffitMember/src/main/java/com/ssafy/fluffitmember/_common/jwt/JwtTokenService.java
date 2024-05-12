@@ -1,4 +1,4 @@
-package com.ssafy.fluffitmember.jwt;
+package com.ssafy.fluffitmember._common.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

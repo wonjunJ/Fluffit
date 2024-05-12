@@ -1,4 +1,4 @@
-package com.ssafy.fluffitmember.jwt;
+package com.ssafy.fluffitmember._common.jwt;
 
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;

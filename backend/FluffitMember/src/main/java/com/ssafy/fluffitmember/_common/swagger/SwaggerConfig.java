@@ -1,4 +1,4 @@
-package com.ssafy.fluffitmember.swagger;
+package com.ssafy.fluffitmember._common.swagger;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
