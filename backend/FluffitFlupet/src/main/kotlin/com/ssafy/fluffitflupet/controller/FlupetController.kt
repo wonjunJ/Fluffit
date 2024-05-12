@@ -58,4 +58,10 @@ class FlupetController(
     suspend fun getMyPetHistory(@RequestHeader("memberId") userId: String): HistoryResponse {
         return flupetService.getMyPetHistory(userId)
     }
+
+    //플러펫 수명 랭킹
+    @GetMapping("/age")
+    suspend fun getFlupetRank(@RequestHeader("memberId") userId: String): RankingResponse {
+        return flupetService.getFlupetRank(userId)
+    }
 }

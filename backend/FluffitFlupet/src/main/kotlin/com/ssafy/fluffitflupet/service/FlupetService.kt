@@ -36,7 +36,6 @@ class FlupetService(
         println("여기왔나?")
         val mainInfoDto = async { memberFlupetRepository.findMainInfoByUserId(userId) }
         //ErrorDecoder로 오류 처리를 할지, 아니면 try~catch로 오류처리를 할지
-        log.info("여긴가??")
         val coinWait = async { client.getUserCoin(userId) }
         log.info("여긴가??22")
         val dto = mainInfoDto.await()
@@ -49,15 +48,15 @@ class FlupetService(
             return@coroutineScope response
         } else {
             val response = MainInfoResponse(
-                fullness = dto.fullness,
-                health = dto.health,
+                fullness = if(dto.isDead) 0 else dto.fullness,
+                health = if(dto.isDead) 0 else dto.health,
                 flupetName = dto.flupetName,
                 imageUrl = dto.imageUrl.split(","),
-                birthDay = dto.birthDay.toLocalDate(),
-                age = "${ChronoUnit.DAYS.between(dto.birthDay, LocalDateTime.now())}일 ${ChronoUnit.HOURS.between(dto.birthDay, LocalDateTime.now())}시간",
+                birthDay = dto.birthDay.toLocalDate().toString(),
+                age = "${ChronoUnit.DAYS.between(dto.birthDay, LocalDateTime.now())}일 ${(ChronoUnit.HOURS.between(dto.birthDay, LocalDateTime.now())) % 24}시간",
                 isEvolutionAvailable = if(dto.exp == 100) true else false,
-                nextFullnessUpdateTime = (dto.nextFullnessUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-                nextHealthUpdateTime = (dto.nextHealthUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                nextFullnessUpdateTime = if(dto.isDead) 0 else (dto.nextFullnessUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                nextHealthUpdateTime = if(dto.isDead) 0 else (dto.nextHealthUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                 coin = coin
             )
             return@coroutineScope response
@@ -138,9 +137,11 @@ class FlupetService(
         val fInfo = async(Dispatchers.IO) { flupetRepository.findById(1) }
         return@coroutineScope GenFlupetResponse(
             flupetName = "새로운 알",
-            imageUrl = fInfo.await()?.imgUrl,
+            imageUrl = fInfo.await()!!.imgUrl.split(","),
             fullness = 100,
-            health = 100
+            health = 100,
+            nextHealthUpdateTime = (LocalDateTime.now().plusHours(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            nextFullnessUpdateTime = (LocalDateTime.now().plusHours(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         )
     }
 
@@ -219,5 +220,88 @@ class FlupetService(
                 .distinctBy { it.birthDay }
         }
         return HistoryResponse(flupets.subList(1, flupets.size))
+    }
+
+    suspend fun getFlupetRank(userId: String): RankingResponse = coroutineScope {
+        val nick = async { client.getNickname(userId) }
+        var nick1: Any? = null; var nick2: Any? = null; var nick3: Any? = null; var nick4: Any? = null
+        var flag = 0
+        val mrank = ArrayList<RankDto>()
+        val rank = withContext(Dispatchers.IO){ memberFlupetRepository.findFlupetRank(userId) }
+        rank.collect{ value ->
+            log.info("flag값은 $flag")
+            log.info("요청 userId는 ${value.userId}")
+            val tmp = async { client.getNickname(value.userId) }
+//            when(flag){
+//                0 -> nick1 = async { client.getNickname(value.userId) } //나
+//                1 -> nick2 = async { client.getNickname(value.userId) } //1등
+//                2 -> nick3 = async { client.getNickname(value.userId) } //2등
+//                3 -> nick4 = async { client.getNickname(value.userId) } //3등 -> 내 순위에 따라서 4등이 될 수도 있다.
+//            }
+            value.userNickname = tmp.await().nickname
+            mrank.add(value)
+            flag++
+        }
+
+        if(mrank.size == 0){
+            throw CustomBadRequestException(ErrorType.INVALID_USERID)
+        }
+        if(mrank[0].rank in 1..3){ //내 순위가 1~3위안에 포함되어 있다.(nick4 요청을 취소시킬 수 있다.)
+            if(mrank.size == 4){
+//                (nick4 as Deferred<Nick>).cancel()
+//                mrank[0].userNickname = (nick1 as Deferred<Nick>).await().nickname
+                mrank.removeAt(mrank.size-1)
+                if(mrank[0].rank == 2) { //내가 2등
+                    val tmp = mrank[0]
+                    mrank.add(2, tmp)
+//                    mrank[1].userNickname = (nick2 as Deferred<Nick>).await().nickname //1등
+//                    mrank[3].userNickname = (nick3 as Deferred<Nick>).await().nickname //3등
+                }else if(mrank[0].rank == 3) { //내가 3등
+                    val tmp = mrank[0]
+                    mrank.add(tmp)
+//                    mrank[1].userNickname = (nick2 as Deferred<Nick>).await().nickname //1등
+//                    mrank[2].userNickname = (nick3 as Deferred<Nick>).await().nickname //2등
+                }else{ //내가 1등이다.
+                    val tmp = mrank[0]
+                    mrank.add(1, tmp)
+//                    mrank[2].userNickname = (nick2 as Deferred<Nick>).await().nickname //2등
+//                    mrank[3].userNickname = (nick3 as Deferred<Nick>).await().nickname //3등
+                }
+            }else{ //현재 살아있는 펫이 4명이 안된다.
+                if(mrank[0].rank == mrank.size){
+                    mrank.add(mrank[0])
+                }else{
+                    mrank.add(mrank[0].rank, mrank[0])
+                }
+            }
+        }else{
+//            mrank[0].userNickname = (nick1 as Deferred<Nick>).await().nickname
+//            mrank[1].userNickname = (nick2 as Deferred<Nick>).await().nickname //1등
+//            mrank[2].userNickname = (nick3 as Deferred<Nick>).await().nickname //2등
+//            mrank[3].userNickname = (nick4 as Deferred<Nick>).await().nickname //3등
+        }
+
+        var tmprank = mrank.removeAt(0)
+        var myRank = RankingResponse.PetAgeInfo(
+            rank = tmprank.rank,
+            userNickname = tmprank.userNickname,
+            lifetime = tmprank.lifetime,
+            flupetNickname = tmprank.flupetNickname,
+            imageUrl = tmprank.imageUrl
+        )
+        var ranking = mrank.map { value ->
+            RankingResponse.PetAgeInfo(
+                rank = value.rank,
+                userNickname = value.userNickname,
+                lifetime = value.lifetime,
+                flupetNickname = value.flupetNickname,
+                imageUrl = value.imageUrl
+            )
+        }
+
+        return@coroutineScope RankingResponse(
+            ranking = ranking,
+            myRank = myRank,
+        )
     }
 }
