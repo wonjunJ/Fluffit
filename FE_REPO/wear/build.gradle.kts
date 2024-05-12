@@ -1,6 +1,10 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.fluffit.hilt)
+    id("kotlin-kapt")
 }
 
 android {
@@ -28,6 +32,10 @@ android {
             )
         }
     }
+
+    configurations.implementation {
+        exclude(group = "com.intellij", module = "annotations")
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -37,6 +45,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -45,6 +54,10 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+    kapt {
+        correctErrorTypes = true
+        useBuildCache = false
     }
 }
 
@@ -61,5 +74,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+//    implementation(libs.hilt.android)
+//    kapt(libs.hilt.compiler)
+
+    implementation("androidx.health:health-services-client:1.1.0-alpha02")
+    implementation("com.google.android.horologist:horologist-compose-layout:0.5.26")
     wearApp(project(":wear"))
 }

@@ -1,5 +1,3 @@
-
-
 plugins {
     alias(libs.plugins.fluffit.androidlibrary)
     alias(libs.plugins.fluffit.hilt)

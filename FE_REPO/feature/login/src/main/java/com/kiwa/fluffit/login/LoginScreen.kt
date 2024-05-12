@@ -55,6 +55,14 @@ internal fun LoginScreen(
         viewModel.onTriggerEvent(LoginViewEvent.AttemptAutoLogin)
     }
 
+    if (viewState.isNewUser) {
+        UserNicknameDialog(initialText = "닉네임입력") {
+        }
+    }
+
+    LaunchedEffect(key1 = viewState.userName) {
+    }
+
     ObserveLoginAttempt(viewState, context, viewModel)
 
     ObserveToastMessage(viewState, snackBarHostState, viewModel)
@@ -82,7 +90,7 @@ internal fun LoginScreen(
                 .fillMaxWidth(),
             painter = painterResource(id = R.drawable.login_background),
             contentDescription = "배경화면",
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds
         )
 
         Box(
@@ -144,11 +152,9 @@ private fun ObserveLoginAttempt(
             val result = authenticateWithNaver(context = context)
             result.fold(
                 onSuccess = {
-                    Log.d(TAG, "ObserveLoginAttempt: 성공")
                     viewModel.onTriggerEvent(LoginViewEvent.AttemptToFetchNaverId(it))
                 },
                 onFailure = { _ ->
-                    viewModel.onTriggerEvent(LoginViewEvent.ShowToast("네이버 로그인 실패"))
                     Log.d(TAG, "ObserveLoginAttempt: 실패")
                 }
             )

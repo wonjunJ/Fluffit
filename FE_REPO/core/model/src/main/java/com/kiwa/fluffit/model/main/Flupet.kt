@@ -9,3 +9,11 @@ data class Flupet(
     val age: String,
     val evolutionAvailable: Boolean
 )
+
+data class FlupetCollection(
+    val species: String,
+    val imageUrl: List<String>,
+    val tier: Int,
+    val metBefore: Boolean
+
+)

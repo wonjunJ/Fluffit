@@ -1,15 +1,20 @@
 package com.kiwa.fluffit.collection
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.kiwa.domain.TokenManager
 import com.kiwa.domain.usecase.LoadCollectionUseCase
 import com.kiwa.fluffit.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TAG = "CollectionViewModel_싸피"
+
 @HiltViewModel
 class CollectionViewModel @Inject constructor(
-    private val loadCollectionUseCase: LoadCollectionUseCase
+    private val loadCollectionUseCase: LoadCollectionUseCase,
+    private val tokenManager: TokenManager
 ) : BaseViewModel<CollectionViewState, CollectionViewEvent>() {
     override fun createInitialState(): CollectionViewState =
         CollectionViewState.Init()
@@ -29,13 +34,14 @@ class CollectionViewModel @Inject constructor(
     private fun collectionViewEvent(event: CollectionViewEvent) {
         when (event) {
             CollectionViewEvent.initLoadingCollections -> tryLoadCollections()
-            CollectionViewEvent.afterLoadingCollections -> TODO()
             CollectionViewEvent.OnFinishToast -> setState { onFinishToast() }
         }
     }
 
     private fun tryLoadCollections() {
         viewModelScope.launch {
+            val accessToken = tokenManager.getAccessToken()
+            Log.d(TAG, "tryLoadCollections: Bearer $accessToken")
             loadCollectionUseCase().fold(
                 onSuccess = { collectionList ->
                     setState { CollectionViewState.Default(collectionList) }

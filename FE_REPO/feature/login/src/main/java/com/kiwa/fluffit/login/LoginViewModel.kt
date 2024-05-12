@@ -2,7 +2,9 @@ package com.kiwa.fluffit.login
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.kiwa.domain.TokenManager
 import com.kiwa.domain.usecase.CheckAccessTokenUseCase
+import com.kiwa.domain.usecase.CheckUserProfileUseCase
 import com.kiwa.domain.usecase.GetNaverIdUseCase
 import com.kiwa.domain.usecase.SignInNaverUseCase
 import com.kiwa.domain.usecase.TryAutoLoginUseCase
@@ -11,14 +13,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val TAG = "LoginViewModel 싸피"
+private const val TAG = "LoginViewModel_싸피"
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val checkAccessTokenUseCase: CheckAccessTokenUseCase,
     private val tryAutoLoginUseCase: TryAutoLoginUseCase,
     private val getNaverIdUseCase: GetNaverIdUseCase,
-    private val signInNaverUseCase: SignInNaverUseCase
+    private val signInNaverUseCase: SignInNaverUseCase,
+    private val checkUserProfileUseCase: CheckUserProfileUseCase,
+    private val tokenManager: TokenManager
 ) : BaseViewModel<LoginViewState, LoginViewEvent>() {
     override fun createInitialState(): LoginViewState =
         LoginViewState.Splash()
@@ -54,11 +58,9 @@ class LoginViewModel @Inject constructor(
     private suspend fun checkAccessToken() {
         checkAccessTokenUseCase().fold(
             onSuccess = {
-                Log.d(TAG, "checkAccessToken: AccessToken 확인 성공")
                 onTriggerEvent(LoginViewEvent.TryAutoLogin)
             },
             onFailure = {
-                Log.d(TAG, "checkAccessToken: AccessToken 확인 실패")
                 setState { LoginViewState.Default() }
             }
         )
@@ -67,11 +69,9 @@ class LoginViewModel @Inject constructor(
     private suspend fun tryAutoLogin() {
         tryAutoLoginUseCase().fold(
             onSuccess = {
-                Log.d(TAG, "tryAutoLogin: AutoLogin 성공")
-                setState { LoginViewState.AutoLogin() }
+                setState { LoginViewState.LoginSuccess() }
             },
             onFailure = {
-                Log.d(TAG, "tryAutoLogin: AutoLogin 실패")
                 setState { LoginViewState.Default() }
             }
         )
@@ -80,11 +80,10 @@ class LoginViewModel @Inject constructor(
     private suspend fun fetchUserNaverId(accessToken: String) {
         getNaverIdUseCase(accessToken).fold(
             onSuccess = {
-                Log.d(TAG, "fetchUserNaverId: 네이버 ID 가져오기 성공")
+                Log.d(TAG, "fetchUserNaverId: $it")
                 tryToLogin(it)
             },
             onFailure = {
-                Log.d(TAG, "fetchUserNaverId: 네이버 ID 가져오기 실패")
                 setState { showToast(it.message ?: "네이버 접속 실패") }
             }
         )
@@ -93,14 +92,25 @@ class LoginViewModel @Inject constructor(
     private suspend fun tryToLogin(naverId: String) {
         signInNaverUseCase(naverId).fold(
             onSuccess = {
-                Log.d(TAG, "tryToLogin: 네이버ID 값 : $naverId")
-                Log.d(TAG, "tryToLogin: 로그인 시도 성공")
+                checkUserProfile()
+            },
+            onFailure = {
+                setState { showToast(it.message ?: "네트워크 에러") }
+                setState { LoginViewState.Default() }
+            }
+        )
+    }
+
+    private suspend fun checkUserProfile() {
+        val accessToken = tokenManager.getAccessToken()
+        checkUserProfileUseCase(accessToken).fold(
+            onSuccess = {
+                Log.d(TAG, "checkUserProfile: 성공")
                 setState { LoginViewState.LoginSuccess() }
             },
             onFailure = {
-                Log.d(TAG, "tryToLogin: 로그인 시도 실패")
-                setState { showToast(it.message ?: "네트워크 에러") }
-                setState { LoginViewState.Default() }
+                Log.d(TAG, "checkUserProfile: 실패")
+                setState { LoginViewState.SignIn() }
             }
         )
     }
@@ -115,6 +125,7 @@ class LoginViewModel @Inject constructor(
             is LoginViewState.Login -> copy(toastMessage = message)
             is LoginViewState.Splash -> copy(toastMessage = message)
             is LoginViewState.AutoLogin -> copy(toastMessage = message)
+            is LoginViewState.SignIn -> copy(toastMessage = message)
             is LoginViewState.LoginSuccess -> copy(toastMessage = message)
         }
     }
@@ -125,6 +136,7 @@ class LoginViewModel @Inject constructor(
             is LoginViewState.Login -> copy(toastMessage = "")
             is LoginViewState.Splash -> copy(toastMessage = "")
             is LoginViewState.AutoLogin -> copy(toastMessage = "")
+            is LoginViewState.SignIn -> copy(toastMessage = "")
             is LoginViewState.LoginSuccess -> copy(toastMessage = "")
         }
     }
@@ -136,6 +148,7 @@ class LoginViewModel @Inject constructor(
                 is LoginViewState.Login -> copy(shouldExit = true)
                 is LoginViewState.Splash -> copy(shouldExit = true)
                 is LoginViewState.AutoLogin -> copy(shouldExit = true)
+                is LoginViewState.SignIn -> copy(shouldExit = true)
                 is LoginViewState.LoginSuccess -> copy(shouldExit = true)
             }
         }
@@ -157,6 +170,11 @@ class LoginViewModel @Inject constructor(
             )
 
             is LoginViewState.AutoLogin -> copy(
+                lastBackPressedTime = backPressedTime,
+                toastMessage = "한번 더 누르면 종료됩니다."
+            )
+
+            is LoginViewState.SignIn -> copy(
                 lastBackPressedTime = backPressedTime,
                 toastMessage = "한번 더 누르면 종료됩니다."
             )
