@@ -1,10 +1,10 @@
 package com.kiwa.domain.usecase
 
-import com.kiwa.domain.repository.MainRepository
+import com.kiwa.domain.repository.FlupetRepository
 import javax.inject.Inject
 
 class UpdateHealthUseCase @Inject constructor(
-    private val mainRepository: MainRepository
+    private val flupetRepository: FlupetRepository
 ) {
-    suspend operator fun invoke() = mainRepository.updateHealth()
+    suspend operator fun invoke() = flupetRepository.updateHealth()
 }

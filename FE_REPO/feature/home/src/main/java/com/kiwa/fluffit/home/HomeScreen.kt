@@ -2,6 +2,7 @@ package com.kiwa.fluffit.home
 
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,7 +49,9 @@ internal fun HomeRoute(
         onClickRankingButton = onNavigateToRankingDialog,
         onClickCollectionButton = onNavigateToCollection,
         onUpdateFullness = { viewModel.onTriggerEvent(HomeViewEvent.OnUpdateFullness()) },
-        onUpdateHealth = { viewModel.onTriggerEvent(HomeViewEvent.OnUpdateHealth()) }
+        onUpdateHealth = { viewModel.onTriggerEvent(HomeViewEvent.OnUpdateHealth()) },
+        onClickTombStone = { viewModel.onTriggerEvent(HomeViewEvent.OnClickTombStone) },
+        onClickEmptyEgg = { viewModel.onTriggerEvent(HomeViewEvent.OnClickNewEggButton) }
     )
 }
 
@@ -60,7 +63,9 @@ internal fun HomeScreen(
     onClickConfirmButton: (String) -> Unit,
     onClickRankingButton: () -> Unit,
     onUpdateFullness: () -> Unit,
-    onUpdateHealth: () -> Unit
+    onUpdateHealth: () -> Unit,
+    onClickTombStone: () -> Unit,
+    onClickEmptyEgg: () -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -97,13 +102,15 @@ internal fun HomeScreen(
 
             FlupetStatus.Dead -> TombStoneUI(
                 modifier = Modifier
-                    .align(Alignment.Center),
+                    .align(Alignment.Center)
+                    .clickable { onClickTombStone() },
                 name = uiState.flupet.name
             )
 
             FlupetStatus.None -> NoFlupetUI(
                 modifier = Modifier
                     .align(Alignment.Center)
+                    .clickable { onClickEmptyEgg() }
             )
         }
     }

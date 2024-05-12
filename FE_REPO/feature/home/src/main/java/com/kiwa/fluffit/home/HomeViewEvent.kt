@@ -13,5 +13,9 @@ sealed class HomeViewEvent : ViewEvent {
 
     data object OnClickCollectionButton : HomeViewEvent()
 
+    data object OnClickTombStone : HomeViewEvent()
+
+    data object OnClickNewEggButton : HomeViewEvent()
+
     data object OnClickUserButton : HomeViewEvent()
 }

@@ -2,6 +2,7 @@ package com.kiwa.fluffit.home
 
 import androidx.lifecycle.viewModelScope
 import com.kiwa.domain.usecase.GetMainUIInfoUseCase
+import com.kiwa.domain.usecase.GetNewEggUseCase
 import com.kiwa.domain.usecase.UpdateFullnessUseCase
 import com.kiwa.domain.usecase.UpdateHealthUseCase
 import com.kiwa.fluffit.base.BaseViewModel
@@ -21,7 +22,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getMainUIInfoUseCase: GetMainUIInfoUseCase,
     private val updateFullnessUseCase: UpdateFullnessUseCase,
-    private val updateHealthUseCase: UpdateHealthUseCase
+    private val updateHealthUseCase: UpdateHealthUseCase,
+    private val getNewEggUseCase: GetNewEggUseCase
 ) : BaseViewModel<HomeViewState, HomeViewEvent>() {
     override fun createInitialState(): HomeViewState =
         HomeViewState.Default()
@@ -95,9 +97,32 @@ class HomeViewModel @Inject constructor(
                         event.stat,
                         uiState.value.nextHealthUpdateTime
                     )
+
+                    HomeViewEvent.OnClickNewEggButton -> getNewEgg()
+                    HomeViewEvent.OnClickTombStone -> setState { showEmptyEgg() }
                 }
             }
         }
+    }
+
+    private fun HomeViewState.showEmptyEgg(): HomeViewState =
+        HomeViewState.Default(
+            this.coin,
+            this.flupet,
+            this.nextFullnessUpdateTime,
+            this.nextHealthUpdateTime,
+            "",
+            FlupetStatus.None
+        )
+
+    private suspend fun getNewEgg() {
+        getNewEggUseCase().fold(
+            onSuccess = {
+                setState { showNewEgg(it) }
+            },
+            onFailure = {
+            }
+        )
     }
 
     private fun HomeViewState.updateFullness(fullnessUpdateInfo: FullnessUpdateInfo):
@@ -108,7 +133,8 @@ class HomeViewModel @Inject constructor(
                 flupet = this.flupet.copy(
                     fullness = fullnessUpdateInfo.fullness,
                     evolutionAvailable = fullnessUpdateInfo.isEvolutionAvailable
-                )
+                ),
+                flupetStatus = fullnessUpdateInfo.flupetStatus
             )
 
             is HomeViewState.FlupetNameEdit -> this.copy(
@@ -116,7 +142,8 @@ class HomeViewModel @Inject constructor(
                 flupet = this.flupet.copy(
                     fullness = fullnessUpdateInfo.fullness,
                     evolutionAvailable = fullnessUpdateInfo.isEvolutionAvailable
-                )
+                ),
+                flupetStatus = fullnessUpdateInfo.flupetStatus
             )
         }
 
@@ -127,7 +154,8 @@ class HomeViewModel @Inject constructor(
                 flupet = this.flupet.copy(
                     health = healthUpdateInfo.health,
                     evolutionAvailable = healthUpdateInfo.isEvolutionAvailable
-                )
+                ),
+                flupetStatus = healthUpdateInfo.flupetStatus
             )
 
             is HomeViewState.FlupetNameEdit -> this.copy(
@@ -135,7 +163,8 @@ class HomeViewModel @Inject constructor(
                 flupet = this.flupet.copy(
                     health = healthUpdateInfo.health,
                     evolutionAvailable = healthUpdateInfo.isEvolutionAvailable
-                )
+                ),
+                flupetStatus = healthUpdateInfo.flupetStatus
             )
         }
 
@@ -171,6 +200,15 @@ class HomeViewModel @Inject constructor(
     private fun showMainUIInfo(mainUIModel: MainUIModel): HomeViewState =
         HomeViewState.Default(
             coin = mainUIModel.coin,
+            flupet = mainUIModel.flupet,
+            nextFullnessUpdateTime = mainUIModel.nextFullnessUpdateTime,
+            nextHealthUpdateTime = mainUIModel.nextHealthUpdateTime,
+            flupetStatus = mainUIModel.flupetStatus
+        )
+
+    private fun HomeViewState.showNewEgg(mainUIModel: MainUIModel): HomeViewState =
+        HomeViewState.Default(
+            coin = this.coin,
             flupet = mainUIModel.flupet,
             nextFullnessUpdateTime = mainUIModel.nextFullnessUpdateTime,
             nextHealthUpdateTime = mainUIModel.nextHealthUpdateTime,
