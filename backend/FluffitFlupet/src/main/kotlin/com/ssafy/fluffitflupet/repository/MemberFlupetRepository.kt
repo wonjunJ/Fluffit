@@ -11,4 +11,5 @@ interface MemberFlupetRepository: ReactiveCrudRepository<MemberFlupet, Long>, Me
     fun findAllByIsDeadIsFalse(): Flux<MemberFlupet>
     fun findByMemberIdAndIsDeadIsFalse(memberId: String): Mono<MemberFlupet>
     fun findAllByMemberIdAndIsDeadIsTrue(memberId: String): Flux<MemberFlupet>
+    fun existsByMemberIdAndIsDeadIsFalse(memberId: String): Mono<Boolean>
 }

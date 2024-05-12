@@ -4,9 +4,11 @@ import com.ssafy.fluffitflupet.entity.MemberFlupet
 import com.ssafy.fluffitflupet.repository.MemberFlupetRepository
 import com.ssafy.fluffitflupet.service.FlupetService
 import jakarta.annotation.PreDestroy
+import jakarta.annotation.Priority
 import kotlinx.coroutines.*
 import kotlinx.coroutines.reactor.awaitSingle
 import org.slf4j.LoggerFactory
+import org.springframework.core.env.Environment
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import reactor.core.publisher.BufferOverflowStrategy
@@ -18,12 +20,14 @@ import kotlin.coroutines.CoroutineContext
 @Component
 class PetTaskScheduler(
     private val memberFlupetRepository: MemberFlupetRepository
+    private val env: Environment
 ): CoroutineScope { //CoroutineScope를 컴포넌트 레벨에서 구현하여 각 스케쥴된 작업이 자신의 CoroutineScope를 가지게 된다.
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default + job
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
     var dropList = ArrayList<MemberFlupet>()
+    //var cron: String = env.getProperty("schedule.cron", "0 1 0 * * ?")
 
     //2시간마다 스케쥴링을 돈다(초기 딜레이를 얼마로 할지)
     @Scheduled(fixedDelay = 1000 * 60, initialDelay = 1000 * 60 * 2L)
@@ -110,6 +114,11 @@ class PetTaskScheduler(
         }
         data.health = health
         data.healthUpdateTime = LocalDateTime.now()
+    }
+
+    @Scheduled(cron = "0 1 0 * * ?")
+    fun initializePat() { //매일 쓰다듬기 횟수를 초기화 한다.
+
     }
 
     @PreDestroy
