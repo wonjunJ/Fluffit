@@ -7,7 +7,7 @@ data class MainInfoResponse(
     var health: Int = 0,
     var flupetName: String = "",
     var imageUrl: List<String> = listOf(),
-    var birthDay: LocalDate? = null,
+    var birthDay: String = "",
     var age: String = "",
     var isEvolutionAvailable: Boolean = false,
     var nextFullnessUpdateTime: Long = 0,

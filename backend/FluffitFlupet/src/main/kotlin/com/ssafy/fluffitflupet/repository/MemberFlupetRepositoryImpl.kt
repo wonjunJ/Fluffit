@@ -1,9 +1,6 @@
 package com.ssafy.fluffitflupet.repository
 
-import com.ssafy.fluffitflupet.dto.CollectionResponse
-import com.ssafy.fluffitflupet.dto.HistoryResponse
-import com.ssafy.fluffitflupet.dto.MainInfoDto
-import com.ssafy.fluffitflupet.dto.MyFlupetStateDto
+import com.ssafy.fluffitflupet.dto.*
 import com.ssafy.jooq.tables.Flupet
 import com.ssafy.jooq.tables.MemberFlupet
 import kotlinx.coroutines.Dispatchers
@@ -141,10 +138,45 @@ class MemberFlupetRepositoryImpl(
                     endDay = record.get(MEMBER_FLUPET.END_TIME, LocalDateTime::class.java).toLocalDate(),
                     age = "${ChronoUnit.DAYS.between(
                         record.get(MEMBER_FLUPET.CREATE_TIME, LocalDateTime::class.java), 
-                        record.get(MEMBER_FLUPET.END_TIME, LocalDateTime::class.java))}일 ${ChronoUnit.HOURS.between(
+                        record.get(MEMBER_FLUPET.END_TIME, LocalDateTime::class.java))}일 ${(ChronoUnit.HOURS.between(
                         record.get(MEMBER_FLUPET.CREATE_TIME, LocalDateTime::class.java),
-                        record.get(MEMBER_FLUPET.END_TIME, LocalDateTime::class.java))}시간",
+                        record.get(MEMBER_FLUPET.END_TIME, LocalDateTime::class.java))) % 24}시간",
                     steps = record.get(MEMBER_FLUPET.STEPS, Long::class.java)
+                )
+            }
+            .asFlow()
+    }
+
+    override fun findFlupetRank(userId: String): Flow<RankDto> {
+        return Flux.from(
+            dslContext
+                .select(
+                    DSL.rowNumber().over().orderBy(
+                        MEMBER_FLUPET.CREATE_TIME.asc()
+                    ).`as`("rank"), //윈도우 함수 사용
+                    MEMBER_FLUPET.CREATE_TIME,
+                    MEMBER_FLUPET.NAME,
+                    FLUPET.IMG_URL,
+                    MEMBER_FLUPET.MEMBER_ID
+                )
+                .from(MEMBER_FLUPET)
+                .join(FLUPET)
+                .on(MEMBER_FLUPET.FLUPET_ID.eq(FLUPET.ID))
+                .where(MEMBER_FLUPET.IS_DEAD.isFalse)
+                .orderBy(
+                    (MEMBER_FLUPET.MEMBER_ID.eq(userId)).desc(),
+                    MEMBER_FLUPET.CREATE_TIME.asc()
+                )
+                .limit(4)
+        )
+            .map { record ->
+                RankDto(
+                    rank = record.get("rank", Int::class.java),
+                    userId = record.get(MEMBER_FLUPET.MEMBER_ID, String::class.java),
+                    lifetime = ChronoUnit.HOURS.between(
+                        record.get(MEMBER_FLUPET.CREATE_TIME, LocalDateTime::class.java), LocalDateTime.now()),
+                    flupetNickname = record.get(MEMBER_FLUPET.NAME, String::class.java),
+                    imageUrl = record.get(FLUPET.IMG_URL, String::class.java).split(",")
                 )
             }
             .asFlow()
