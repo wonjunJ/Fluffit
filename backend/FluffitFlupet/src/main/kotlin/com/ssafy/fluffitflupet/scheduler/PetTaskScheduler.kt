@@ -19,7 +19,7 @@ import kotlin.coroutines.CoroutineContext
 
 @Component
 class PetTaskScheduler(
-    private val memberFlupetRepository: MemberFlupetRepository
+    private val memberFlupetRepository: MemberFlupetRepository,
     private val env: Environment
 ): CoroutineScope { //CoroutineScope를 컴포넌트 레벨에서 구현하여 각 스케쥴된 작업이 자신의 CoroutineScope를 가지게 된다.
     private val job = Job()
@@ -118,7 +118,6 @@ class PetTaskScheduler(
 
     @Scheduled(cron = "0 1 0 * * ?")
     fun initializePat() { //매일 쓰다듬기 횟수를 초기화 한다.
-
     }
 
     @PreDestroy
