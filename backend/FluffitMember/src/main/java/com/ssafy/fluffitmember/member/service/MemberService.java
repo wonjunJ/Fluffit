@@ -4,6 +4,7 @@ import com.ssafy.fluffitmember.exception.DuplicateNickname;
 import com.ssafy.fluffitmember.exception.NotFoundUserException;
 import com.ssafy.fluffitmember.exception.NotValidNickname;
 import com.ssafy.fluffitmember.member.dto.Request.UpdateNicknameReqDto;
+import com.ssafy.fluffitmember.member.dto.Response.GetCoinResDto;
 import com.ssafy.fluffitmember.member.dto.Response.GetNicknameResDto;
 import com.ssafy.fluffitmember.member.dto.Response.GetRankResDto;
 import com.ssafy.fluffitmember.member.entity.Member;
@@ -44,9 +45,12 @@ public class MemberService {
         }
     }
 
-    public int getUserCoin(String memberId) {
+    public GetCoinResDto getUserCoin(String memberId) {
         Optional<Member> findMember = memberRepository.findByMemberId(memberId);
-        return findMember.map(Member::getCoin).orElse(-1);
+
+        GetCoinResDto getCoinResDto = new GetCoinResDto();
+        getCoinResDto.setCoin(findMember.map(Member::getCoin).orElse(-1));
+        return getCoinResDto;
     }
 
     public GetNicknameResDto getNickname(String memberId) {

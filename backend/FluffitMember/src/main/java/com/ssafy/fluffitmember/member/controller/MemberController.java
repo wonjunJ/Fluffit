@@ -5,6 +5,7 @@ import com.ssafy.fluffitmember.error.ErrorStateCode;
 import com.ssafy.fluffitmember.exception.DuplicateNickname;
 import com.ssafy.fluffitmember.exception.NotFoundUserException;
 import com.ssafy.fluffitmember.exception.NotValidNickname;
+import com.ssafy.fluffitmember.member.dto.Response.GetCoinResDto;
 import com.ssafy.fluffitmember.member.dto.Request.UpdateNicknameReqDto;
 import com.ssafy.fluffitmember.member.dto.Response.AutoLoginResDto;
 import com.ssafy.fluffitmember.member.dto.Response.GetNicknameResDto;
@@ -72,7 +73,8 @@ public class MemberController {
         }
     }
     @GetMapping("/get-coin")
-    public int getUserCoin(@RequestHeader("memberId") String memberId){
-        return memberService.getUserCoin(memberId);
+    public ResponseEntity<Object> getUserCoin(@RequestHeader("memberId") String memberId){
+        GetCoinResDto getRankResDto = memberService.getUserCoin(memberId);
+        return ResponseEntity.ok().body(getRankResDto);
     }
 }
