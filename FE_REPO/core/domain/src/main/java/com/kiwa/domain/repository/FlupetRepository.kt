@@ -14,4 +14,6 @@ interface FlupetRepository {
     suspend fun getNewEgg(): Result<MainUIModel>
 
     suspend fun editFlupetNickname(nickname: String): Result<BasicResponse>
+
+    suspend fun evolve(): Result<MainUIModel>
 }

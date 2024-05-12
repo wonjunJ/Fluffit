@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.presentation.battle.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -19,7 +18,6 @@ internal fun MatchingCompletedUI(uiState: BattleViewState, onReadyForBattle: () 
 
     LaunchedEffect(Unit) {
         while (timer.intValue <= 10) {
-            Log.d("확인", timer.toString())
             delay(1000)
             timer.intValue += 1
         }

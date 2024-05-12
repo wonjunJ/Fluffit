@@ -96,4 +96,11 @@ class FlupetRepositoryImpl @Inject constructor(private val flupetDataSource: Flu
             },
             onFailure = { Result.failure(it) }
         )
+
+    override suspend fun evolve(): Result<MainUIModel> = flupetDataSource.evolve().fold(
+        onSuccess = {
+            Result.success(it.toMainUIModel())
+        },
+        onFailure = { Result.failure(it) }
+    )
 }

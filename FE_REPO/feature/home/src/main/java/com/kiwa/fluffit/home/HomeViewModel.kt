@@ -1,8 +1,8 @@
 package com.kiwa.fluffit.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.kiwa.domain.usecase.EditFlupetNicknameUseCase
+import com.kiwa.domain.usecase.EvolveFlupetUseCase
 import com.kiwa.domain.usecase.GetMainUIInfoUseCase
 import com.kiwa.domain.usecase.GetNewEggUseCase
 import com.kiwa.domain.usecase.UpdateFullnessUseCase
@@ -26,7 +26,8 @@ class HomeViewModel @Inject constructor(
     private val updateFullnessUseCase: UpdateFullnessUseCase,
     private val updateHealthUseCase: UpdateHealthUseCase,
     private val getNewEggUseCase: GetNewEggUseCase,
-    private val editFlupetNicknameUseCase: EditFlupetNicknameUseCase
+    private val editFlupetNicknameUseCase: EditFlupetNicknameUseCase,
+    private val evolveFlupetUseCase: EvolveFlupetUseCase
 ) : BaseViewModel<HomeViewState, HomeViewEvent>() {
     override fun createInitialState(): HomeViewState =
         HomeViewState.Default()
@@ -97,9 +98,33 @@ class HomeViewModel @Inject constructor(
                     HomeViewEvent.OnClickNewEggButton -> getNewEgg()
                     HomeViewEvent.OnClickTombStone -> setState { showEmptyEgg() }
                     HomeViewEvent.OnDismissSnackBar -> setState { resetMessage() }
+                    HomeViewEvent.OnClickEvolutionButton -> evolveFlupet()
                 }
             }
         }
+    }
+
+    private suspend fun evolveFlupet() {
+        evolveFlupetUseCase().fold(
+            onSuccess = {
+                setState { evolve(it) }
+            },
+            onFailure = {}
+        )
+    }
+
+    private fun HomeViewState.evolve(mainUIModel: MainUIModel): HomeViewState = when (this) {
+        is HomeViewState.Default -> this.copy(
+            flupet = mainUIModel.flupet.copy(
+                birthDay = this.flupet.birthDay,
+                age = this.flupet.age
+            ),
+            nextFullnessUpdateTime = mainUIModel.nextFullnessUpdateTime,
+            nextHealthUpdateTime = mainUIModel.nextHealthUpdateTime,
+            flupetStatus = mainUIModel.flupetStatus
+        )
+
+        is HomeViewState.FlupetNameEdit -> this
     }
 
     private fun HomeViewState.resetMessage(): HomeViewState =
@@ -251,7 +276,6 @@ class HomeViewModel @Inject constructor(
                 setState { onSuccessEditFlupetNickname(name) }
             },
             onFailure = {
-                Log.d("확인", it.message.toString())
                 setState { onUpdateMessage(it.message.toString()) }
             }
         )
