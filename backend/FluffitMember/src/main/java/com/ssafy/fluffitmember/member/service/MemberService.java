@@ -1,14 +1,19 @@
 package com.ssafy.fluffitmember.member.service;
 
-import com.ssafy.fluffitmember.exception.DuplicateNickname;
-import com.ssafy.fluffitmember.exception.NotFoundUserException;
-import com.ssafy.fluffitmember.exception.NotValidNickname;
+import com.ssafy.fluffitmember._common.exception.DuplicateNickname;
+import com.ssafy.fluffitmember._common.exception.NotFoundUserException;
+import com.ssafy.fluffitmember._common.exception.NotValidNickname;
+import com.ssafy.fluffitmember._common.exception.NotValidSQL;
 import com.ssafy.fluffitmember.member.dto.Request.UpdateNicknameReqDto;
 import com.ssafy.fluffitmember.member.dto.Response.GetCoinResDto;
 import com.ssafy.fluffitmember.member.dto.Response.GetNicknameResDto;
 import com.ssafy.fluffitmember.member.dto.Response.GetRankResDto;
+import com.ssafy.fluffitmember.member.dto.Response.RankDto;
 import com.ssafy.fluffitmember.member.entity.Member;
 import com.ssafy.fluffitmember.member.repository.MemberRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,6 +76,35 @@ public class MemberService {
         if (findMember.isEmpty()){
             throw new NotFoundUserException();
         }
+
+        // 요청한 멤버아이디의 랭크값을 얻어옴
+        Optional<Integer> memberRankById = memberRepository.findRankByMemberId(memberId);
+        if(memberRankById.isEmpty()){
+            throw new NotFoundUserException();
+        }
+        log.info("memberId = " +memberId + " // myRankId = ",memberRankById.get());
+
+        RankDto myRank = new RankDto();
+        myRank.setRank(memberRankById.get());
+        myRank.setNickname(findMember.get().getNickname());
+
+        List<Member> rankerList = memberRepository.findTop3ByBattlePoint();
+        if(rankerList.isEmpty()){
+            throw new NotValidSQL();
+        }
+        List<Integer> rankerRank = memberRepository.findTop3RankingsByBattlePoint();
+        if(rankerRank.isEmpty()){
+            throw new NotValidSQL();
+        }
+
+        //feign client로 flupet 관련 정보 얻기
+
+        List<RankDto> rankerInfo = new ArrayList<>();
+
+        
+        // 1,2,3 위의 랭크값을 얻어옴 (점수가 같을 수 있음)
+
+
         return null;
     }
 }
