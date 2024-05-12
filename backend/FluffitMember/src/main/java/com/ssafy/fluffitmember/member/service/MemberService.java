@@ -1,5 +1,7 @@
 package com.ssafy.fluffitmember.member.service;
 
+import com.ssafy.fluffitmember._common.client.FlupetClient;
+import com.ssafy.fluffitmember._common.client.dto.RankFlupetInfoDto;
 import com.ssafy.fluffitmember._common.exception.DuplicateNickname;
 import com.ssafy.fluffitmember._common.exception.NotFoundUserException;
 import com.ssafy.fluffitmember._common.exception.NotValidNickname;
@@ -15,6 +17,8 @@ import com.ssafy.fluffitmember.member.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -28,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final FlupetClient flupetClient;
 
     @Transactional
     public void updateNickname(String memberId, UpdateNicknameReqDto updateNicknameReqDto) {
@@ -97,14 +102,32 @@ public class MemberService {
             throw new NotValidSQL();
         }
 
+        // 회원 ID 목록 수집 및 findMember의 ID 추가
+        List<String> memberIds = rankerList.stream()
+                .map(Member::getMemberId)
+                .collect(Collectors.toList());
+        findMember.ifPresent(member -> memberIds.add(member.getMemberId()));
+
         //feign client로 flupet 관련 정보 얻기
+        List<RankFlupetInfoDto> flupetRanks = flupetClient.getFlupetRanks(memberIds);
 
         List<RankDto> rankerInfo = new ArrayList<>();
+        for (int i = 0; i < rankerList.size(); i++) {
+            Member member = rankerList.get(i);
+            Integer rank = rankerRank.get(i);
+            RankFlupetInfoDto rankFlupetInfoDto = flupetRanks.get(i);  // 순서를 맞추기 위해 동일 인덱스 사용
 
-        
-        // 1,2,3 위의 랭크값을 얻어옴 (점수가 같을 수 있음)
+            rankerInfo.add(new RankDto(rank, member.getNickname(), rankFlupetInfoDto.getFlupetNickname(), rankFlupetInfoDto.getFlupetImageUrl()));
+        }
 
+        RankFlupetInfoDto myflupet = flupetRanks.get(flupetRanks.size()-1);
+        myRank.setFlupetNickname(myflupet.getFlupetNickname());
+        myRank.setFlupetImageUrl(myflupet.getFlupetImageUrl());
 
-        return null;
+        GetRankResDto getRankResDto = new GetRankResDto();
+        getRankResDto.setRanker(rankerInfo);
+        getRankResDto.setMyRank(myRank);
+
+        return getRankResDto;
     }
 }
