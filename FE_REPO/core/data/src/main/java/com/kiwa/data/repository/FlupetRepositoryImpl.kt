@@ -4,6 +4,7 @@ import com.kiwa.data.datasource.FlupetDataSource
 import com.kiwa.data.model.FlupetStatusException
 import com.kiwa.domain.repository.FlupetRepository
 import com.kiwa.fluffit.model.flupet.FlupetStatus
+import com.kiwa.fluffit.model.flupet.response.BasicResponse
 import com.kiwa.fluffit.model.main.FullnessUpdateInfo
 import com.kiwa.fluffit.model.main.HealthUpdateInfo
 import com.kiwa.fluffit.model.main.MainUIModel
@@ -87,4 +88,12 @@ class FlupetRepositoryImpl @Inject constructor(private val flupetDataSource: Flu
         },
         onFailure = { Result.failure(it) }
     )
+
+    override suspend fun editFlupetNickname(nickname: String): Result<BasicResponse> =
+        flupetDataSource.editFlupetNickname(nickname).fold(
+            onSuccess = {
+                Result.success(it)
+            },
+            onFailure = { Result.failure(it) }
+        )
 }

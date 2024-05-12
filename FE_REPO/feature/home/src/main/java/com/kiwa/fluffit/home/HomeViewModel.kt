@@ -1,6 +1,8 @@
 package com.kiwa.fluffit.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.kiwa.domain.usecase.EditFlupetNicknameUseCase
 import com.kiwa.domain.usecase.GetMainUIInfoUseCase
 import com.kiwa.domain.usecase.GetNewEggUseCase
 import com.kiwa.domain.usecase.UpdateFullnessUseCase
@@ -23,7 +25,8 @@ class HomeViewModel @Inject constructor(
     private val getMainUIInfoUseCase: GetMainUIInfoUseCase,
     private val updateFullnessUseCase: UpdateFullnessUseCase,
     private val updateHealthUseCase: UpdateHealthUseCase,
-    private val getNewEggUseCase: GetNewEggUseCase
+    private val getNewEggUseCase: GetNewEggUseCase,
+    private val editFlupetNicknameUseCase: EditFlupetNicknameUseCase
 ) : BaseViewModel<HomeViewState, HomeViewEvent>() {
     override fun createInitialState(): HomeViewState =
         HomeViewState.Default()
@@ -79,15 +82,8 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             uiEvent.collect { event ->
                 when (event) {
-                    HomeViewEvent.OnClickCollectionButton -> TODO()
-                    is HomeViewEvent.OnClickConfirmEditButton -> setState {
-                        onConfirmName(
-                            event.name
-                        )
-                    }
-
+                    is HomeViewEvent.OnClickConfirmEditButton -> onConfirmName(event.name)
                     HomeViewEvent.OnClickPencilButton -> setState { onStartEditName() }
-                    HomeViewEvent.OnClickUserButton -> TODO()
                     is HomeViewEvent.OnUpdateFullness -> enqueueNewRequest(
                         event.stat,
                         uiState.value.nextFullnessUpdateTime
@@ -100,10 +96,17 @@ class HomeViewModel @Inject constructor(
 
                     HomeViewEvent.OnClickNewEggButton -> getNewEgg()
                     HomeViewEvent.OnClickTombStone -> setState { showEmptyEgg() }
+                    HomeViewEvent.OnDismissSnackBar -> setState { resetMessage() }
                 }
             }
         }
     }
+
+    private fun HomeViewState.resetMessage(): HomeViewState =
+        when (this) {
+            is HomeViewState.Default -> this.copy(message = "")
+            is HomeViewState.FlupetNameEdit -> this.copy(message = "")
+        }
 
     private fun HomeViewState.showEmptyEgg(): HomeViewState =
         HomeViewState.Default(
@@ -229,7 +232,7 @@ class HomeViewModel @Inject constructor(
             is HomeViewState.FlupetNameEdit -> this
         }
 
-    private fun HomeViewState.onConfirmName(name: String): HomeViewState =
+    private fun HomeViewState.onSuccessEditFlupetNickname(name: String): HomeViewState =
         when (this) {
             is HomeViewState.Default -> this
             is HomeViewState.FlupetNameEdit -> HomeViewState.Default(
@@ -237,8 +240,27 @@ class HomeViewModel @Inject constructor(
                 flupet = this.flupet.copy(name = name),
                 nextFullnessUpdateTime = this.nextFullnessUpdateTime,
                 nextHealthUpdateTime = this.nextHealthUpdateTime,
-                flupetStatus = this.flupetStatus
+                flupetStatus = this.flupetStatus,
+                message = "플러펫 닉네임이 변경되었습니다"
             )
+        }
+
+    private suspend fun onConfirmName(name: String) {
+        editFlupetNicknameUseCase(name).fold(
+            onSuccess = {
+                setState { onSuccessEditFlupetNickname(name) }
+            },
+            onFailure = {
+                Log.d("확인", it.message.toString())
+                setState { onUpdateMessage(it.message.toString()) }
+            }
+        )
+    }
+
+    private fun HomeViewState.onUpdateMessage(message: String): HomeViewState =
+        when (this) {
+            is HomeViewState.Default -> this.copy(message = message)
+            is HomeViewState.FlupetNameEdit -> this.copy(message = message)
         }
 
     private suspend fun enqueueNewRequest(tag: String, nextUpdateTime: Long) {

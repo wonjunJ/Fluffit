@@ -1,21 +1,19 @@
 package com.kiwa.fluffit.home
 
 import android.os.Build.VERSION.SDK_INT
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -25,12 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.ImageLoader
-import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.size.OriginalSize
 import com.kiwa.fluffit.home.components.CoinDisplay
-import com.kiwa.fluffit.home.components.FlupetAndStatUI
 import com.kiwa.fluffit.home.components.FlupetImageButton
 import com.kiwa.fluffit.home.ui.FlupetUI
 import com.kiwa.fluffit.home.ui.NoFlupetUI
@@ -62,7 +58,8 @@ internal fun HomeRoute(
         onUpdateHealth = { viewModel.onTriggerEvent(HomeViewEvent.OnUpdateHealth()) },
         onClickMyPage = onNavigateToMyPage,
         onClickTombStone = { viewModel.onTriggerEvent(HomeViewEvent.OnClickTombStone) },
-        onClickEmptyEgg = { viewModel.onTriggerEvent(HomeViewEvent.OnClickNewEggButton) }
+        onClickEmptyEgg = { viewModel.onTriggerEvent(HomeViewEvent.OnClickNewEggButton) },
+        onDismissSnackBar = { viewModel.onTriggerEvent(HomeViewEvent.OnDismissSnackBar) }
     )
 }
 
@@ -77,7 +74,8 @@ internal fun HomeScreen(
     onUpdateHealth: () -> Unit,
     onClickTombStone: () -> Unit,
     onClickEmptyEgg: () -> Unit,
-    onClickMyPage: () -> Unit
+    onClickMyPage: () -> Unit,
+    onDismissSnackBar: () -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -89,7 +87,9 @@ internal fun HomeScreen(
             }
         }.build()
 
-    Log.d("확인", "컴포징")
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    ObserveToastMessage(uiState, snackBarHostState) { onDismissSnackBar() }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -127,6 +127,13 @@ internal fun HomeScreen(
                     .clickable { onClickEmptyEgg() }
             )
         }
+
+        HomeSnackBarHost(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(start = 24.dp, end = 24.dp, bottom = 24.dp),
+            snackBarHostState = snackBarHostState
+        )
     }
 }
 
@@ -172,4 +179,23 @@ private fun UserButton(modifier: Modifier, onNavigateToMyPage: () -> Unit) {
 @Composable
 private fun RankingButton(onClickRankingButton: () -> Unit) {
     FlupetImageButton(id = R.drawable.ranking, onClickImage = onClickRankingButton)
+}
+
+@Composable
+private fun ObserveToastMessage(
+    uiState: HomeViewState,
+    snackBarHostState: SnackbarHostState,
+    onDismissSnackBar: () -> Unit
+) {
+    LaunchedEffect(key1 = uiState.message) {
+        if (uiState.message.isNotEmpty()) {
+            snackBarHostState.currentSnackbarData?.dismiss()
+            snackBarHostState.showSnackbar(
+                uiState.message,
+                actionLabel = "확인",
+                duration = SnackbarDuration.Short
+            )
+            onDismissSnackBar()
+        }
+    }
 }

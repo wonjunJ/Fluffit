@@ -11,11 +11,9 @@ sealed class HomeViewEvent : ViewEvent {
 
     data class OnUpdateHealth(val stat: String = "health") : HomeViewEvent()
 
-    data object OnClickCollectionButton : HomeViewEvent()
-
     data object OnClickTombStone : HomeViewEvent()
 
     data object OnClickNewEggButton : HomeViewEvent()
 
-    data object OnClickUserButton : HomeViewEvent()
+    data object OnDismissSnackBar : HomeViewEvent()
 }
