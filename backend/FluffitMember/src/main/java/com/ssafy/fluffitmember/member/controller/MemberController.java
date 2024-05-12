@@ -5,11 +5,11 @@ import com.ssafy.fluffitmember._common.error.ErrorType;
 import com.ssafy.fluffitmember._common.exception.DuplicateNickname;
 import com.ssafy.fluffitmember._common.exception.NotFoundUserException;
 import com.ssafy.fluffitmember._common.exception.NotValidNickname;
+import com.ssafy.fluffitmember._common.exception.NotValidSQL;
 import com.ssafy.fluffitmember._common.success.SuccessResponse;
 import com.ssafy.fluffitmember._common.success.SuccessType;
 import com.ssafy.fluffitmember.member.dto.Response.GetCoinResDto;
 import com.ssafy.fluffitmember.member.dto.Request.UpdateNicknameReqDto;
-import com.ssafy.fluffitmember.member.dto.Response.AutoLoginResDto;
 import com.ssafy.fluffitmember.member.dto.Response.GetNicknameResDto;
 import com.ssafy.fluffitmember.member.dto.Response.GetRankResDto;
 import com.ssafy.fluffitmember.member.service.MemberService;
@@ -60,15 +60,18 @@ public class MemberController {
         return ResponseEntity.ok().body(SuccessResponse.from(SuccessType.LOGIN_SUCCESSFULLY));
     }
 
-    @GetMapping("/rank")
+    @GetMapping("/battle-rank")
     public ResponseEntity<Object> getRank(@RequestHeader("memberId") String memberId){
         try {
             GetRankResDto getRankResDto = memberService.getRank(memberId);
             return ResponseEntity.ok().body(getRankResDto);
         }catch (NotFoundUserException e){
             return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.NOT_FOUND_MEMBER));
+        }catch (NotValidSQL e){
+            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.NOT_VALID_SQL));
         }
     }
+
     @GetMapping("/get-coin")
     public ResponseEntity<Object> getUserCoin(@RequestHeader("memberId") String memberId){
         GetCoinResDto getRankResDto = memberService.getUserCoin(memberId);

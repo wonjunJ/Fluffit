@@ -23,6 +23,7 @@ public enum ErrorType {
     NOT_FOUND_MEMBER(400,"조회된 사용자가 없습니다"),
     NOT_VALID_NICKNAME(401,"유효한 닉네임이 아닙니다"),
     DUPLICATE_NICKNAME(402,"중복된 닉네임입니다"),
+    NOT_VALID_SQL(500,"SQL 오류 입니다")
     ;
     private final int status;
     private final String msg;
