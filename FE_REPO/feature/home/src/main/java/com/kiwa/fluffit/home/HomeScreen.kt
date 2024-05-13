@@ -25,7 +25,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import coil.size.OriginalSize
 import com.kiwa.fluffit.home.components.CoinDisplay
 import com.kiwa.fluffit.home.components.FlupetImageButton
 import com.kiwa.fluffit.home.ui.FlupetUI
@@ -59,7 +58,8 @@ internal fun HomeRoute(
         onClickMyPage = onNavigateToMyPage,
         onClickTombStone = { viewModel.onTriggerEvent(HomeViewEvent.OnClickTombStone) },
         onClickEmptyEgg = { viewModel.onTriggerEvent(HomeViewEvent.OnClickNewEggButton) },
-        onDismissSnackBar = { viewModel.onTriggerEvent(HomeViewEvent.OnDismissSnackBar) }
+        onDismissSnackBar = { viewModel.onTriggerEvent(HomeViewEvent.OnDismissSnackBar) },
+        onClickEvolutionButton = { viewModel.onTriggerEvent(HomeViewEvent.OnClickEvolutionButton) }
     )
 }
 
@@ -75,7 +75,8 @@ internal fun HomeScreen(
     onClickTombStone: () -> Unit,
     onClickEmptyEgg: () -> Unit,
     onClickMyPage: () -> Unit,
-    onDismissSnackBar: () -> Unit
+    onDismissSnackBar: () -> Unit,
+    onClickEvolutionButton: () -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -109,9 +110,9 @@ internal fun HomeScreen(
                 onUpdateFullness,
                 onUpdateHealth,
                 imageLoader,
-                OriginalSize,
                 onClickPencilButton,
-                onClickConfirmButton
+                onClickConfirmButton,
+                onClickEvolutionButton
             )
 
             FlupetStatus.Dead -> TombStoneUI(
