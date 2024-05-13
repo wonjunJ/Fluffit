@@ -44,7 +44,7 @@ class FlupetService(
         log.info("coin은 ${coin}")
         if(dto == null){ //현재 플러펫이 없다(mainInfoDto 연산이 완료될때까지 '블로킹되지 않고' 기다리게 된다)
             val response = MainInfoResponse()
-            response.coin = coin
+            response.coin = coin.coin
             return@coroutineScope response
         } else {
             val response = MainInfoResponse(
@@ -57,7 +57,7 @@ class FlupetService(
                 isEvolutionAvailable = if(dto.exp == 100) true else false,
                 nextFullnessUpdateTime = if(dto.isDead) 0 else (dto.nextFullnessUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                 nextHealthUpdateTime = if(dto.isDead) 0 else (dto.nextHealthUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-                coin = coin
+                coin = coin.coin
             )
             return@coroutineScope response
         }
