@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -149,13 +150,13 @@ private fun MainButtons(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp)
-            .padding(top = 120.dp)
     ) {
         Row(modifier = Modifier.align(Alignment.TopCenter), verticalAlignment = Alignment.Bottom) {
             CoinDisplay(coin = coin)
             Spacer(modifier = Modifier.weight(1f))
             RankingButton(onClickRankingButton)
         }
+        Spacer(modifier = Modifier.height(120.dp))
         CollectionButton(
             modifier = Modifier.align(Alignment.BottomStart),
             onNavigateToCollection = onClickCollectionButton
