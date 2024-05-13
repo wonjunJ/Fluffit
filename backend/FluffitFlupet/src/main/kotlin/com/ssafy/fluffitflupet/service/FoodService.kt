@@ -41,7 +41,7 @@ class FoodService(
         }
         return@coroutineScope FoodListResponse(
             foods = foods,
-            coin = coinWait.await()
+            coin = coinWait.await().coin
         )
     }
 
