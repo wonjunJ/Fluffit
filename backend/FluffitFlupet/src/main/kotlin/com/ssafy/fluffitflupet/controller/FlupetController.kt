@@ -64,4 +64,10 @@ class FlupetController(
     suspend fun getFlupetRank(@RequestHeader("memberId") userId: String): RankingResponse {
         return flupetService.getFlupetRank(userId)
     }
+
+    //member service에서 배틀 랭킹 관련 필요한 정보 조회
+    @GetMapping("/rank-info")
+    suspend fun getFlupetBattleRank(@RequestParam("memberIds") memberIds: List<String>): List<RankFlupetInfoDto> {
+        return flupetService.getFlupetBattleRank(memberIds)
+    }
 }
