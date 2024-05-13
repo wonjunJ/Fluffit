@@ -54,7 +54,7 @@ class FlupetService(
                 imageUrl = dto.imageUrl.split(","),
                 birthDay = dto.birthDay.toLocalDate().toString(),
                 age = "${ChronoUnit.DAYS.between(dto.birthDay, LocalDateTime.now())}일 ${(ChronoUnit.HOURS.between(dto.birthDay, LocalDateTime.now())) % 24}시간",
-                isEvolutionAvailable = true, //if(dto.exp == 100) true else false,
+                isEvolutionAvailable = if(dto.exp == 100) true else false,
                 nextFullnessUpdateTime = if(dto.isDead) 0 else (dto.nextFullnessUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                 nextHealthUpdateTime = if(dto.isDead) 0 else (dto.nextHealthUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                 coin = coin
@@ -91,7 +91,7 @@ class FlupetService(
         return FullResponse(
             fullness = mflupet.fullness,
             nextUpdateTime = (mflupet.fullnessUpdateTime!!.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            isEvolutionAvailable = true //if(mflupet.exp == 100) true else false
+            isEvolutionAvailable = if(mflupet.exp == 100) true else false
         )
     }
 
@@ -109,7 +109,7 @@ class FlupetService(
         return HealthResponse(
             health = mflupet.health,
             nextUpdateTime = (mflupet.healthUpdateTime!!.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            isEvolutionAvailable = true //if(mflupet.exp == 100) true else false
+            isEvolutionAvailable = if(mflupet.exp == 100) true else false
         )
     }
 
@@ -190,7 +190,7 @@ class FlupetService(
                     flupetId = if(mypetRst.stage == 1) flist[0].id else evolveFlupet!!.id,
                     memberId = userId,
                     name = mflupetRst.name,
-                    exp = mflupetRst.exp,
+                    exp = 0,
                     steps = mflupetRst.steps,
                     createTime = mflupetRst.createTime,
                     fullness = mflupetRst.fullness,
@@ -207,8 +207,8 @@ class FlupetService(
             fullness = mflupetRst.fullness,
             health = mflupetRst.health,
             isEvolutionAvailable = false,
-            nextFullnessUpdateTime = mflupetRst.fullnessUpdateTime!!.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            nextHealthUpdateTime = mflupetRst.healthUpdateTime!!.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            nextFullnessUpdateTime = (mflupetRst.fullnessUpdateTime!!.plusHours(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            nextHealthUpdateTime = (mflupetRst.healthUpdateTime!!.plusHours(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         )
     }
 
