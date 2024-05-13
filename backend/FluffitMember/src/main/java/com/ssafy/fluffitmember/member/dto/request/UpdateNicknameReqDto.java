@@ -1,4 +1,4 @@
-package com.ssafy.fluffitmember.member.dto.Request;
+package com.ssafy.fluffitmember.member.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

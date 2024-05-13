@@ -1,4 +1,4 @@
-package com.ssafy.fluffitmember.member.dto.Response;
+package com.ssafy.fluffitmember.member.dto.response;
 
 
 import lombok.Getter;

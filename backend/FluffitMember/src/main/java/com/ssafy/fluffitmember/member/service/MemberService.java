@@ -6,11 +6,11 @@ import com.ssafy.fluffitmember._common.exception.DuplicateNickname;
 import com.ssafy.fluffitmember._common.exception.NotFoundUserException;
 import com.ssafy.fluffitmember._common.exception.NotValidNickname;
 import com.ssafy.fluffitmember._common.exception.NotValidSQL;
-import com.ssafy.fluffitmember.member.dto.Request.UpdateNicknameReqDto;
-import com.ssafy.fluffitmember.member.dto.Response.GetCoinResDto;
-import com.ssafy.fluffitmember.member.dto.Response.GetNicknameResDto;
-import com.ssafy.fluffitmember.member.dto.Response.GetRankResDto;
-import com.ssafy.fluffitmember.member.dto.Response.RankDto;
+import com.ssafy.fluffitmember.member.dto.request.UpdateNicknameReqDto;
+import com.ssafy.fluffitmember.member.dto.response.GetCoinResDto;
+import com.ssafy.fluffitmember.member.dto.response.GetNicknameResDto;
+import com.ssafy.fluffitmember.member.dto.response.GetRankResDto;
+import com.ssafy.fluffitmember.member.dto.response.RankDto;
 import com.ssafy.fluffitmember.member.entity.Member;
 import com.ssafy.fluffitmember.member.repository.MemberRepository;
 

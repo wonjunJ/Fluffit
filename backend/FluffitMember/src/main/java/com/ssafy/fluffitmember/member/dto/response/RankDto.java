@@ -1,9 +1,11 @@
-package com.ssafy.fluffitmember.member.dto.Response;
+package com.ssafy.fluffitmember.member.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,5 +15,5 @@ public class RankDto {
     private int rank;
     private String nickname;
     private String flupetNickname;
-    private String flupetImageUrl;
+    private List<String> flupetImageUrl;
 }
