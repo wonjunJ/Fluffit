@@ -14,10 +14,12 @@ import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
+import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.system.measureTimeMillis
 
@@ -26,7 +28,8 @@ class FlupetService(
     private val memberFlupetRepository: MemberFlupetRepository,
     private val client: MemberServiceClientAsync,
     private val flupetRepository: FlupetRepository,
-    private val env: Environment
+    private val env: Environment,
+    private val reactiveRedisTemplate: ReactiveRedisTemplate<String, String>
 ) {
     //lombok slf4j를 쓰기 위해
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
@@ -340,6 +343,36 @@ class FlupetService(
                 )
             }
             return@coroutineScope list
+        }
+    }
+
+    suspend fun patMyFlupet(userId: String) = coroutineScope {
+        log.info("쓰다듬기")
+        val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+        val patTime = reactiveRedisTemplate.opsForValue().get("patTime: $userId").awaitSingleOrNull()
+        if(patTime != null){ //오늘 쓰다듬기를 한적이 있다.
+            var parseTime = LocalDateTime.parse(patTime, formatter)
+            if(LocalDateTime.now().isBefore(parseTime.plusMinutes(5))){ //마지막으로 쓰다듬기를 한 후 5분이 지나지 않았다.
+                throw CustomBadRequestException(ErrorType.PAT_TIME_LIMIT)
+            }
+            var mf = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
+            if(mf == null){
+                throw CustomBadRequestException(ErrorType.INVALID_USERID)
+            }
+            if(mf.patCnt == 0){
+                throw CustomBadRequestException(ErrorType.PAT_CNT_LIMIT)
+            }
+            mf.patCnt--
+            launch(Dispatchers.IO) { reactiveRedisTemplate.opsForValue().set("patTime: $userId", LocalDateTime.now().toString()).awaitSingle() }
+            launch(Dispatchers.IO) { memberFlupetRepository.save(mf).awaitSingle() }
+        }else{
+            var mf = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
+            if(mf == null){
+                throw CustomBadRequestException(ErrorType.INVALID_USERID)
+            }
+            mf.patCnt--
+            launch(Dispatchers.IO) { reactiveRedisTemplate.opsForValue().set("patTime: $userId", LocalDateTime.now().toString()).awaitSingle() }
+            launch(Dispatchers.IO) { memberFlupetRepository.save(mf).awaitSingle() }
         }
     }
 }
