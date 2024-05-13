@@ -75,6 +75,7 @@ public class MemberController {
     @GetMapping("/get-coin")
     public ResponseEntity<Object> getUserCoin(@RequestHeader("memberId") String memberId){
         GetCoinResDto getRankResDto = memberService.getUserCoin(memberId);
+        log.info("getCoin enter!!" + memberId);
         return ResponseEntity.ok().body(getRankResDto);
     }
 }
