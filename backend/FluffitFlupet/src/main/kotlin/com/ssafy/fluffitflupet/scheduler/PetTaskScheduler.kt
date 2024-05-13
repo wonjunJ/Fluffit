@@ -9,6 +9,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.reactor.awaitSingle
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
+import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import reactor.core.publisher.BufferOverflowStrategy
@@ -20,13 +21,15 @@ import kotlin.coroutines.CoroutineContext
 @Component
 class PetTaskScheduler(
     private val memberFlupetRepository: MemberFlupetRepository,
-    private val env: Environment
+    private val env: Environment,
+    private val reactiveRedisTemplate: ReactiveRedisTemplate<String, String>
 ): CoroutineScope { //CoroutineScope를 컴포넌트 레벨에서 구현하여 각 스케쥴된 작업이 자신의 CoroutineScope를 가지게 된다.
     private val job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Default + job
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
     var dropList = ArrayList<MemberFlupet>()
+    var dropPat = ArrayList<MemberFlupet>()
     //var cron: String = env.getProperty("schedule.cron", "0 1 0 * * ?")
 
     //2시간마다 스케쥴링을 돈다(초기 딜레이를 얼마로 할지)
@@ -117,7 +120,26 @@ class PetTaskScheduler(
     }
 
     @Scheduled(cron = "0 1 0 * * ?")
-    fun initializePat() { //매일 쓰다듬기 횟수를 초기화 한다.
+    fun initializePatRun() { //매일 쓰다듬기 횟수를 초기화 한다.
+        log.info("스케쥴링")
+        memberFlupetRepository.findAllByIsDeadIsFalse()
+            .onBackpressureBuffer(256,
+                {dropped -> dropPat.add(dropped)},
+                BufferOverflowStrategy.DROP_LATEST)
+            .publishOn(Schedulers.parallel(), false, 32)
+            .subscribe(this::initPat)
+            { error -> log.error(error.toString()) }
+
+        for(mf in dropPat){
+            mf.patCnt = 5
+            launch(Dispatchers.IO) { memberFlupetRepository.save(mf).awaitSingle() }
+        }
+    }
+
+    fun initPat(data: MemberFlupet){
+        data.patCnt = 5
+        launch(Dispatchers.IO) { reactiveRedisTemplate.opsForValue().delete("patTime: ${data.memberId}").awaitSingle() }
+        launch(Dispatchers.IO) { memberFlupetRepository.save(data).awaitSingle() }
     }
 
     @PreDestroy

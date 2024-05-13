@@ -14,6 +14,8 @@ enum class ErrorType(
     NOT_AVAILABLE_EVOLVE(HttpStatus.FORBIDDEN, "더 이상 진화할 수 없습니다."),
     NOT_AVAILABLE_GEN_PET(HttpStatus.FORBIDDEN, "이미 플러펫이 존재하여 더 이상 플러펫을 생성할 수 없습니다."),
     NOT_FOUND_NEXT_FLUPET(HttpStatus.NOT_FOUND, "그 단계의 플러펫을 찾을 수 없습니다."),
-    TEST_EXCEPTION(HttpStatus.BAD_REQUEST, "테스트 오류가 발생했어요")
+    TEST_EXCEPTION(HttpStatus.BAD_REQUEST, "테스트 오류가 발생했어요"),
+    PAT_TIME_LIMIT(HttpStatus.PAYMENT_REQUIRED, "쓰다듬기는 5분에 한번씩만 할 수 있어요"),
+    PAT_CNT_LIMIT(HttpStatus.CONFLICT, "하루에 5번만 쓰다듬기를 할 수 있어요")
     ;
 }
