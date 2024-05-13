@@ -1,6 +1,6 @@
 package com.ssafy.fluffitflupet.dto
 
-data class CoinDto(
+data class GetCoinResDto(
     var coin: Int
 ) {
 }
