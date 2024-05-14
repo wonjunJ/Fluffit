@@ -1,6 +1,7 @@
 package com.ssafy.fluffitmember.exercise.service;
 
 import com.ssafy.fluffitmember._common.exception.NotFoundUserException;
+import com.ssafy.fluffitmember.exercise.dto.StepsKafkaDto;
 import com.ssafy.fluffitmember.exercise.dto.request.RunningReqDto;
 import com.ssafy.fluffitmember.exercise.dto.request.StepsReqDto;
 import com.ssafy.fluffitmember.exercise.dto.response.RunningResDto;
@@ -11,6 +12,7 @@ import com.ssafy.fluffitmember.exercise.repository.RunningRepository;
 import com.ssafy.fluffitmember.exercise.repository.StepsRepository;
 import com.ssafy.fluffitmember.member.entity.Member;
 import com.ssafy.fluffitmember.member.repository.MemberRepository;
+import com.ssafy.fluffitmember.messagequeue.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,7 @@ public class ExerciseService {
     private final RunningRepository exerciseRepository;
     private final StepsRepository stepsRepository;
     private final MemberRepository memberRepository;
+    private final KafkaProducer kafkaProducer;
 
     @Transactional
     public RunningResDto getRunningReword(String memberId, RunningReqDto runningReqDto) {
@@ -87,17 +90,20 @@ public class ExerciseService {
         }
         Member member = findMember.get();
         Optional<Steps> findSteps = stepsRepository.findByMemberIdAndDate(memberId, stepsReqDto.getDate());
-
+        int newSteps = stepsReqDto.getStepCount();
         int currentSteps = 0;
         Steps steps = null;
         if(findSteps.isEmpty()){
-            steps = Steps.of(member,stepsReqDto.getDate(),stepsReqDto.getStepCount(),memberId);
+            steps = Steps.of(member,stepsReqDto.getDate(),newSteps,memberId);
             stepsRepository.save(steps);
         }else{
             steps = findSteps.get();
             currentSteps = steps.getStepCount();
         }
 
+        // kafka
+        StepsKafkaDto stepsKafkaDto = new StepsKafkaDto(member.getMemberId(),newSteps - currentSteps);
+        kafkaProducer.send("steps-update",stepsKafkaDto);
         int stepsReword = calculateStepsReward(currentSteps,stepsReqDto.getStepCount());
         int coin = member.getCoin();
         member.updateCoin(coin + stepsReword);
