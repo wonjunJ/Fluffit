@@ -22,7 +22,8 @@ import kotlin.coroutines.CoroutineContext
 class PetTaskScheduler(
     private val memberFlupetRepository: MemberFlupetRepository,
     private val env: Environment,
-    private val reactiveRedisTemplate: ReactiveRedisTemplate<String, String>
+    private val reactiveRedisTemplate: ReactiveRedisTemplate<String, String>,
+    private val achaCalculator: AchaCalculator
 ): CoroutineScope { //CoroutineScope를 컴포넌트 레벨에서 구현하여 각 스케쥴된 작업이 자신의 CoroutineScope를 가지게 된다.
     private val job = Job()
     override val coroutineContext: CoroutineContext
@@ -53,6 +54,8 @@ class PetTaskScheduler(
                     memberFlupet.isDead = true
                     memberFlupet.endTime = LocalDateTime.now()
                 }
+
+                memberFlupet.achaTime = achaCalculator.calAchaTime(memberFlupet.fullness, memberFlupet.health) ?: memberFlupet.achaTime
                 withContext(Dispatchers.IO){
                     memberFlupetRepository.save(memberFlupet)
                 }
@@ -72,6 +75,8 @@ class PetTaskScheduler(
                 data.isDead = true
                 data.endTime = LocalDateTime.now()
             }
+
+            data.achaTime = achaCalculator.calAchaTime(data.fullness, data.health) ?: data.achaTime
             log.info("스케쥴링에서의 현재 포만감은 ${data.fullness}")
             withContext(Dispatchers.IO){
                 //코루틴을 사용할때 Mono로 리턴이 되는거에는 뒤에 .awaitSingle()을 붙혀줘야 작동이 된다.

@@ -23,7 +23,7 @@ class FoodController(
     }
 
     @PutMapping("/feeding/{foodId}")
-    suspend fun feedToPet(@RequestHeader("memberId") userId: String, @PathVariable("foodId") foodId: Long): FeedingResponse? {
+    suspend fun feedToPet(@RequestHeader("memberId") userId: String, @PathVariable("foodId") foodId: Long): FeedingResponse {
         return foodService.feedToPet(userId, foodId)
     }
 }

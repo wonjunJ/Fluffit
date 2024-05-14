@@ -16,6 +16,11 @@ enum class ErrorType(
     NOT_FOUND_NEXT_FLUPET(HttpStatus.NOT_FOUND, "그 단계의 플러펫을 찾을 수 없습니다."),
     TEST_EXCEPTION(HttpStatus.BAD_REQUEST, "테스트 오류가 발생했어요"),
     PAT_TIME_LIMIT(HttpStatus.PAYMENT_REQUIRED, "쓰다듬기는 5분에 한번씩만 할 수 있어요"),
-    PAT_CNT_LIMIT(HttpStatus.CONFLICT, "하루에 5번만 쓰다듬기를 할 수 있어요")
+    PAT_CNT_LIMIT(HttpStatus.CONFLICT, "하루에 5번만 쓰다듬기를 할 수 있어요"),
+    LOCK_NOT_AVAILABLE(HttpStatus.LOCKED, "Lock을 획득하지 못했습니다."),
+    LOCK_INTERRUPTED_ERROR(HttpStatus.LOCKED, "Lock획득 대기 상태 중 인터럽트가 발생하였습니다."),
+    INSUFFICIENT_COIN(HttpStatus.FORBIDDEN, "간식을 구매할 코인이 부족합니다."),
+    NOT_REQUIRED_FULLNESS(HttpStatus.NOT_ACCEPTABLE, "이미 포만감이 가득찬 상태입니다."),
+    INSUFFICIENT_FOOD_STOCK(HttpStatus.CONFLICT, "해당 음식의 재고가 부족합니다.")
     ;
 }

@@ -1,14 +1,16 @@
 package com.ssafy.fluffitflupet.scheduler
 
 import com.ssafy.fluffitflupet.entity.MemberFlupet
+import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
-class DecreaseCalculator {
-    suspend fun calAchaTime(data: MemberFlupet){
+@Component
+class AchaCalculator {
+    suspend fun calAchaTime(full: Int, healthy: Int): LocalDateTime? {
         var curHour = LocalDateTime.now().hour
         var hours = 0 //총 몇 시간 뒤에 0이 되는지
-        var fullness = data.fullness
-        var health = data.health
+        var fullness = full //코틀린에서는 매개변수로 전달된 Int와 같은 타입들(값 복사로 전달)을 변경하고 싶다면 var변수에 다시 할당
+        var health = healthy
 
         while(fullness > 0 && health > 0){
             if(curHour in 0..7){ //포만감 2시간에 5씩, 건강 2시간에 3씩
@@ -38,6 +40,10 @@ class DecreaseCalculator {
             }
         }
 
-        data.achaTime = LocalDateTime.now().plusHours(hours - 1L)
+        if(hours > 1){ //죽기까지 한시간밖에 안남았을 경우에는 새로 업데이트할 필요x
+            return LocalDateTime.now().plusHours(hours - 1L)
+        }else{
+            return null
+        }
     }
 }

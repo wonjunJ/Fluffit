@@ -8,6 +8,7 @@ import com.ssafy.fluffitflupet.error.ErrorType
 import com.ssafy.fluffitflupet.exception.CustomBadRequestException
 import com.ssafy.fluffitflupet.repository.FlupetRepository
 import com.ssafy.fluffitflupet.repository.MemberFlupetRepository
+import com.ssafy.fluffitflupet.scheduler.AchaCalculator
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactor.awaitSingle
@@ -29,7 +30,8 @@ class FlupetService(
     private val client: MemberServiceClientAsync,
     private val flupetRepository: FlupetRepository,
     private val env: Environment,
-    private val reactiveRedisTemplate: ReactiveRedisTemplate<String, String>
+    private val reactiveRedisTemplate: ReactiveRedisTemplate<String, String>,
+    private val achaCalculator: AchaCalculator
 ) {
     //lombok slf4j를 쓰기 위해
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
@@ -128,12 +130,15 @@ class FlupetService(
         if(mflupet != null){
             throw CustomBadRequestException(ErrorType.NOT_AVAILABLE_GEN_PET)
         }
+        val achaTime = achaCalculator.calAchaTime(100, 100)
+        log.info("계산된 achaTime은 $achaTime")
         launch(Dispatchers.IO) {
             memberFlupetRepository.save(
                 MemberFlupet(
                     flupetId = 1,
                     memberId = userId,
-                    name = "새로운 알"
+                    name = "새로운 알",
+                    achaTime = achaTime
                 )
             ).awaitSingle()
         }
@@ -199,6 +204,7 @@ class FlupetService(
                     fullness = mflupetRst.fullness,
                     health = mflupetRst.health,
                     patCnt = mflupetRst.patCnt,
+                    achaTime = mflupetRst.achaTime,
                     fullnessUpdateTime = mflupetRst.fullnessUpdateTime,
                     healthUpdateTime = mflupetRst.healthUpdateTime
                 )
@@ -230,87 +236,87 @@ class FlupetService(
     }
 
     suspend fun getFlupetRank(userId: String): RankingResponse = coroutineScope {
-        throw CustomBadRequestException(ErrorType.TEST_EXCEPTION)
-//        val nick = async { client.getNickname(userId) }
-//        var nick1: Any? = null; var nick2: Any? = null; var nick3: Any? = null; var nick4: Any? = null
-//        var flag = 0
-//        val mrank = ArrayList<RankDto>()
-//        val rank = withContext(Dispatchers.IO){ memberFlupetRepository.findFlupetRank(userId) }
-//        rank.collect{ value ->
-//            log.info("flag값은 $flag")
-//            log.info("요청 userId는 ${value.userId}")
-//            val tmp = async { client.getNickname(value.userId) }
-////            when(flag){
-////                0 -> nick1 = async { client.getNickname(value.userId) } //나
-////                1 -> nick2 = async { client.getNickname(value.userId) } //1등
-////                2 -> nick3 = async { client.getNickname(value.userId) } //2등
-////                3 -> nick4 = async { client.getNickname(value.userId) } //3등 -> 내 순위에 따라서 4등이 될 수도 있다.
-////            }
-//            value.userNickname = tmp.await().nickname
-//            mrank.add(value)
-//            flag++
-//        }
-//
-//        if(mrank.isEmpty()){
-//            throw CustomBadRequestException(ErrorType.INVALID_USERID)
-//        }
-//        if(mrank[0].rank in 1..3){ //내 순위가 1~3위안에 포함되어 있다.(nick4 요청을 취소시킬 수 있다.)
-//            if(mrank.size == 4){
-////                (nick4 as Deferred<Nick>).cancel()
-////                mrank[0].userNickname = (nick1 as Deferred<Nick>).await().nickname
-//                mrank.removeAt(mrank.size-1)
-//                if(mrank[0].rank == 2) { //내가 2등
-//                    val tmp = mrank[0]
-//                    mrank.add(2, tmp)
-////                    mrank[1].userNickname = (nick2 as Deferred<Nick>).await().nickname //1등
-////                    mrank[3].userNickname = (nick3 as Deferred<Nick>).await().nickname //3등
-//                }else if(mrank[0].rank == 3) { //내가 3등
-//                    val tmp = mrank[0]
-//                    mrank.add(tmp)
-////                    mrank[1].userNickname = (nick2 as Deferred<Nick>).await().nickname //1등
-////                    mrank[2].userNickname = (nick3 as Deferred<Nick>).await().nickname //2등
-//                }else{ //내가 1등이다.
-//                    val tmp = mrank[0]
-//                    mrank.add(1, tmp)
-////                    mrank[2].userNickname = (nick2 as Deferred<Nick>).await().nickname //2등
-////                    mrank[3].userNickname = (nick3 as Deferred<Nick>).await().nickname //3등
-//                }
-//            }else{ //현재 살아있는 펫이 4명이 안된다.
-//                if(mrank[0].rank == mrank.size){
-//                    mrank.add(mrank[0])
-//                }else{
-//                    mrank.add(mrank[0].rank, mrank[0])
-//                }
+        //throw CustomBadRequestException(ErrorType.TEST_EXCEPTION)
+        val nick = async { client.getNickname(userId) }
+        var nick1: Any? = null; var nick2: Any? = null; var nick3: Any? = null; var nick4: Any? = null
+        var flag = 0
+        val mrank = ArrayList<RankDto>()
+        val rank = withContext(Dispatchers.IO){ memberFlupetRepository.findFlupetRank(userId) }
+        rank.collect{ value ->
+            log.info("flag값은 $flag")
+            log.info("요청 userId는 ${value.userId}")
+            val tmp = async { client.getNickname(value.userId) }
+//            when(flag){
+//                0 -> nick1 = async { client.getNickname(value.userId) } //나
+//                1 -> nick2 = async { client.getNickname(value.userId) } //1등
+//                2 -> nick3 = async { client.getNickname(value.userId) } //2등
+//                3 -> nick4 = async { client.getNickname(value.userId) } //3등 -> 내 순위에 따라서 4등이 될 수도 있다.
 //            }
-//        }else{
-////            mrank[0].userNickname = (nick1 as Deferred<Nick>).await().nickname
-////            mrank[1].userNickname = (nick2 as Deferred<Nick>).await().nickname //1등
-////            mrank[2].userNickname = (nick3 as Deferred<Nick>).await().nickname //2등
-////            mrank[3].userNickname = (nick4 as Deferred<Nick>).await().nickname //3등
-//        }
-//
-//        var tmprank = mrank.removeAt(0)
-//        var myRank = RankingResponse.PetAgeInfo(
-//            rank = tmprank.rank,
-//            userNickname = tmprank.userNickname,
-//            lifetime = tmprank.lifetime,
-//            flupetNickname = tmprank.flupetNickname,
-//            imageUrl = tmprank.imageUrl
-//        )
-//        var ranking = mrank.map { value ->
-//            RankingResponse.PetAgeInfo(
-//                rank = value.rank,
-//                userNickname = value.userNickname,
-//                lifetime = value.lifetime,
-//                flupetNickname = value.flupetNickname,
-//                imageUrl = value.imageUrl
-//            )
-//        }
-//
-//        return@coroutineScope RankingResponse(
-//            ranking = ranking,
-//            myRank = myRank,
-//        )
+            value.userNickname = tmp.await().nickname
+            mrank.add(value)
+            flag++
+        }
+
+        if(mrank.isEmpty()){
+            throw CustomBadRequestException(ErrorType.INVALID_USERID)
+        }
+        if(mrank[0].rank in 1..3){ //내 순위가 1~3위안에 포함되어 있다.(nick4 요청을 취소시킬 수 있다.)
+            if(mrank.size == 4){
+//                (nick4 as Deferred<Nick>).cancel()
+//                mrank[0].userNickname = (nick1 as Deferred<Nick>).await().nickname
+                mrank.removeAt(mrank.size-1)
+                if(mrank[0].rank == 2) { //내가 2등
+                    val tmp = mrank[0]
+                    mrank.add(2, tmp)
+//                    mrank[1].userNickname = (nick2 as Deferred<Nick>).await().nickname //1등
+//                    mrank[3].userNickname = (nick3 as Deferred<Nick>).await().nickname //3등
+                }else if(mrank[0].rank == 3) { //내가 3등
+                    val tmp = mrank[0]
+                    mrank.add(tmp)
+//                    mrank[1].userNickname = (nick2 as Deferred<Nick>).await().nickname //1등
+//                    mrank[2].userNickname = (nick3 as Deferred<Nick>).await().nickname //2등
+                }else{ //내가 1등이다.
+                    val tmp = mrank[0]
+                    mrank.add(1, tmp)
+//                    mrank[2].userNickname = (nick2 as Deferred<Nick>).await().nickname //2등
+//                    mrank[3].userNickname = (nick3 as Deferred<Nick>).await().nickname //3등
+                }
+            }else{ //현재 살아있는 펫이 4명이 안된다.
+                if(mrank[0].rank == mrank.size){
+                    mrank.add(mrank[0])
+                }else{
+                    mrank.add(mrank[0].rank, mrank[0])
+                }
+            }
+        }else{
+//            mrank[0].userNickname = (nick1 as Deferred<Nick>).await().nickname
+//            mrank[1].userNickname = (nick2 as Deferred<Nick>).await().nickname //1등
+//            mrank[2].userNickname = (nick3 as Deferred<Nick>).await().nickname //2등
+//            mrank[3].userNickname = (nick4 as Deferred<Nick>).await().nickname //3등
+        }
+
+        var tmprank = mrank.removeAt(0)
+        var myRank = RankingResponse.PetAgeInfo(
+            rank = tmprank.rank,
+            userNickname = tmprank.userNickname,
+            lifetime = tmprank.lifetime,
+            flupetNickname = tmprank.flupetNickname,
+            imageUrl = tmprank.imageUrl
+        )
+        var ranking = mrank.map { value ->
+            RankingResponse.PetAgeInfo(
+                rank = value.rank,
+                userNickname = value.userNickname,
+                lifetime = value.lifetime,
+                flupetNickname = value.flupetNickname,
+                imageUrl = value.imageUrl
+            )
+        }
+
+        return@coroutineScope RankingResponse(
+            ranking = ranking,
+            myRank = myRank,
+        )
     }
 
     suspend fun getFlupetBattleRank(memberIds: List<String>): List<RankFlupetInfoDto> = coroutineScope {
