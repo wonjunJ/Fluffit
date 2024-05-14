@@ -60,7 +60,7 @@ fun FlupetLog(
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxHeight(0.7f)
+                    .fillMaxWidth(0.3f)
                     .aspectRatio(1f)
             ) {
                 AndroidView(
@@ -94,17 +94,20 @@ fun FlupetLog(
                         textAlign = TextAlign.Start,
                     )
                 )
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = myFlupet.birthDay + " ~\n" + myFlupet.endDay,
                     style = fluffitTypography.headlineSmall.merge(
                         textAlign = TextAlign.Start,
                     )
                 )
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = "육성기간\n" + myFlupet.age, style = fluffitTypography.headlineSmall.merge(
                         textAlign = TextAlign.Start,
                     )
                 )
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = myFlupet.steps.toString()+"걸음", style = fluffitTypography.headlineSmall.merge(
                         textAlign = TextAlign.Start,

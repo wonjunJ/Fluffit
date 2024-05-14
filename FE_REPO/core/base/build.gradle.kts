@@ -7,3 +7,6 @@ plugins {
 android {
     namespace = "com.kiwa.fluffit.base"
 }
+configurations.implementation {
+    exclude(group = "com.intellij", module = "annotations")
+}
