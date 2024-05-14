@@ -29,15 +29,11 @@ internal fun MatchingCompletedUI(uiState: BattleViewState, onReadyForBattle: () 
                 in 0..5 -> {
                     OpponentUI(uiState.opponentInfo, Modifier.align(Alignment.Center))
                 }
-
-                in 6..10 -> {
-                    BattleInfoUI()
-                }
-
                 else -> {
                     onReadyForBattle()
                 }
             }
         }
     }
+
 }

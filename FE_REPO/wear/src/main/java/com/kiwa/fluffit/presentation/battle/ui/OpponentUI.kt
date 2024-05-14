@@ -12,9 +12,8 @@ import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import coil.ImageLoader
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
-import coil.size.OriginalSize
 import com.kiwa.fluffit.model.battle.OpponentInfo
 
 @Composable
@@ -29,12 +28,9 @@ internal fun OpponentUI(opponentInfo: OpponentInfo, modifier: Modifier) {
         Text(text = "VS", style = MaterialTheme.typography.display2)
         Text(text = opponentInfo.opponentName, style = MaterialTheme.typography.display1)
         Image(
-            painter = rememberImagePainter(
+            painter = rememberAsyncImagePainter(
                 imageLoader = imageLoader,
-                data = opponentInfo.opponentFlupetImage,
-                builder = {
-                    size(OriginalSize)
-                }
+                model = opponentInfo.opponentFlupetImage,
             ),
             contentDescription = null,
             modifier = Modifier
