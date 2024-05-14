@@ -78,7 +78,7 @@ public class MemberController {
     public ResponseEntity<Object> signOut(@RequestHeader("memberId") String memberId, @RequestBody SignOutResDto signOutResDto){
         try {
             memberService.signOut(memberId,signOutResDto);
-            return ResponseEntity.ok().body(SuccessResponse.from(SuccessType.LOGIN_SUCCESSFULLY));
+            return ResponseEntity.ok().body(SuccessResponse.from(SuccessType.SIGNOUT_SUCCESSFULLY));
         }catch (NotFoundUserException e){
             return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.NOT_FOUND_MEMBER));
         }catch (EncryptionException e){

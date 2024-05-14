@@ -11,6 +11,7 @@ public enum SuccessType {
     //****************************User****************************//
     UPDATE_USER_NICKNAME_SUCCESSFULLY(200,"닉네임 수정 성공"),
     LOGIN_SUCCESSFULLY(200,"로그인 성공"),
+    SIGNOUT_SUCCESSFULLY(200,"회원탈퇴 성공"),
 
     ;
     private final int status;
