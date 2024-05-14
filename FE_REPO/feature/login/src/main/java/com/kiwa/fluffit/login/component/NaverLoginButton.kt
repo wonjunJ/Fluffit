@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.login.component
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,8 +15,6 @@ import androidx.compose.ui.unit.dp
 import com.kiwa.fluffit.login.LoginViewEvent
 import com.kiwa.fluffit.login.LoginViewModel
 import com.kiwa.fluffit.login.R
-
-private const val TAG = "NaverLoginButton_싸피"
 
 @Composable
 internal fun NaverLoginButton(
@@ -37,7 +34,6 @@ internal fun NaverLoginButton(
                     indication = null
                 ) {
                     viewModel.onTriggerEvent(LoginViewEvent.OnClickNaverLoginButton)
-                    Log.d(TAG, "NaverLoginButton: 클릭된듯")
                 },
             painter = painterResource(id = R.drawable.naver_login_white),
             contentDescription = "네이버 로그인"

@@ -1,18 +1,14 @@
 package com.kiwa.fluffit.model.flupet.response
 
-data class CollectionResponse(
-    val status: Int,
-    val msg: String,
-    val data: Flupets
-)
+import com.google.gson.annotations.SerializedName
 
 data class Flupets(
-    val flupets: List<Collections>
+    @SerializedName("flupets") val flupets: List<Collections>
 )
 
 data class Collections(
-    val species: String,
-    val imageUrl: String,
-    val tier: Int,
-    val metBefore: Boolean
+    @SerializedName("species") val species: String,
+    @SerializedName("imageUrl") val imageUrl: List<String>,
+    @SerializedName("tier") val tier: Int,
+    @SerializedName("metBefore") val metBefore: Boolean
 )

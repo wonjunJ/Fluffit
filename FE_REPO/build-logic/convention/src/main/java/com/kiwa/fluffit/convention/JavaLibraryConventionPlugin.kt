@@ -32,6 +32,7 @@ internal class JavaLibraryConventionPlugin : Plugin<Project> {
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
             dependencies {
                 "testImplementation"(libs.findLibrary("junit").get())
+                "implementation"("com.google.code.gson:gson:2.10.1")
             }
         }
     }

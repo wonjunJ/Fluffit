@@ -19,11 +19,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.kiwa.fluffit.designsystem.theme.fluffitTypography
-import com.kiwa.fluffit.model.flupet.FlupetCollection
+import com.kiwa.fluffit.model.flupet.response.Collections
 
 @Composable
 internal fun CollectionView(
-    collectionList: List<FlupetCollection>
+    collectionList: List<Collections>
 ) {
     Box(
         modifier = Modifier.fillMaxSize()
@@ -43,7 +43,7 @@ internal fun CollectionView(
                 .align(Alignment.Center)
                 .padding(top = 30.dp)
         ) {
-            for (i in 0..collectionList.size - 1 step (2)) {
+            for (i in 1..collectionList.size - 1 step (1)) {
                 Text(
                     modifier = Modifier
                         .weight(0.2f)
@@ -67,7 +67,9 @@ internal fun CollectionView(
                     CollectionFlupetCard(
                         modifier = Modifier.weight(1f),
                         collectionList,
-                        i + 1
+                        // 테스트를 위해 i+1(다음 항목)이 아닌 i로 구분 (tier 1의 도트가 아직 없는 상태)
+//                        i + 1
+                        i
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                 }

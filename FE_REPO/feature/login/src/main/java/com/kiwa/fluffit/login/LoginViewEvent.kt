@@ -9,9 +9,15 @@ sealed class LoginViewEvent : ViewEvent {
 
     data object OnClickNaverLoginButton : LoginViewEvent()
 
+    data object TryNicknameSetting : LoginViewEvent()
+
+    data class AttempToModifyNickname(val name: String) : LoginViewEvent()
+
     data class AttemptToFetchNaverId(val accessToken: String) : LoginViewEvent()
 
     data class OnClickBackButton(val backPressedTime: Long) : LoginViewEvent()
+
+    data object FinishProfileCheck : LoginViewEvent()
 
     data class ShowToast(val message: String) : LoginViewEvent()
 

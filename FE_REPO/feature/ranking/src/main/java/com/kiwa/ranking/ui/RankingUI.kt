@@ -83,8 +83,7 @@ internal fun RankingUI(
                                 "",
                                 "",
                                 "",
-                                "https://github.com/shjung53/algorithm_study/assets/" +
-                                    "90888718/4399f85d-7810-464c-ad76-caae980ce047"
+                                ""
                             ),
                         Modifier.weight(0.33f)
                     )
@@ -99,7 +98,7 @@ internal fun RankingUI(
                 val textStyle = MaterialTheme.typography.bodySmall
                 Text(text = "${myRanking.rank}.", style = textStyle)
                 Text(
-                    text = myRanking.userName,
+                    text = myRanking.userNickname,
                     modifier = Modifier
                         .weight(1f)
                         .basicMarquee(),

@@ -1,28 +1,43 @@
 package com.kiwa.data.api
 
 import com.kiwa.fluffit.model.user.request.NaverLoginRequest
-import com.kiwa.fluffit.model.user.response.TokenResponse
+import com.kiwa.fluffit.model.user.request.UserRequest
+import com.kiwa.fluffit.model.user.response.AutoLoginResponse
+import com.kiwa.fluffit.model.user.response.Tokens
+import com.kiwa.fluffit.model.user.response.UserModificationResponse
+import com.kiwa.fluffit.model.user.response.UserResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface AuthService {
     // api 언제 나와요
 
-    @GET("api/members/refresh")
+    @GET("member-service/auth/regenerate-token")
     suspend fun refreshUserToken(
         @Header("refreshToken") refreshToken: String
-//        @Header("Authorization") accessToken: String
-    ): TokenResponse
+    ): Tokens
 
-    @POST("api/members/autoLogin")
+    @GET("member-service/member/login")
     suspend fun autoLogin(
         @Header("Authorization") accessToken: String
-    ): TokenResponse
+    ): AutoLoginResponse
 
-    @POST("api/login")
+    @POST("member-service/auth/login")
     suspend fun signInNaver(
         @Body naverLoginRequest: NaverLoginRequest
-    ): TokenResponse
+    ): Tokens
+
+    @GET("member-service/member/nickname")
+    suspend fun loadUserName(
+        @Header("Authorization") accessToken: String
+    ): UserResponse
+
+    @PUT("member-service/member/update-nickname")
+    suspend fun updateUserName(
+        @Header("Authorization") accessToken: String,
+        @Body nickname: UserRequest
+    ): UserModificationResponse
 }

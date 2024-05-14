@@ -8,12 +8,14 @@ const val homeRoute = "home"
 
 fun NavGraphBuilder.homeScreen(
     onNavigateToCollection: () -> Unit,
-    onNavigateToRankingDialog: () -> Unit
+    onNavigateToRankingDialog: () -> Unit,
+    onNavigateToMyPage: () -> Unit
 ) {
     composable(homeRoute) {
         HomeRoute(
             onNavigateToRankingDialog = onNavigateToRankingDialog,
-            onNavigateToCollection = onNavigateToCollection
+            onNavigateToCollection = onNavigateToCollection,
+            onNavigateToMyPage = onNavigateToMyPage
         )
     }
 }

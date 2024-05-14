@@ -12,21 +12,21 @@ class RankingRepositoryImpl @Inject constructor(
     override suspend fun getBattleRanking(): Result<RankingUIModel> =
         rankingDataSource.fetchBattleRanking().fold(
             onSuccess = {
-                val rankingList = it.data.ranking.map { info ->
+                val rankingList = it.ranking.map { info ->
                     RankingInfo(
                         info.rank,
                         info.userName,
                         "${info.battlePoint}점",
                         info.petName,
-                        info.petImageUrl
+                        info.petImageUrl.first()
                     )
                 }
                 val myRank = RankingInfo(
-                    it.data.myRank.rank,
-                    it.data.myRank.userName,
-                    "${it.data.myRank.battlePoint}점",
-                    it.data.myRank.petName,
-                    it.data.myRank.petImageUrl
+                    it.myRank.rank,
+                    it.myRank.userName,
+                    "${it.myRank.battlePoint}점",
+                    it.myRank.petName,
+                    it.myRank.petImageUrl.first()
                 )
                 Result.success(RankingUIModel(rankingList, myRank))
             },
@@ -36,21 +36,21 @@ class RankingRepositoryImpl @Inject constructor(
     override suspend fun getAgeRanking(): Result<RankingUIModel> =
         rankingDataSource.fetchAgeRanking().fold(
             onSuccess = {
-                val rankingList = it.data.ranking.map { info ->
+                val rankingList = it.ranking.map { info ->
                     RankingInfo(
                         info.rank,
-                        info.userName,
-                        "${info.lifeTime}시간",
-                        info.petName,
-                        info.petImageUrl
+                        info.userNickname,
+                        "${info.lifetime}시간",
+                        info.flupetNickname,
+                        info.imageUrl.first()
                     )
                 }
                 val myRank = RankingInfo(
-                    it.data.myRank.rank,
-                    it.data.myRank.userName,
-                    "${it.data.myRank.lifeTime}시간",
-                    it.data.myRank.petName,
-                    it.data.myRank.petImageUrl
+                    it.myRank.rank,
+                    it.myRank.userNickname,
+                    "${it.myRank.lifetime}시간",
+                    it.myRank.flupetNickname,
+                    it.myRank.imageUrl.first()
                 )
                 Result.success(RankingUIModel(rankingList, myRank))
             },
