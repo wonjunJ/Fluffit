@@ -88,6 +88,7 @@ class LoginViewModel @Inject constructor(
             },
             onFailure = {
                 setState { showToast(it.message ?: "네이버 접속 실패") }
+                setState { LoginViewState.Default() }
             }
         )
     }

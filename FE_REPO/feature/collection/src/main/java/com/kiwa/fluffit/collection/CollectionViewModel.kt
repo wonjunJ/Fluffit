@@ -11,7 +11,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CollectionViewModel @Inject constructor(
     private val loadCollectionUseCase: LoadCollectionUseCase,
-    private val tokenManager: TokenManager
 ) : BaseViewModel<CollectionViewState, CollectionViewEvent>() {
     override fun createInitialState(): CollectionViewState =
         CollectionViewState.Init()
