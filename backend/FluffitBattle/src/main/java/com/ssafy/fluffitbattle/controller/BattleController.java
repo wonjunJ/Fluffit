@@ -12,15 +12,16 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/battle")
+@RequestMapping("/battle-service")
 public class BattleController {
 
     private final BattleService battleService;
     private final NotificationService notificationService;
 
     // 매칭 요청 처리
-    @PostMapping("/regist")
-    public ResponseEntity<SseEmitter> requestBattle(@RequestParam Long userId) {
+    @PostMapping("/wait")
+    public ResponseEntity<SseEmitter> requestBattle(@RequestHeader("memberId") String memberId) {
+        Long userId = Long.parseLong(memberId);
         SseEmitter sseEmitter = notificationService.createEmitter(userId);
         battleService.requestBattle(userId);
         return ResponseEntity.ok(sseEmitter);
@@ -28,7 +29,8 @@ public class BattleController {
 
     // 대기 취소
     @PostMapping("/cancel")
-    public ResponseEntity<Void> cancelWaiting(@RequestParam Long userId) {
+    public ResponseEntity<Void> cancelWaiting(@RequestHeader("memberId") String memberId) {
+        Long userId = Long.parseLong(memberId);
         notificationService.ridOfUserFromWaitingQueue(userId);
         return ResponseEntity.ok().build();
     }
@@ -42,7 +44,8 @@ public class BattleController {
 
     // 배틀 결과 처리
     @PostMapping("/result")
-    public ResponseEntity<SseEmitter> finishBattle(@RequestParam Long userId, @RequestBody BattleResultRequestDto battleResultRequestDto) {
+    public ResponseEntity<SseEmitter> finishBattle(@RequestHeader("memberId") String memberId, @RequestBody BattleResultRequestDto battleResultRequestDto) {
+        Long userId = Long.parseLong(memberId);
         SseEmitter sseEmitter = notificationService.createEmitter(userId);
         battleService.submitBattleRecord(userId, battleResultRequestDto);
         return ResponseEntity.ok(sseEmitter);

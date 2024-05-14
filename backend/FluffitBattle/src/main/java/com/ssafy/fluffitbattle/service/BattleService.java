@@ -1,5 +1,6 @@
 package com.ssafy.fluffitbattle.service;
 
+import com.ssafy.fluffitbattle.client.MemberFeignClient;
 import com.ssafy.fluffitbattle.entity.Battle;
 import com.ssafy.fluffitbattle.entity.BattleType;
 import com.ssafy.fluffitbattle.entity.dto.BattleMatchingResponseDto;
@@ -29,6 +30,8 @@ public class BattleService {
 
     private final BattleRepository battleRepository;
     private final NotificationService notificationService;
+    private final MemberFeignClient memberFeignClient;
+
     @Qualifier("stringRedisTemplate")
     private final RedisTemplate<String, String> redisTemplate;
     @Qualifier("battleRedisTemplate")
@@ -99,7 +102,7 @@ public class BattleService {
         notificationService.notifyUser(userId, JUST_NOW_MATCHED_EVENTNAME,
                 BattleMatchingResponseDto.builder()
                         .result(true)
-                        .opponentName(opponentId)
+                        .opponentName(memberFeignClient.getNickName(opponentId).getNickname())
                         .battleId(battle.getId())
                         .battleType(battle.getBattleType())
                         .build());

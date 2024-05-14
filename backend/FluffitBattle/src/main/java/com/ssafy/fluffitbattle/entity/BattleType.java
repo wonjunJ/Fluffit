@@ -1,5 +1,6 @@
 package com.ssafy.fluffitbattle.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import java.io.IOException;
 @Getter
 @RequiredArgsConstructor
 @JsonSerialize(using = BattleTypeSerializer.class)
+@JsonDeserialize(using = BattleTypeDeserializer.class)
 public enum BattleType {
 
     ROCK("BATTLE_ROCK", "돌 깨기", 1, "1분 내에 더 많은 돌을 터치해서 깨자!"),

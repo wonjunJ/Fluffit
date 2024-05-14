@@ -2,6 +2,7 @@ package com.ssafy.fluffitbattle;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -12,6 +13,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableJpaRepositories(basePackages = "com.ssafy.fluffitbattle.repository")
 @EnableRedisRepositories(basePackages = "com.ssafy.fluffitbattle.redis")
 @EnableRedisHttpSession
+@EnableFeignClients
 public class FluffitbattleApplication {
 
 	public static void main(String[] args) {
