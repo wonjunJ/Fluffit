@@ -45,10 +45,13 @@ import androidx.wear.compose.material.Text
 import com.example.wearapp.presentation.HealthViewModel
 import com.kiwa.fluffit.presentation.components.FeedButton
 import com.kiwa.fluffit.presentation.screens.BattleScreen
+import com.kiwa.fluffit.presentation.screens.CheckPhoneScreen
 import com.kiwa.fluffit.presentation.screens.ExerciseScreen
 import com.kiwa.fluffit.presentation.screens.FeedScreen
 import com.kiwa.fluffit.presentation.screens.MainScreen
 import com.kiwa.fluffit.presentation.theme.FluffitTheme
+import com.kiwa.fluffit.presentation.token.TokenViewModel
+import com.kiwa.fluffit.presentation.token.fetchConnectedNodes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
@@ -56,8 +59,7 @@ private const val TAG = "MainActivity"
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val healthViewModel: HealthViewModel by viewModels()
-
+    private val tokenViewModel: TokenViewModel by viewModels()
     override fun onGenericMotionEvent(event: MotionEvent?): Boolean {
         if (event != null) {
             if (event.action == MotionEvent.ACTION_SCROLL &&
@@ -84,17 +86,40 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
-            // 권한이 승인되지 않았다면 요청
-            val REQUEST_CODE_ACTIVITY_RECOGNITION = 1
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), REQUEST_CODE_ACTIVITY_RECOGNITION)
-        }
+        tokenViewModel.fetchConnectedNodes(this)
 
-        setContent {
-            FluffitTheme {
-                WearApp()
+        tokenViewModel.nodes.observe(this) { nodes ->
+            if(nodes.isNullOrEmpty()) {
+                setContent{
+                    CheckPhoneScreen()
+                }
+            } else {
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACTIVITY_RECOGNITION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    // 권한이 승인되지 않았다면 요청
+                    val REQUEST_CODE_ACTIVITY_RECOGNITION = 1
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
+                        REQUEST_CODE_ACTIVITY_RECOGNITION
+                    )
+                }
+
+                tokenViewModel.nodes.value!!.forEach {
+                    tokenViewModel.requestAccessToken(it.id)
+                }
+
+                setContent {
+                    FluffitTheme {
+                        WearApp()
+                    }
+                }
             }
         }
+
     }
 
     companion object {
