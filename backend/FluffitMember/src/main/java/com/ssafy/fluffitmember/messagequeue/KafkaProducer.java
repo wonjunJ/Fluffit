@@ -11,12 +11,9 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class KafkaProducer {
-    private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
-    }
+    private KafkaTemplate<String, String> kafkaTemplate;
 
     public StepsKafkaDto send(String topic, StepsKafkaDto stepsKafkaDto) {
         ObjectMapper mapper = new ObjectMapper();

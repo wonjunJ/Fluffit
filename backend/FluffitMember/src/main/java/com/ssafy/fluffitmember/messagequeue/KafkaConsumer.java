@@ -20,7 +20,7 @@ public class KafkaConsumer {
 
     private final MemberRepository memberRepository;
 
-    @KafkaListener(topics = "coin-update")
+    @KafkaListener(topics = "coin-update", groupId = "consumerGroupId")
     public void updateCoin(String kafkaMessage) {
         log.info("Kafka Message: ->" + kafkaMessage);
 
@@ -39,7 +39,7 @@ public class KafkaConsumer {
         }
     }
 
-    @KafkaListener(topics = "point-update")
+    @KafkaListener(topics = "point-update", groupId = "consumerGroupId")
     public void updateBattlePoint(String kafkaMessage) {
         log.info("Kafka Message: ->" + kafkaMessage);
 
