@@ -1,10 +1,13 @@
 package com.kiwa.fluffit
 
+import android.content.Context
 import android.util.Log
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
+import com.google.android.gms.wearable.NodeClient
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
+import com.google.gson.Gson
 import com.kiwa.domain.TokenManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -27,25 +30,37 @@ class AccessTokenResponseService () : WearableListenerService(), CoroutineScope 
     }
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
-        if (messageEvent.path == "/request_access_token") {
-            val nodeId = messageEvent.sourceNodeId
+        if (messageEvent.path == "/request_token") {
             Log.d(TAG, "onMessageReceived: 받았습니다.")
 
+            Log.d(TAG, "답신: id- ${messageEvent.sourceNodeId}")
             launch {
-                sendAccessToken(nodeId)
+                sendAccessToken()
             }
         }
     }
 
-    private suspend fun sendAccessToken(nodeId: String) {
-        val path = "/access_token"
-        val accessToken = tokenManager.getAccessToken() // 실제 AccessToken을 가져오는 로직
-        val data = accessToken.toByteArray(Charsets.UTF_8)
+    private suspend fun sendAccessToken() {
+        val path = "/token"
+        val accessToken = tokenManager.getAccessToken()
+        val refreshToken = tokenManager.getRefreshToken()
 
-        messageClient.sendMessage(nodeId, path, data).addOnSuccessListener {
-            Log.d("MobileService", "토큰 : ${accessToken}")
-        }.addOnFailureListener {
-            Log.e("MobileService", "Failed to send AccessToken", it)
+        val tokens = mapOf("accessToken" to accessToken, "refreshToken" to refreshToken)
+        val jsonData = Gson().toJson(tokens)
+        val data = jsonData.toByteArray(Charsets.UTF_8)
+
+        val nodeClient = Wearable.getNodeClient(this)
+        nodeClient.connectedNodes.addOnSuccessListener { nodes ->
+            for (node in nodes) {
+                Log.d(TAG, "보내기: ${node.displayName}, ${node.id}")
+                messageClient.sendMessage(node.id, path, data).addOnSuccessListener {
+                    Log.d("MobileService", "토큰 : ${tokens}")
+                }.addOnFailureListener {
+                    Log.e("MobileService", "Failed to send AccessToken", it)
+                }
+            }
         }
+
     }
+
 }

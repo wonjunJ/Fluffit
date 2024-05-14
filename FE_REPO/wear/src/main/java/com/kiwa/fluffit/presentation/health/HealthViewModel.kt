@@ -1,5 +1,6 @@
 package com.example.wearapp.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TAG = "HealthViewModel"
 @HiltViewModel
 class HealthViewModel @Inject constructor(
     private val healthRepository: HealthRepository

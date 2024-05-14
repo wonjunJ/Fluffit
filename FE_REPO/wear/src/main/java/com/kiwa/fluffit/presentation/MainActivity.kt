@@ -42,7 +42,6 @@ import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Text
-import com.example.wearapp.presentation.HealthViewModel
 import com.kiwa.fluffit.presentation.components.FeedButton
 import com.kiwa.fluffit.presentation.screens.BattleScreen
 import com.kiwa.fluffit.presentation.screens.CheckPhoneScreen
@@ -51,9 +50,10 @@ import com.kiwa.fluffit.presentation.screens.FeedScreen
 import com.kiwa.fluffit.presentation.screens.MainScreen
 import com.kiwa.fluffit.presentation.theme.FluffitTheme
 import com.kiwa.fluffit.presentation.token.TokenViewModel
-import com.kiwa.fluffit.presentation.token.fetchConnectedNodes
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+
+private const val TAG = "MainActivity"
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -72,6 +72,7 @@ class MainActivity : ComponentActivity() {
                 } else if (delta < 0) {
                     MainActivityViewModel.previousPage()
                 }
+                Log.d(TAG, "onGenericMotionEvent: 회전 ${MainActivityViewModel.currentPage.value}")
 
                 return true
             }
@@ -83,41 +84,46 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        tokenViewModel.fetchConnectedNodes(this)
+        tokenViewModel.fetchConnectedNodes()
 
         tokenViewModel.nodes.observe(this) { nodes ->
-            if(nodes.isNullOrEmpty()) {
-                setContent{
+            if (nodes.isNullOrEmpty()) {
+                // 연결된 노드가 없을 때
+                setContent {
                     CheckPhoneScreen()
                 }
             } else {
-                if (ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACTIVITY_RECOGNITION
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    // 권한이 승인되지 않았다면 요청
-                    val REQUEST_CODE_ACTIVITY_RECOGNITION = 1
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
-                        REQUEST_CODE_ACTIVITY_RECOGNITION
-                    )
-                }
+                // 연결된 노드가 있을 때
+                tokenViewModel.requestAccessToken()
+                checkPermissionsAndSetContent()
+            }
+        }
+    }
 
-                tokenViewModel.nodes.value!!.forEach {
-                    tokenViewModel.requestAccessToken(it.id)
-                }
+    private fun checkPermissionsAndSetContent() {
+        val permissions = arrayOf(
+            Manifest.permission.BODY_SENSORS,
+            Manifest.permission.ACTIVITY_RECOGNITION
+        )
 
-                setContent {
-                    FluffitTheme {
-                        WearApp()
-                    }
+        val permissionsNeeded = permissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }.toTypedArray()
+
+        if (permissionsNeeded.isNotEmpty()) {
+            // 하나 이상의 권한이 승인되지 않았다면 모든 필요 권한 요청
+            val REQUEST_CODE_PERMISSIONS = 101
+            ActivityCompat.requestPermissions(this, permissionsNeeded, REQUEST_CODE_PERMISSIONS)
+        } else {
+            // 모든 권한이 있을 때 UI 설정
+            setContent {
+                FluffitTheme {
+                    WearApp()
                 }
             }
         }
-
     }
+
 
     companion object {
         const val PAGE_COUNT = 4;

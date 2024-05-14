@@ -11,34 +11,44 @@ import com.google.android.gms.wearable.NodeClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+private const val TAG = "TokenViewModel"
 @HiltViewModel
 class TokenViewModel @Inject constructor(
     private val messageClient: MessageClient,
     private val nodeClient: NodeClient,
+    private val tokenRepository: TokenRepository
 ) : ViewModel() {
 
     private val _nodes = MutableLiveData<List<Node>>()
     val nodes: LiveData<List<Node>> = _nodes
 
-    private val _token = MutableLiveData<String>()
-    val token: LiveData<String> = _token
+    val accessToken: LiveData<String> = tokenRepository.accessToken
+    val refreshToken: LiveData<String> = tokenRepository.refreshToken
 
-    fun fetchConnectedNodes(context: Context) {
+
+    fun fetchConnectedNodes() {
         nodeClient.connectedNodes.addOnSuccessListener { nodes ->
             _nodes.postValue(nodes)
+            Log.d(TAG, "연결 기기: ${nodes[0].displayName}")
         }.addOnFailureListener {
             Log.e("Node Info", "Failed to get connected nodes", it)
         }
     }
 
-    fun requestAccessToken(nodeId: String) {
-        val path = "/request_access_token"
+    fun requestAccessToken() {
+        val path = "/request_token"
         val emptyPayload = ByteArray(0)
 
-        messageClient.sendMessage(nodeId, path, emptyPayload).addOnSuccessListener {
-            Log.d("TokenViewModel", "Request for AccessToken sent successfully")
-        }.addOnFailureListener {
-            Log.e("TokenViewModel", "Failed to send request for AccessToken", it)
+        nodes.value!!.forEach {
+            Log.d(TAG, "토큰 요청 : ${it.id}, ${it.displayName}")
+
+            messageClient.sendMessage(it.id, path, emptyPayload).addOnSuccessListener {
+                Log.d("TokenViewModel", "Request for AccessToken sent successfully")
+            }.addOnFailureListener {
+                Log.e("TokenViewModel", "Failed to send request for AccessToken", it)
+            }
         }
+
+
     }
 }
