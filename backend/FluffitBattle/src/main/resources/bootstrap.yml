@@ -1,5 +1,5 @@
 spring:
   cloud:
     config:
-      uri: http://127.0.0.1:8888
-      name: battle-service-local #깃허브 레포지토리에 추가한 .yml파일 이름
+      uri: https://config.fluffit.shop
+      name: battle-service #깃허브 레포지토리에 추가한 .yml파일 이름
