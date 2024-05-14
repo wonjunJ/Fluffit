@@ -12,3 +12,17 @@ data class Collections(
     @SerializedName("tier") val tier: Int,
     @SerializedName("metBefore") val metBefore: Boolean
 )
+
+data class FlupetHistory(
+    @SerializedName("flupets") val flupets: List<MyFlupets>
+)
+
+data class MyFlupets(
+    @SerializedName("species") val species: String,
+    @SerializedName("name") val name: String,
+    @SerializedName("imageUrl") val imageUrl: List<String>,
+    @SerializedName("birthDay") val birthDay: String,
+    @SerializedName("endDay") val endDay: String,
+    @SerializedName("age") val age: String,
+    @SerializedName("steps") val steps: Int
+)
