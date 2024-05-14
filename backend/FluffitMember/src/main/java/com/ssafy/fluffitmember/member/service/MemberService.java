@@ -3,9 +3,11 @@ package com.ssafy.fluffitmember.member.service;
 import com.ssafy.fluffitmember._common.client.FlupetClient;
 import com.ssafy.fluffitmember._common.client.dto.RankFlupetInfoDto;
 import com.ssafy.fluffitmember._common.exception.DuplicateNickname;
+import com.ssafy.fluffitmember._common.exception.EncryptionException;
 import com.ssafy.fluffitmember._common.exception.NotFoundUserException;
 import com.ssafy.fluffitmember._common.exception.NotValidNickname;
 import com.ssafy.fluffitmember._common.exception.NotValidSQL;
+import com.ssafy.fluffitmember.member.dto.request.SignOutResDto;
 import com.ssafy.fluffitmember.member.dto.request.UpdateNicknameReqDto;
 import com.ssafy.fluffitmember.member.dto.response.GetCoinResDto;
 import com.ssafy.fluffitmember.member.dto.response.GetNicknameResDto;
@@ -129,5 +131,17 @@ public class MemberService {
         getRankResDto.setMyRank(myRank);
 
         return getRankResDto;
+    }
+
+    public void signOut(String memberId, SignOutResDto signOutResDto) {
+        Optional<Member> findMember = memberRepository.findByMemberId(memberId);
+        if(findMember.isEmpty()){
+            throw new NotFoundUserException();
+        }
+        Member member = findMember.get();
+
+        if(!member.getSocialId().equals(signOutResDto.getSignature())){
+            throw new EncryptionException();
+        }
     }
 }

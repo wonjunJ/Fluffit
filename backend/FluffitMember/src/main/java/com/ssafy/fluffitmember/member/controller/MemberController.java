@@ -3,11 +3,13 @@ package com.ssafy.fluffitmember.member.controller;
 import com.ssafy.fluffitmember._common.error.ErrorResponse;
 import com.ssafy.fluffitmember._common.error.ErrorType;
 import com.ssafy.fluffitmember._common.exception.DuplicateNickname;
+import com.ssafy.fluffitmember._common.exception.EncryptionException;
 import com.ssafy.fluffitmember._common.exception.NotFoundUserException;
 import com.ssafy.fluffitmember._common.exception.NotValidNickname;
 import com.ssafy.fluffitmember._common.exception.NotValidSQL;
 import com.ssafy.fluffitmember._common.success.SuccessResponse;
 import com.ssafy.fluffitmember._common.success.SuccessType;
+import com.ssafy.fluffitmember.member.dto.request.SignOutResDto;
 import com.ssafy.fluffitmember.member.dto.response.GetCoinResDto;
 import com.ssafy.fluffitmember.member.dto.request.UpdateNicknameReqDto;
 import com.ssafy.fluffitmember.member.dto.response.GetNicknameResDto;
@@ -69,6 +71,18 @@ public class MemberController {
             return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.NOT_FOUND_MEMBER));
         }catch (NotValidSQL e){
             return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.NOT_VALID_SQL));
+        }
+    }
+
+    @PutMapping("/sign-out")
+    public ResponseEntity<Object> signOut(@RequestHeader("memberId") String memberId, @RequestBody SignOutResDto signOutResDto){
+        try {
+            memberService.signOut(memberId,signOutResDto);
+            return ResponseEntity.ok().body(SuccessResponse.from(SuccessType.SIGNOUT_SUCCESSFULLY));
+        }catch (NotFoundUserException e){
+            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.NOT_FOUND_MEMBER));
+        }catch (EncryptionException e){
+            return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.ENCRYPTION_MISMATCH));
         }
     }
 
