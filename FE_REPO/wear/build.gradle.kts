@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
+    implementation(libs.retrofitGson)
     implementation(project(":core:base"))
     implementation(project(":core:domain"))
     implementation(project(":core:model"))

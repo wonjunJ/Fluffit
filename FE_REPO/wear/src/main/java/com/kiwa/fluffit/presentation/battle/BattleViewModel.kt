@@ -29,51 +29,41 @@ class BattleViewModel @Inject constructor(
             uiEvent.collect { event ->
                 when (event) {
                     BattleViewEvent.OnClickCancelBattleButton -> setState { cancelFindMatching() }
-                    BattleViewEvent.OnClickBattleButton -> setState { findMatchingCompleted() }
-                    BattleViewEvent.OnConfirmResult -> TODO()
-                    is BattleViewEvent.OnFinishBattle -> TODO()
-                    BattleViewEvent.OnReadyForBattle -> setState { startBattle() }
+                    BattleViewEvent.OnClickBattleButton -> findMatching()
                 }
             }
         }
     }
 
-    private fun BattleViewState.startBattle(): BattleViewState =
-        when (this) {
-            is BattleViewState.MatchingCompleted -> BattleViewState.Battle(
-                battleType = this.battleType,
-                score = 0,
-                loading = false,
-                battleId = this.battleId
-            )
-            else -> this
-        }
-
-    private fun BattleViewState.findMatching(): BattleViewState =
-        when (this) {
-            is BattleViewState.Default -> this.copy(loading = true, findMatching = true)
-            else -> this
-        }
+    private fun findMatching() {
+        setState { setLoading() }
+        setState { findMatchingCompleted() }
+    }
 
     private fun BattleViewState.findMatchingCompleted(): BattleViewState =
         when (this) {
-            is BattleViewState.Default -> BattleViewState.MatchingCompleted(
-                battleId = "1",
-                loading = false,
+            is BattleViewState.Default -> this.copy(
                 opponentInfo = OpponentInfo(
-                    "적입니다", "", "https://github.com/shjung53/algorithm_study/assets/" +
-                        "90888718/4399f85d-7810-464c-ad76-caae980ce047", 0
+                    "적입니다",
+                    "",
+                    "https://github.com/shjung53/algorithm_study/assets/" +
+                        "90888718/4399f85d-7810-464c-ad76-caae980ce047",
+                    0
                 ),
-                battleType = BattleType.BreakStone("", "", ""),
+                loading = false,
             )
-
-            else -> this
         }
 
 
     private fun BattleViewState.cancelFindMatching(): BattleViewState =
         when (this) {
             is BattleViewState.Default -> this.copy(loading = false, findMatching = false)
+            else -> this
+        }
+
+    private fun BattleViewState.setLoading(): BattleViewState =
+        when (this) {
+            is BattleViewState.Default -> this.copy(loading = true)
             else -> this
         }
 

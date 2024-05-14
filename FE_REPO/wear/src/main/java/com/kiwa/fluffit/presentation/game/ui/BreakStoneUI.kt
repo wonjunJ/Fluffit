@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.presentation.battle.ui
+package com.kiwa.fluffit.presentation.game.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -29,7 +29,7 @@ import com.kiwa.fluffit.presentation.util.formatTime
 import kotlinx.coroutines.delay
 
 @Composable
-internal fun BreakStoneGameUI() {
+internal fun BreakStoneGameUI(onFinishGame: (Int) -> Unit) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
         .components {
@@ -39,7 +39,7 @@ internal fun BreakStoneGameUI() {
     val descriptionVisibility = remember { mutableStateOf(false) }
     val descriptionCountDown = remember { mutableIntStateOf(3) }
 
-    val time = 60 * 1000L
+    val time = 10 * 1000L
     val timer = remember { mutableStateOf(time.formatTime()) }
     val startTime = remember { mutableLongStateOf(0L) }
     val isTimerRunning = remember { mutableStateOf(false) }
@@ -64,6 +64,10 @@ internal fun BreakStoneGameUI() {
                     isTimerRunning.value = false
                 }
             }
+        }
+        if (!isTimerRunning.value && startTime.longValue > 0L) {
+            delay(300)
+            onFinishGame(score.intValue)
         }
     }
 

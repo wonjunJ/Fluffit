@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.presentation.battle
+package com.kiwa.fluffit.presentation.game
 
 sealed class BattleType {
     abstract val title: String

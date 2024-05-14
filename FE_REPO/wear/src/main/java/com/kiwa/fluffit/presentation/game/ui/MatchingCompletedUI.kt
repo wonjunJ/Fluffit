@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.presentation.battle.ui
+package com.kiwa.fluffit.presentation.game.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,11 +8,11 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.kiwa.fluffit.presentation.battle.BattleViewState
+import com.kiwa.fluffit.model.battle.OpponentInfo
 import kotlinx.coroutines.delay
 
 @Composable
-internal fun MatchingCompletedUI(uiState: BattleViewState, onReadyForBattle: () -> Unit) {
+internal fun MatchingCompletedUI(opponentInfo: OpponentInfo, onReadyForBattle: () -> Unit) {
 
     val timer = remember { mutableIntStateOf(0) }
 
@@ -24,14 +24,13 @@ internal fun MatchingCompletedUI(uiState: BattleViewState, onReadyForBattle: () 
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        if (uiState is BattleViewState.MatchingCompleted) {
-            when (timer.intValue) {
-                in 0..5 -> {
-                    OpponentUI(uiState.opponentInfo, Modifier.align(Alignment.Center))
-                }
-                else -> {
-                    onReadyForBattle()
-                }
+        when (timer.intValue) {
+            in 0..5 -> {
+                OpponentUI(opponentInfo, Modifier.align(Alignment.Center))
+            }
+
+            else -> {
+                onReadyForBattle()
             }
         }
     }

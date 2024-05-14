@@ -1,4 +1,4 @@
-package com.kiwa.fluffit.presentation.battle.ui
+package com.kiwa.fluffit.presentation.game.ui
 
 import androidx.compose.runtime.Composable
 

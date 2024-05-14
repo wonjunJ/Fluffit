@@ -6,10 +6,4 @@ sealed class BattleViewEvent: ViewEvent {
     data object OnClickBattleButton: BattleViewEvent()
 
     data object OnClickCancelBattleButton: BattleViewEvent()
-
-    data object OnReadyForBattle: BattleViewEvent()
-
-    data class OnFinishBattle(val battleId: String, val score: Int): BattleViewEvent()
-
-    data object OnConfirmResult: BattleViewEvent()
 }

@@ -3,7 +3,6 @@ package com.kiwa.fluffit.presentation
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.ViewConfiguration
 import androidx.activity.ComponentActivity
@@ -15,8 +14,13 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -37,12 +41,16 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.InputDeviceCompat
 import androidx.core.view.MotionEventCompat
 import androidx.core.view.ViewConfigurationCompat
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Text
 import com.example.wearapp.presentation.HealthViewModel
+import com.kiwa.fluffit.model.battle.OpponentInfo
 import com.kiwa.fluffit.presentation.components.FeedButton
 import com.kiwa.fluffit.presentation.screens.BattleScreen
 import com.kiwa.fluffit.presentation.screens.ExerciseScreen
@@ -59,12 +67,13 @@ class MainActivity : ComponentActivity() {
     override fun onGenericMotionEvent(event: MotionEvent?): Boolean {
         if (event != null) {
             if (event.action == MotionEvent.ACTION_SCROLL &&
-                event.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)) {
+                event.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)
+            ) {
 
                 val delta = -event.getAxisValue(MotionEventCompat.AXIS_SCROLL) *
-                        ViewConfigurationCompat.getScaledVerticalScrollFactor(
-                            ViewConfiguration.get(this), this
-                        )
+                    ViewConfigurationCompat.getScaledVerticalScrollFactor(
+                        ViewConfiguration.get(this), this
+                    )
                 if (delta > 0) {
                     MainActivityViewModel.nextPage()
                 } else if (delta < 0) {
@@ -76,20 +85,29 @@ class MainActivity : ComponentActivity() {
         }
         return super.onGenericMotionEvent(event)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
 
         super.onCreate(savedInstanceState)
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACTIVITY_RECOGNITION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             // 권한이 승인되지 않았다면 요청
             val REQUEST_CODE_ACTIVITY_RECOGNITION = 1
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), REQUEST_CODE_ACTIVITY_RECOGNITION)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
+                REQUEST_CODE_ACTIVITY_RECOGNITION
+            )
         }
 
         setContent {
             FluffitTheme {
-                WearApp()
+                WearNavHost()
             }
         }
     }
@@ -99,11 +117,33 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun WearNavHost(
+    navController: NavHostController = rememberNavController()
+) {
+    NavHost(
+        navController = navController,
+        startDestination = wearMainRoute,
+        modifier = Modifier
+            .fillMaxSize()
+            .windowInsetsPadding(
+                WindowInsets.systemBars.only(WindowInsetsSides.Vertical)
+            )
+    ) {
+        wearMain { it ->
+            navController.game(it)
+        }
+
+        game()
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WearApp() {
+fun WearApp(onNavigateToGame: (OpponentInfo) -> Unit) {
     val currentPage by MainActivityViewModel.currentPage.collectAsState()
-    val pagerState = rememberPagerState(pageCount = {MainActivity.PAGE_COUNT}, initialPage = currentPage)
+    val pagerState =
+        rememberPagerState(pageCount = { MainActivity.PAGE_COUNT }, initialPage = currentPage)
     var showIndicator by remember { mutableStateOf(false) }
 
 
@@ -120,7 +160,10 @@ fun WearApp() {
 
     LaunchedEffect(currentPage) {
         showIndicator = true
-        pagerState.animateScrollToPage(currentPage, animationSpec = spring(dampingRatio = 0.8f, stiffness = 500f))
+        pagerState.animateScrollToPage(
+            currentPage,
+            animationSpec = spring(dampingRatio = 0.8f, stiffness = 500f)
+        )
         delay(1000)
         showIndicator = false
     }
@@ -143,11 +186,11 @@ fun WearApp() {
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            when(page){
+            when (page) {
                 0 -> MainScreen()
                 1 -> FeedScreen()
                 2 -> ExerciseScreen()
-                3 -> BattleScreen()
+                3 -> BattleScreen(onStartGame = onNavigateToGame)
             }
         }
     }
@@ -155,7 +198,7 @@ fun WearApp() {
 
 @Composable
 fun Greeting(greetingName: String) {
-    Box (modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize()) {
         CircularProgressIndicator(
             modifier = Modifier.fillMaxSize(),
             indicatorColor = Color.White,
