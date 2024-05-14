@@ -1,5 +1,6 @@
 package com.kiwa.ranking
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -81,6 +82,7 @@ private fun ObserveToastMessage(
 ) {
     LaunchedEffect(key1 = uiState.message) {
         if (uiState.message.isNotEmpty()) {
+            Log.d("확인", "스낵바 생성")
             snackBarHostState.currentSnackbarData?.dismiss()
             snackBarHostState.showSnackbar(
                 uiState.message,

@@ -3,6 +3,7 @@ package com.kiwa.data.datasource
 import com.kiwa.data.api.RankingService
 import com.kiwa.fluffit.model.ranking.AgeRankingResponse
 import com.kiwa.fluffit.model.ranking.BattleRankingResponse
+import org.json.JSONObject
 import javax.inject.Inject
 
 class RankingDataSourceImpl @Inject constructor(private val rankingService: RankingService) :
@@ -13,7 +14,9 @@ class RankingDataSourceImpl @Inject constructor(private val rankingService: Rank
             if (response.isSuccessful) {
                 Result.success(response.body()!!)
             } else {
-                Result.failure(Exception(response.message()))
+                val errorBodyStr = response.errorBody()?.string()
+                val errorMsg = JSONObject(errorBodyStr.toString()).getString("msg")
+                Result.failure(Exception(errorMsg))
             }
         } catch (e: Exception) {
             Result.failure(Exception("네트워크 에러"))
@@ -25,7 +28,9 @@ class RankingDataSourceImpl @Inject constructor(private val rankingService: Rank
             if (response.isSuccessful) {
                 Result.success(response.body()!!)
             } else {
-                Result.failure(Exception(response.message()))
+                val errorBodyStr = response.errorBody()?.string()
+                val errorMsg = JSONObject(errorBodyStr.toString()).getString("msg")
+                Result.failure(Exception(errorMsg))
             }
         } catch (e: Exception) {
             Result.failure(Exception("네트워크 에러"))
