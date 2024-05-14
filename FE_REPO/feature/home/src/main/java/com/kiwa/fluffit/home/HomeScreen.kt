@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -25,7 +26,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import coil.size.OriginalSize
 import com.kiwa.fluffit.home.components.CoinDisplay
 import com.kiwa.fluffit.home.components.FlupetImageButton
 import com.kiwa.fluffit.home.ui.FlupetUI
@@ -59,7 +59,8 @@ internal fun HomeRoute(
         onClickMyPage = onNavigateToMyPage,
         onClickTombStone = { viewModel.onTriggerEvent(HomeViewEvent.OnClickTombStone) },
         onClickEmptyEgg = { viewModel.onTriggerEvent(HomeViewEvent.OnClickNewEggButton) },
-        onDismissSnackBar = { viewModel.onTriggerEvent(HomeViewEvent.OnDismissSnackBar) }
+        onDismissSnackBar = { viewModel.onTriggerEvent(HomeViewEvent.OnDismissSnackBar) },
+        onClickEvolutionButton = { viewModel.onTriggerEvent(HomeViewEvent.OnClickEvolutionButton) }
     )
 }
 
@@ -75,7 +76,8 @@ internal fun HomeScreen(
     onClickTombStone: () -> Unit,
     onClickEmptyEgg: () -> Unit,
     onClickMyPage: () -> Unit,
-    onDismissSnackBar: () -> Unit
+    onDismissSnackBar: () -> Unit,
+    onClickEvolutionButton: () -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context)
@@ -109,9 +111,9 @@ internal fun HomeScreen(
                 onUpdateFullness,
                 onUpdateHealth,
                 imageLoader,
-                OriginalSize,
                 onClickPencilButton,
-                onClickConfirmButton
+                onClickConfirmButton,
+                onClickEvolutionButton
             )
 
             FlupetStatus.Dead -> TombStoneUI(
@@ -148,13 +150,13 @@ private fun MainButtons(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp)
-            .padding(top = 120.dp)
     ) {
         Row(modifier = Modifier.align(Alignment.TopCenter), verticalAlignment = Alignment.Bottom) {
             CoinDisplay(coin = coin)
             Spacer(modifier = Modifier.weight(1f))
             RankingButton(onClickRankingButton)
         }
+        Spacer(modifier = Modifier.height(120.dp))
         CollectionButton(
             modifier = Modifier.align(Alignment.BottomStart),
             onNavigateToCollection = onClickCollectionButton

@@ -19,10 +19,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import coil.size.OriginalSize
 import com.kiwa.fluffit.designsystem.theme.bronze
 import com.kiwa.fluffit.designsystem.theme.gold
 import com.kiwa.fluffit.designsystem.theme.silver
@@ -73,7 +72,7 @@ fun RankingFloor(rankingInfo: RankingInfo, modifier: Modifier = Modifier) {
             MaterialTheme.typography.headlineSmall.merge(fontSize = 12.sp, color = textColor)
         OutLinedText(
             onClickText = {},
-            text = rankingInfo.userName,
+            text = rankingInfo.userNickname,
             textStyle = textStyle,
             strokeColor = Color.Black,
             strokeWidth = 1f
@@ -104,12 +103,9 @@ fun RankingFloor(rankingInfo: RankingInfo, modifier: Modifier = Modifier) {
                     .align(Alignment.BottomCenter)
             )
             Image(
-                painter = rememberImagePainter(
+                painter = rememberAsyncImagePainter(
                     imageLoader = imageLoader,
-                    data = rankingInfo.petImageUrl,
-                    builder = {
-                        size(OriginalSize)
-                    }
+                    model = rankingInfo.petImageUrl
                 ),
                 contentDescription = null,
                 modifier = Modifier

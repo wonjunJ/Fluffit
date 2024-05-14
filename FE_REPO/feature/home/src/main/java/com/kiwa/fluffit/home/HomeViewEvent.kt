@@ -16,4 +16,6 @@ sealed class HomeViewEvent : ViewEvent {
     data object OnClickNewEggButton : HomeViewEvent()
 
     data object OnDismissSnackBar : HomeViewEvent()
+
+    data object OnClickEvolutionButton : HomeViewEvent()
 }

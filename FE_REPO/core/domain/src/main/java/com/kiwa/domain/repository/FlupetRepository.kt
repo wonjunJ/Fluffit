@@ -16,5 +16,7 @@ interface FlupetRepository {
 
     suspend fun editFlupetNickname(nickname: String): Result<BasicResponse>
 
+    suspend fun evolve(): Result<MainUIModel>
+
     suspend fun getHistory(): Result<List<MyFlupets>>
 }

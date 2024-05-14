@@ -10,6 +10,6 @@ interface RankingService {
     @GET("ranking/battle")
     suspend fun fetchBattleRanking(): Response<BattleRankingResponse>
 
-    @GET("ranking/age")
+    @GET("flupet-service/flupet/age")
     suspend fun fetchAgeRanking(): Response<AgeRankingResponse>
 }

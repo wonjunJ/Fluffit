@@ -7,8 +7,8 @@ data class AgeRankingResponse(
 
 data class AgeRankingInfo(
     val rank: Int,
-    val userName: String,
-    val lifeTime: Int,
-    val petName: String,
-    val petImageUrl: String
+    val userNickname: String,
+    val lifetime: Int,
+    val flupetNickname: String,
+    val imageUrl: List<String>
 )

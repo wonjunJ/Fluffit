@@ -8,7 +8,7 @@ import com.kiwa.fluffit.model.flupet.response.FlupetHistory
 import com.kiwa.fluffit.model.main.FullnessUpdateInfo
 import com.kiwa.fluffit.model.main.HealthUpdateInfo
 import com.kiwa.fluffit.model.main.response.FlupetResponse
-import com.kiwa.fluffit.model.main.response.NewEggResponse
+import com.kiwa.fluffit.model.main.response.NewFlupetResponse
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -57,7 +57,7 @@ class FlupetDataSourceImpl @Inject constructor(
             Result.failure(e)
         }
 
-    override suspend fun createNewEgg(): Result<NewEggResponse> =
+    override suspend fun createNewEgg(): Result<NewFlupetResponse> =
         try {
             val response = flupetService.createNewEgg()
             if (response.isSuccessful) {
@@ -73,6 +73,19 @@ class FlupetDataSourceImpl @Inject constructor(
 
     override suspend fun editFlupetNickname(nickname: String): Result<BasicResponse> = try {
         val response = flupetService.editFlupetNickname(NicknameRequest(nickname))
+        if (response.isSuccessful) {
+            Result.success(response.body()!!)
+        } else {
+            val errorBodyStr = response.errorBody()?.string()
+            val errorMsg = JSONObject(errorBodyStr.toString()).getString("msg")
+            Result.failure(Exception(errorMsg))
+        }
+    } catch (e: Exception) {
+        Result.failure(Exception("네트워크 에러"))
+    }
+
+    override suspend fun evolve(): Result<NewFlupetResponse> = try {
+        val response = flupetService.evolve()
         if (response.isSuccessful) {
             Result.success(response.body()!!)
         } else {

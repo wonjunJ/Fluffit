@@ -16,6 +16,7 @@ class FlupetRepositoryImpl @Inject constructor(
     private val flupetDataSource: FlupetDataSource
 ) :
     FlupetRepository {
+
     override suspend fun getMainUIInfo(): Result<MainUIModel> =
         flupetDataSource.fetchMainUIInfo().fold(
             onSuccess = {
@@ -99,6 +100,13 @@ class FlupetRepositoryImpl @Inject constructor(
             onFailure = { Result.failure(it) }
         )
 
+    override suspend fun evolve(): Result<MainUIModel> = flupetDataSource.evolve().fold(
+        onSuccess = {
+            Result.success(it.toMainUIModel())
+        },
+        onFailure = { Result.failure(it) }
+    )
+
     override suspend fun getHistory(): Result<List<MyFlupets>> =
         flupetDataSource.loadHistory().fold(
             onSuccess = { response ->
@@ -120,5 +128,4 @@ class FlupetRepositoryImpl @Inject constructor(
                 Result.failure(it)
             }
         )
-
 }

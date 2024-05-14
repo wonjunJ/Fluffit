@@ -5,7 +5,7 @@ import com.kiwa.fluffit.model.main.Flupet
 import com.kiwa.fluffit.model.main.ImageUrls
 import com.kiwa.fluffit.model.main.MainUIModel
 
-data class NewEggResponse(
+data class NewFlupetResponse(
     val flupetName: String,
     val imageUrl: List<String>,
     val fullness: Int,
@@ -14,7 +14,7 @@ data class NewEggResponse(
     val nextHealthUpdateTime: Long
 )
 
-fun NewEggResponse.toMainUIModel(): MainUIModel {
+fun NewFlupetResponse.toMainUIModel(): MainUIModel {
     var standard = ""
     var nodding = ""
     var sleeping = ""

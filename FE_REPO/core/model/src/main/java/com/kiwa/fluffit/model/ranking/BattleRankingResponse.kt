@@ -10,5 +10,5 @@ data class BattleRankingInfo(
     val userName: String,
     val battlePoint: Int,
     val petName: String,
-    val petImageUrl: String
+    val petImageUrl: List<String>
 )

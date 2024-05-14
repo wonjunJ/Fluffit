@@ -18,15 +18,18 @@ class RankingViewModel @Inject constructor(
         RankingViewState.AgeRanking()
 
     override fun onTriggerEvent(event: RankingViewEvent) {
-        viewModelScope.launch {
-            when (event) {
-                RankingViewEvent.OnClickAgeRankingButton -> getAgeRanking()
-                RankingViewEvent.OnClickBattleRankingButton -> getBattleRanking()
-            }
-        }
+        setEvent(event)
     }
 
     init {
+        viewModelScope.launch {
+            uiEvent.collect {
+                when (it) {
+                    RankingViewEvent.OnClickAgeRankingButton -> getAgeRanking()
+                    RankingViewEvent.OnClickBattleRankingButton -> getBattleRanking()
+                }
+            }
+        }
         viewModelScope.launch {
             when (currentState) {
                 is RankingViewState.AgeRanking -> getAgeRanking()
@@ -44,7 +47,9 @@ class RankingViewModel @Inject constructor(
 
     private suspend fun getAgeRanking() {
         getAgeRankingUseCase().fold(
-            onSuccess = { setState { showAgeRanking(it) } },
+            onSuccess = {
+                setState { showAgeRanking(it) }
+            },
             onFailure = {}
         )
     }
