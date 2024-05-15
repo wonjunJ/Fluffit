@@ -69,9 +69,6 @@ public class BattleService {
 
         if (opponentId == null) {
             listOps.rightPush(BATTLE_QUEUE_KEY, userId);
-
-            System.out.println("살려줘!!!!!!" + userId + " !!!!! " + listOps.rightPopAndLeftPush(BATTLE_QUEUE_KEY, userId));
-
             redisTemplate.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
             notificationService.notifyUser(userId, WAIT_MATCHING_EVENTNAME,
                     BattleMatchingResponseDto.builder().result(false).build());

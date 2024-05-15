@@ -29,8 +29,6 @@ public class BattleController {
     @GetMapping("/wait")
     public ResponseEntity<SseEmitter> requestBattle(@RequestHeader("memberId") String memberId) {
 //        Long userId = Long.parseLong(memberId);
-        System.out.println("살려줘!!!!!! " + memberId + " requestBattle까지는 들어오는데 왜 저래");
-
         SseEmitter sseEmitter = notificationService.createEmitter(memberId);
         battleService.requestBattle(memberId);
         return ResponseEntity.ok(sseEmitter);
