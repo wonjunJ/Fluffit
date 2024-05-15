@@ -11,7 +11,7 @@ public class BattleMatchingResponseDto {
     private String opponentName;
     private String opponentFlupetName;
     private String opponentFlupetImageUrl;
-    private String opponentBattlePoint;
+    private Integer opponentBattlePoint;
     private Long battleId;
     private BattleType battleType;
 }

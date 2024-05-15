@@ -1,11 +1,13 @@
 package com.ssafy.fluffitbattle.service;
 
+import com.ssafy.fluffitbattle.client.FlupetFeignClient;
 import com.ssafy.fluffitbattle.client.MemberFeignClient;
 import com.ssafy.fluffitbattle.entity.Battle;
 import com.ssafy.fluffitbattle.entity.BattleType;
 import com.ssafy.fluffitbattle.entity.dto.BattleMatchingResponseDto;
 import com.ssafy.fluffitbattle.entity.dto.BattleResultRequestDto;
 import com.ssafy.fluffitbattle.entity.dto.BattleResultResponseDto;
+import com.ssafy.fluffitbattle.entity.dto.FlupetInfoTempClientDto;
 import com.ssafy.fluffitbattle.repository.BattleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,7 @@ public class BattleService {
     private final BattleRepository battleRepository;
     private final NotificationService notificationService;
     private final MemberFeignClient memberFeignClient;
+    private final FlupetFeignClient flupetFeignClient;
 
     @Qualifier("stringRedisTemplate")
     private final RedisTemplate<String, String> redisTemplate;
@@ -89,7 +92,7 @@ public class BattleService {
             Long battleId = theBattle.getId();
 
             notifyJustMatched(userId, opponentId, theBattle);
-            notifyJustMatched(opponentId, userId + "", theBattle);
+            notifyJustMatched(opponentId, userId, theBattle);
 
             setUser(userId, battleId);
             setUser(opponentId, battleId);
@@ -99,17 +102,21 @@ public class BattleService {
     }
 
     private void notifyJustMatched(String userId, String opponentId, Battle battle) {
+        FlupetInfoTempClientDto opponentFlupetInfoDto = flupetFeignClient.getFlupetInfo(opponentId);
         notificationService.notifyUser(userId, JUST_NOW_MATCHED_EVENTNAME,
                 BattleMatchingResponseDto.builder()
                         .result(true)
                         .opponentName(memberFeignClient.getNickName(opponentId).getNickname())
+                        .opponentBattlePoint(memberFeignClient.getBattlePoint(opponentId).getPoint())
+                        .opponentFlupetName(opponentFlupetInfoDto.getFlupetName())
+                        .opponentFlupetImageUrl(opponentFlupetInfoDto.getImageUrl().get(opponentFlupetInfoDto.getImageUrl().size()-1))
                         .battleId(battle.getId())
                         .battleType(battle.getBattleType())
                         .build());
     }
 
     private String getUserBattle(String userId) {
-        Object result = redisTemplate.opsForHash().get(USER_BATTLE_KEY, userId.toString());
+        Object result = redisTemplate.opsForHash().get(USER_BATTLE_KEY, userId);
         return result != null ? result.toString() : null;
     }
 
@@ -179,8 +186,8 @@ public class BattleService {
         redisTemplate.delete("User:" + organizerId);
         redisTemplate.delete("User:" + participantId);
 
-        redisTemplate.opsForHash().delete(USER_BATTLE_KEY, organizerId.toString());
-        redisTemplate.opsForHash().delete(USER_BATTLE_KEY, participantId.toString());
+        redisTemplate.opsForHash().delete(USER_BATTLE_KEY, organizerId);
+        redisTemplate.opsForHash().delete(USER_BATTLE_KEY, participantId);
 
         notifyBattleResult(organizerId, battle);
         notifyBattleResult(participantId, battle);
@@ -191,8 +198,8 @@ public class BattleService {
         notificationService.notifyUser(userId, BATTLE_RESULT_EVENTNAME,
                 BattleResultResponseDto.builder()
                 .isWin(isWin)
-                .myBattleScore(battle.getOrganizerId() == userId ? battle.getOrganizerScore() : battle.getParticipantScore())
-                .opponentBattleScore(battle.getOrganizerId() == userId ? battle.getParticipantScore() : battle.getOrganizerScore())
+                .myBattleScore(Objects.equals(battle.getOrganizerId(), userId) ? battle.getOrganizerScore() : battle.getParticipantScore())
+                .opponentBattleScore(Objects.equals(battle.getOrganizerId(), userId) ? battle.getParticipantScore() : battle.getOrganizerScore())
                 .build());
     }
 
@@ -204,12 +211,12 @@ public class BattleService {
         Battle battle = getBattle(battleKey);
 
         boolean battleNull = battle == null;
-        boolean organizer = battle.getOrganizerId() == userId && battle.getOrganizerScore() != null;
-        boolean participant = battle.getParticipantId() == userId && battle.getParticipantScore() != null;
+        boolean organizer = Objects.equals(battle.getOrganizerId(), userId) && battle.getOrganizerScore() != null;
+        boolean participant = Objects.equals(battle.getParticipantId(), userId) && battle.getParticipantScore() != null;
         if (!battleNull && !organizer && !participant) {
             writeRecord(battleKey, userId, -1);
         }
 
-        redisTemplate.opsForHash().delete(USER_BATTLE_KEY, userId.toString());
+        redisTemplate.opsForHash().delete(USER_BATTLE_KEY, userId);
     }
 }
