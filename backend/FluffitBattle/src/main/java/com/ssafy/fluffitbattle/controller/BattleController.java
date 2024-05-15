@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/battle-service")
+@RequestMapping("")
 public class BattleController {
 
     private final BattleService battleService;
@@ -22,6 +22,7 @@ public class BattleController {
     @PostMapping("/wait")
     public ResponseEntity<SseEmitter> requestBattle(@RequestHeader("memberId") String memberId) {
         Long userId = Long.parseLong(memberId);
+        System.out.println(userId+ "        !!!!!!");
         SseEmitter sseEmitter = notificationService.createEmitter(userId);
         battleService.requestBattle(userId);
         return ResponseEntity.ok(sseEmitter);
