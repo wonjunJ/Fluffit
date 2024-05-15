@@ -13,6 +13,7 @@ import com.ssafy.fluffitmember.member.dto.request.SignOutResDto;
 import com.ssafy.fluffitmember.member.dto.response.GetCoinResDto;
 import com.ssafy.fluffitmember.member.dto.request.UpdateNicknameReqDto;
 import com.ssafy.fluffitmember.member.dto.response.GetNicknameResDto;
+import com.ssafy.fluffitmember.member.dto.response.GetPointResDto;
 import com.ssafy.fluffitmember.member.dto.response.GetRankResDto;
 import com.ssafy.fluffitmember.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -88,8 +89,15 @@ public class MemberController {
 
     @GetMapping("/get-coin")
     public ResponseEntity<Object> getUserCoin(@RequestHeader("memberId") String memberId){
-        GetCoinResDto getRankResDto = memberService.getUserCoin(memberId);
+        GetCoinResDto getCoinResDto = memberService.getUserCoin(memberId);
         log.info("getCoin enter!!" + memberId);
-        return ResponseEntity.ok().body(getRankResDto);
+        return ResponseEntity.ok().body(getCoinResDto);
+    }
+
+    @GetMapping("/get-point")
+    public ResponseEntity<Object> getUserPoint(@RequestHeader("memberId") String memberId){
+        GetPointResDto getPointResDto = memberService.getUserPoint(memberId);
+        log.info("getPoint enter!!" + memberId);
+        return ResponseEntity.ok().body(getPointResDto);
     }
 }

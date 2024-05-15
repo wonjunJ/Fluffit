@@ -9,10 +9,7 @@ import com.ssafy.fluffitmember._common.exception.NotValidNickname;
 import com.ssafy.fluffitmember._common.exception.NotValidSQL;
 import com.ssafy.fluffitmember.member.dto.request.SignOutResDto;
 import com.ssafy.fluffitmember.member.dto.request.UpdateNicknameReqDto;
-import com.ssafy.fluffitmember.member.dto.response.GetCoinResDto;
-import com.ssafy.fluffitmember.member.dto.response.GetNicknameResDto;
-import com.ssafy.fluffitmember.member.dto.response.GetRankResDto;
-import com.ssafy.fluffitmember.member.dto.response.RankDto;
+import com.ssafy.fluffitmember.member.dto.response.*;
 import com.ssafy.fluffitmember.member.entity.Member;
 import com.ssafy.fluffitmember.member.repository.MemberRepository;
 
@@ -63,6 +60,13 @@ public class MemberService {
         GetCoinResDto getCoinResDto = new GetCoinResDto();
         getCoinResDto.setCoin(findMember.map(Member::getCoin).orElse(-1));
         return getCoinResDto;
+    }
+
+    public GetPointResDto getUserPoint(String memberId) {
+        Optional<Member> findMember = memberRepository.findByMemberId(memberId);
+        GetPointResDto getPointResDto = new GetPointResDto();
+        getPointResDto.setPoint(findMember.map(Member::getBattlePoint).orElse(-1));
+        return getPointResDto;
     }
 
     public GetNicknameResDto getNickname(String memberId) {
@@ -144,4 +148,6 @@ public class MemberService {
             throw new EncryptionException();
         }
     }
+
+
 }
