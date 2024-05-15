@@ -1,11 +1,13 @@
 package com.ssafy.fluffitflupet.service
 
 import com.ssafy.fluffitflupet.client.MemberServiceClientAsync
+import com.ssafy.fluffitflupet.dto.CoinKafkaDto
 import com.ssafy.fluffitflupet.dto.FeedingResponse
 import com.ssafy.fluffitflupet.dto.FoodListResponse
 import com.ssafy.fluffitflupet.entity.FoodType
 import com.ssafy.fluffitflupet.error.ErrorType
 import com.ssafy.fluffitflupet.exception.CustomBadRequestException
+import com.ssafy.fluffitflupet.messagequeue.KafkaProducer
 import com.ssafy.fluffitflupet.repository.FoodRepository
 import com.ssafy.fluffitflupet.repository.MemberFlupetRepository
 import kotlinx.coroutines.*
@@ -24,7 +26,8 @@ class FoodService(
     private val client: MemberServiceClientAsync,
     private val memberFlupetRepository: MemberFlupetRepository,
     private val reactiveRedisTemplate: ReactiveRedisTemplate<String, String>,
-    private val redissonClient: RedissonClient
+    private val redissonClient: RedissonClient,
+    private val kafkaProducer: KafkaProducer
 ) {
     //lombok slf4j를 쓰기 위해
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
@@ -82,6 +85,8 @@ class FoodService(
                 throw CustomBadRequestException(ErrorType.INSUFFICIENT_COIN)
             }
             //여기에서 카프카로 코인 데이터 동기화 요청
+            kafkaProducer.send("coin-update", CoinKafkaDto(memberId = userId, price = food.price))
+
             mflupetRst.fullness = if(mflupetRst.fullness + food.fullnessEffect >= 100) 100
                                                         else mflupetRst.fullness + food.fullnessEffect
             mflupetRst.health = if(mflupetRst.health + food.healthEffect >= 100) 100

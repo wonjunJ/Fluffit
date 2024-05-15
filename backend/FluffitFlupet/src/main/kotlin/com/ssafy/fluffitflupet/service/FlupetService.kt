@@ -221,18 +221,22 @@ class FlupetService(
         )
     }
 
-    suspend fun getMyPetHistory(userId: String): HistoryResponse {
+    suspend fun getMyPetHistory(userId: String): HistoryResponse = coroutineScope {
         log.info("펫 키웠던 내역 조회")
-        val flupets = withContext(Dispatchers.IO){
+        val mflupetWait = async(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
+        val flupetsWait = async(Dispatchers.IO){
             memberFlupetRepository.findHistoryByUserId(userId)
                 .toList()
                 .distinctBy { it.birthDay }
         }
-        if(flupets.isEmpty()){
-            throw CustomBadRequestException(ErrorType.INVALID_USERID)
+
+        val mflupet = mflupetWait.await()
+        val flupets = flupetsWait.await()
+        var flag = false
+        if(flupets.isNotEmpty() && mflupet != null){
+            flag = flupets[0].birthDay.isEqual(mflupet.createTime!!.toLocalDate())
         }
-        return HistoryResponse(flupets.subList(
-            if(memberFlupetRepository.existsByMemberIdAndIsDeadIsFalse(userId).awaitSingle()) 1 else 0, flupets.size))
+        return@coroutineScope HistoryResponse(if(flupets.isEmpty()) flupets else flupets.subList(if(flag) 1 else 0, flupets.size))
     }
 
     suspend fun getFlupetRank(userId: String): RankingResponse = coroutineScope {
