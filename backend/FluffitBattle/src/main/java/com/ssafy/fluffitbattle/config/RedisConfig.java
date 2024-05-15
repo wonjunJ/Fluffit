@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -27,14 +28,16 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class RedisConfig {
 
-    @Value("${spring.data.redis.host}")
-    private String host;
-
-    @Value("${spring.data.redis.port}")
-    private String port;
+//    @Value("${spring.data.redis.host}")
+//    private String host;
+//
+//    @Value("${spring.data.redis.port}")
+//    private String port;
 
 //    @Value("${spring.data.redis.password}")
 //    private String password;
+
+    private final Environment env;
 
     private final int BASIC_DATABASE = 0;
     private final int BATTLE_DATABASE = 1;
@@ -64,9 +67,14 @@ public class RedisConfig {
 
 
     private LettuceConnectionFactory createLettuceConnectionFactory(int database) {
+        String host = env.getProperty("spring.data.redis.host");
+        String port = env.getProperty("spring.data.redis.port");
+        String password = env.getProperty("spring.data.redis.password");
+
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(host);
         config.setPort(Integer.parseInt(port));
+        config.setPassword(password);
         config.setDatabase(database);
         return new LettuceConnectionFactory(config);
     }
