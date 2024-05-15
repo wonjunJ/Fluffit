@@ -114,13 +114,19 @@ public class BattleService {
 
     private void notifyJustMatched(String userId, String opponentId, Battle battle) {
         FlupetInfoTempClientDto opponentFlupetInfoDto = flupetFeignClient.getFlupetInfo(opponentId);
+        String imgUrl;
+        if (opponentFlupetInfoDto.getImageUrl() != null && !opponentFlupetInfoDto.getImageUrl().isEmpty()) {
+            imgUrl = opponentFlupetInfoDto.getImageUrl().get(opponentFlupetInfoDto.getImageUrl().size() - 1);
+        } else {
+            imgUrl = "";
+        }
         notificationService.notifyUser(userId, JUST_NOW_MATCHED_EVENTNAME,
                 BattleMatchingResponseDto.builder()
                         .result(true)
                         .opponentName(memberFeignClient.getNickName(opponentId).getNickname())
                         .opponentBattlePoint(memberFeignClient.getBattlePoint(opponentId).getPoint())
                         .opponentFlupetName(opponentFlupetInfoDto.getFlupetName())
-                        .opponentFlupetImageUrl(opponentFlupetInfoDto.getImageUrl().get(opponentFlupetInfoDto.getImageUrl().size()-1))
+                        .opponentFlupetImageUrl(imgUrl)
                         .battleId(battle.getId())
                         .battleType(battle.getBattleType())
                         .build());
