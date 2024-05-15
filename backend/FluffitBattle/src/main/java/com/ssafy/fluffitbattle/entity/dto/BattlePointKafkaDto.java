@@ -9,5 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BattlePointKafkaDto {
     private String memberId;
-    private int point;
+    private int battlePointChanges;
 }

@@ -182,8 +182,8 @@ public class BattleService {
             participantKafkaDto = new BattlePointKafkaDto(participantId, -5);
         }
 
-        kafkaProducer.send("point-update", organizerKafkaDto);
-        kafkaProducer.send("point-update", participantKafkaDto);
+        kafkaProducer.send("battle-point-update", organizerKafkaDto);
+        kafkaProducer.send("battle-point-update", participantKafkaDto);
 
         battle.setBattleDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         battleRepository.save(battle);
