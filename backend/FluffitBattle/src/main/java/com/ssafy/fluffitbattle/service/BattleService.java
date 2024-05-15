@@ -11,12 +11,15 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -226,5 +229,38 @@ public class BattleService {
         }
 
         redisTemplate.opsForHash().delete(USER_BATTLE_KEY, userId);
+    }
+
+    public Slice<BattleRecordItemDto> getBattleRecords(String userId, Pageable pageable) {
+        return battleRepository.findByOrganizerIdOrParticipantIdOrderByBattleDateDesc(userId, userId, pageable)
+                .map(battle -> convertToDto(battle, userId));
+    }
+
+    private BattleRecordItemDto convertToDto(Battle battle, String userId) {
+        boolean isOrganizer = userId.equals(battle.getOrganizerId());
+        String opponentId = isOrganizer ? battle.getParticipantId() : battle.getOrganizerId();
+        boolean isWin = userId.equals(battle.getWinnerId());
+
+        return BattleRecordItemDto.builder()
+                .isWin(isWin)
+                .title(battle.getBattleType().getTitle())
+                .opponentName(memberFeignClient.getNickName(opponentId).getNickname())
+                .opponentScore(isOrganizer ? battle.getParticipantScore() : battle.getOrganizerScore())
+                .myScore(isOrganizer ? battle.getOrganizerScore() : battle.getParticipantScore())
+                .date(battle.getBattleDate())
+                .build();
+    }
+
+    public List<BattleStatisticItemDto> getBattleStats(String userId) {
+        List<BattleStatisticItemDto> stats = battleRepository.findBattleStatsByUserId(userId);
+        stats.forEach(BattleStatisticItemDto::calculateWinRate);
+        return stats;
+    }
+
+    public BattleStatisticResponseDto getBattleStaticsResponse(String userId) {
+        BattleStatisticResponseDto battleStatisticResponseDto = new BattleStatisticResponseDto();
+        battleStatisticResponseDto.setBattlePoint(Long.valueOf(memberFeignClient.getBattlePoint(userId).getPoint()));
+        battleStatisticResponseDto.setBattleStatisticItemDtoList(getBattleStats(userId));
+        return battleStatisticResponseDto;
     }
 }
