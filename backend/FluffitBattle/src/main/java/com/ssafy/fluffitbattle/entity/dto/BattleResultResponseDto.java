@@ -10,4 +10,5 @@ public class BattleResultResponseDto {
     private Integer opponentBattleScore;
     private Integer myBattleScore;
     private Long battlePoint;
+    private Integer battlePointChanges;
 }

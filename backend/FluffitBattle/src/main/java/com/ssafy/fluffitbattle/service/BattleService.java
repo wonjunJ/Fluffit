@@ -4,10 +4,8 @@ import com.ssafy.fluffitbattle.client.FlupetFeignClient;
 import com.ssafy.fluffitbattle.client.MemberFeignClient;
 import com.ssafy.fluffitbattle.entity.Battle;
 import com.ssafy.fluffitbattle.entity.BattleType;
-import com.ssafy.fluffitbattle.entity.dto.BattleMatchingResponseDto;
-import com.ssafy.fluffitbattle.entity.dto.BattleResultRequestDto;
-import com.ssafy.fluffitbattle.entity.dto.BattleResultResponseDto;
-import com.ssafy.fluffitbattle.entity.dto.FlupetInfoTempClientDto;
+import com.ssafy.fluffitbattle.entity.dto.*;
+import com.ssafy.fluffitbattle.kafka.KafkaProducer;
 import com.ssafy.fluffitbattle.repository.BattleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +32,7 @@ public class BattleService {
     private final NotificationService notificationService;
     private final MemberFeignClient memberFeignClient;
     private final FlupetFeignClient flupetFeignClient;
+    private final KafkaProducer kafkaProducer;
 
     @Qualifier("stringRedisTemplate")
     private final RedisTemplate<String, String> redisTemplate;
@@ -168,16 +167,23 @@ public class BattleService {
         String organizerId = battle.getOrganizerId();
         String participantId = battle.getParticipantId();
 
-        /* TODO
-            1. winner 배틀 점수 더해주기
-         */
-
+        BattlePointKafkaDto organizerKafkaDto;
+        BattlePointKafkaDto participantKafkaDto;
         if (battle.getOrganizerScore() > battle.getParticipantScore()) {
             battle.setWinnerId(organizerId);
-
+            organizerKafkaDto = new BattlePointKafkaDto(organizerId, 10);
+            participantKafkaDto = new BattlePointKafkaDto(participantId, -5);
         } else if (battle.getOrganizerScore() < battle.getParticipantScore()) {
             battle.setWinnerId(participantId);
+            organizerKafkaDto = new BattlePointKafkaDto(organizerId, -5);
+            participantKafkaDto = new BattlePointKafkaDto(participantId, 10);
+        } else {
+            organizerKafkaDto = new BattlePointKafkaDto(organizerId, -5);
+            participantKafkaDto = new BattlePointKafkaDto(participantId, -5);
         }
+
+        kafkaProducer.send("point-update", organizerKafkaDto);
+        kafkaProducer.send("point-update", participantKafkaDto);
 
         battle.setBattleDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         battleRepository.save(battle);
@@ -198,6 +204,8 @@ public class BattleService {
         notificationService.notifyUser(userId, BATTLE_RESULT_EVENTNAME,
                 BattleResultResponseDto.builder()
                 .isWin(isWin)
+                .battlePoint(Long.valueOf(memberFeignClient.getBattlePoint(userId).getPoint()))
+                .battlePointChanges(isWin ? 10 : -5)
                 .myBattleScore(Objects.equals(battle.getOrganizerId(), userId) ? battle.getOrganizerScore() : battle.getParticipantScore())
                 .opponentBattleScore(Objects.equals(battle.getOrganizerId(), userId) ? battle.getParticipantScore() : battle.getOrganizerScore())
                 .build());
