@@ -73,7 +73,7 @@ public class BattleService {
 
             // Redis에 값이 정상적으로 추가되었는지 확인
             Long queueSize = listOps.size(BATTLE_QUEUE_KEY);  // 큐의 현재 크기를 가져옵니다.
-            List<String> queueContents = listOps.range(BATTLE_QUEUE_KEY, 0, -1);  // 큐의 전체 내용을 가져옵니다.
+            List<String> queueContents = listOps.range(BATTLE_QUEUE_KEY, 0, queueSize);  // 큐의 전체 내용을 가져옵니다.
             log.info("Current queue size after adding {}: {}", userId, queueSize);
             log.info("Queue contents: {}", queueContents);
 
@@ -90,6 +90,8 @@ public class BattleService {
 //            notificationService.removeUserEmitter(Long.parseLong(opponentId));
 //            notificationService.createBattleEmitter(userId);
 //            notificationService.createBattleEmitter(Long.parseLong(opponentId));
+
+            log.info("살려줘!!!!!!!!!!!!! " + userId + " " + opponentId);
 
             BattleType battleType = BattleType.values()[random.nextInt(BattleType.values().length)];
             Battle battle = Battle.builder()
