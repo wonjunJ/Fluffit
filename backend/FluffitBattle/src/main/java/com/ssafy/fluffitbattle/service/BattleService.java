@@ -77,8 +77,8 @@ public class BattleService {
             log.info("Current queue size after adding {}: {}", userId, queueSize);
             log.info("Queue contents: {}", queueContents);
 
-            notificationService.notifyUser(userId, WAIT_MATCHING_EVENTNAME,
-                    BattleMatchingResponseDto.builder().result(false).build());
+//            notificationService.notifyUser(userId, WAIT_MATCHING_EVENTNAME,
+//                    BattleMatchingResponseDto.builder().result(false).build());
         } else if (Objects.equals(userId, opponentId)) {
             notificationService.notifyUser(userId, WAIT_MATCHING_EVENTNAME,
                     BattleMatchingResponseDto.builder().result(false).build());
