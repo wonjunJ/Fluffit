@@ -1,8 +1,11 @@
 package com.kiwa.fluffit.presentation.game
 
 import com.kiwa.fluffit.base.ViewEvent
+import com.kiwa.fluffit.model.battle.GameUIModel
 
 sealed class GameViewEvent: ViewEvent {
+
+    data class Init(val gameUIModel: GameUIModel): GameViewEvent()
 
     data object OnReadyForGame: GameViewEvent()
 

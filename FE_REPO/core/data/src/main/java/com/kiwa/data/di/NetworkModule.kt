@@ -20,7 +20,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private val loggingInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        setLevel(HttpLoggingInterceptor.Level.BODY)
+        setLevel(HttpLoggingInterceptor.Level.HEADERS)
     }
 
     @Qualifier
@@ -34,6 +34,28 @@ object NetworkModule {
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class AuthClient
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class BattleSSEClient
+
+    @Singleton
+    @Provides
+    @BattleSSEClient
+    fun provideSSEClient(
+        authInterceptor: AuthInterceptor,
+        authAuthenticator: AuthAuthenticator
+    ): OkHttpClient {
+        val builder = OkHttpClient.Builder()
+        builder.apply {
+            readTimeout(60, TimeUnit.SECONDS)
+            connectTimeout(60, TimeUnit.SECONDS)
+            addInterceptor(authInterceptor)
+            addInterceptor(loggingInterceptor)
+            authenticator(authAuthenticator)
+        }
+        return builder.build()
+    }
 
     @Singleton
     @Provides

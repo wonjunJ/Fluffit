@@ -50,7 +50,7 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Text
 import com.example.wearapp.presentation.HealthViewModel
-import com.kiwa.fluffit.model.battle.OpponentInfo
+import com.kiwa.fluffit.model.battle.GameUIModel
 import com.kiwa.fluffit.presentation.components.FeedButton
 import com.kiwa.fluffit.presentation.screens.BattleScreen
 import com.kiwa.fluffit.presentation.screens.ExerciseScreen
@@ -119,7 +119,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun WearNavHost(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
 ) {
     NavHost(
         navController = navController,
@@ -134,13 +134,15 @@ fun WearNavHost(
             navController.game(it)
         }
 
-        game()
+        game {
+            navController.navigateToMain()
+        }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WearApp(onNavigateToGame: (OpponentInfo) -> Unit) {
+fun WearApp(onNavigateToGame: (GameUIModel) -> Unit) {
     val currentPage by MainActivityViewModel.currentPage.collectAsState()
     val pagerState =
         rememberPagerState(pageCount = { MainActivity.PAGE_COUNT }, initialPage = currentPage)

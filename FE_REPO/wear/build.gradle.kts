@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.coil.gif)
     implementation(libs.retrofitGson)
     implementation(project(":core:base"))
+    implementation(project(":core:data"))
     implementation(project(":core:domain"))
     implementation(project(":core:model"))
     androidTestImplementation(platform(libs.androidx.compose.bom))

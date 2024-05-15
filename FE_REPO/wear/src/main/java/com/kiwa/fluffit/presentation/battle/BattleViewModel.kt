@@ -1,9 +1,10 @@
 package com.kiwa.fluffit.presentation.battle
 
 import androidx.lifecycle.viewModelScope
+import com.kiwa.domain.usecase.FindMatchingUseCase
 import com.kiwa.fluffit.base.BaseViewModel
 import com.kiwa.fluffit.model.battle.BattleLogModel
-import com.kiwa.fluffit.model.battle.OpponentInfo
+import com.kiwa.fluffit.model.battle.GameUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -12,6 +13,7 @@ import javax.inject.Inject
 class BattleViewModel @Inject constructor(
 //    private val getBattleLogUseCase: GetBattleLogsUseCase,
 //    private val getBattleStatisticsUseCase: GetBattleStatisticsUseCase,
+    private val findMatchingUseCase: FindMatchingUseCase,
 ) : BaseViewModel<BattleViewState, BattleViewEvent>() {
     override fun createInitialState(): BattleViewState = BattleViewState.Default()
 
@@ -30,40 +32,48 @@ class BattleViewModel @Inject constructor(
                 when (event) {
                     BattleViewEvent.OnClickCancelBattleButton -> setState { cancelFindMatching() }
                     BattleViewEvent.OnClickBattleButton -> findMatching()
+                    BattleViewEvent.OnDismissToast -> setState { onDismissToast() }
                 }
             }
         }
     }
 
-    private fun findMatching() {
+    private fun BattleViewState.onDismissToast(): BattleViewState =
+        when (this) {
+            is BattleViewState.Default -> this.copy(message = "")
+        }
+
+    private suspend fun findMatching() {
         setState { setLoading() }
-        setState { findMatchingCompleted() }
+        findMatchingUseCase().fold(
+            onSuccess = { setState { findMatchingCompleted(it) } },
+            onFailure = { setState { cancelFindMatching("매칭에 실패했습니다.") } }
+        )
     }
 
-    private fun BattleViewState.findMatchingCompleted(): BattleViewState =
+    private fun BattleViewState.findMatchingCompleted(gameUIModel: GameUIModel): BattleViewState =
         when (this) {
             is BattleViewState.Default -> this.copy(
-                opponentInfo = OpponentInfo(
-                    "적입니다",
-                    "",
-                    "https://github.com/shjung53/algorithm_study/assets/" +
-                        "90888718/4399f85d-7810-464c-ad76-caae980ce047",
-                    0
-                ),
+                gameUIModel = gameUIModel,
                 loading = false,
             )
         }
 
 
-    private fun BattleViewState.cancelFindMatching(): BattleViewState =
+    private fun BattleViewState.cancelFindMatching(message: String = ""): BattleViewState =
         when (this) {
-            is BattleViewState.Default -> this.copy(loading = false, findMatching = false)
+            is BattleViewState.Default -> this.copy(
+                loading = false,
+                findMatching = false,
+                message = message
+            )
+
             else -> this
         }
 
     private fun BattleViewState.setLoading(): BattleViewState =
         when (this) {
-            is BattleViewState.Default -> this.copy(loading = true)
+            is BattleViewState.Default -> this.copy(loading = true, findMatching = true)
             else -> this
         }
 

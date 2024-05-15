@@ -2,9 +2,11 @@ package com.kiwa.domain.repository
 
 import com.kiwa.fluffit.model.battle.BattleLog
 import com.kiwa.fluffit.model.battle.BattleLogModel
+import com.kiwa.fluffit.model.battle.GameUIModel
 
 interface BattleRepository {
 
-    fun getBattleLogs(): Result<List<BattleLog>>
-    fun getBattleStatistics(): Result<BattleLogModel>
+    suspend fun getBattleLogs(): Result<List<BattleLog>>
+    suspend fun getBattleStatistics(): Result<BattleLogModel>
+    suspend fun findMatching(): Result<GameUIModel>
 }

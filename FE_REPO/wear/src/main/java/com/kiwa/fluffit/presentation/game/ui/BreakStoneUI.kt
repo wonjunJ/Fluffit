@@ -2,6 +2,7 @@ package com.kiwa.fluffit.presentation.game.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -23,19 +24,13 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
-import coil.decode.ImageDecoderDecoder
 import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.util.formatTime
 import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 @Composable
-internal fun BreakStoneGameUI(onFinishGame: (Int) -> Unit) {
-    val context = LocalContext.current
-    val imageLoader = ImageLoader.Builder(context)
-        .components {
-            add(ImageDecoderDecoder.Factory())
-        }.build()
-
+internal fun BreakStoneGameUI(imageLoader: ImageLoader, onFinishGame: (Int) -> Unit) {
     val descriptionVisibility = remember { mutableStateOf(false) }
     val descriptionCountDown = remember { mutableIntStateOf(3) }
 
@@ -94,7 +89,10 @@ internal fun BreakStoneGameUI(onFinishGame: (Int) -> Unit) {
         Box(modifier = Modifier
             .size(100.dp)
             .align(Alignment.Center)
-            .clickable {
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
                 if (isTimerRunning.value) {
                     onCrush.value = !onCrush.value
                     score.intValue++
@@ -114,8 +112,27 @@ internal fun BreakStoneGameUI(onFinishGame: (Int) -> Unit) {
                     painter = painterResource(id = R.drawable.stone_hurt),
                     contentDescription = null
                 )
+
+                val random = Random.nextInt(1, 6)
+                val position = when (random) {
+                    1 -> Alignment.Center
+                    2 -> Alignment.TopStart
+                    3 -> Alignment.TopEnd
+                    4 -> Alignment.BottomStart
+                    else -> Alignment.BottomStart
+                }
+
+                Image(
+                    painter = painterResource(id = R.drawable.footprint_one),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(60.dp)
+                        .align(position)
+                        .rotate(if ((random and 1) == 0) 25f else -25f)
+                )
             }
         }
+
 
         Text(
             text = "${score.intValue}",

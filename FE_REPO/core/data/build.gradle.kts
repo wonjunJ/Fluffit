@@ -17,6 +17,7 @@ dependencies {
     implementation(libs.retrofitGson)
     implementation(libs.okhttp)
     implementation(libs.okhttpLogging)
+    implementation(libs.okhttp.sse)
 
     implementation("androidx.media3:media3-ui:1.3.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")

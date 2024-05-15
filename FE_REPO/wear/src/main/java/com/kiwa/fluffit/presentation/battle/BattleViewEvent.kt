@@ -6,4 +6,6 @@ sealed class BattleViewEvent: ViewEvent {
     data object OnClickBattleButton: BattleViewEvent()
 
     data object OnClickCancelBattleButton: BattleViewEvent()
+
+    data object OnDismissToast: BattleViewEvent()
 }

@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetBattleStatisticsUseCase @Inject constructor(
     private val battleRepository: BattleRepository
 ) {
-    operator fun invoke() = battleRepository.getBattleStatistics()
+    suspend operator fun invoke() = battleRepository.getBattleStatistics()
 }

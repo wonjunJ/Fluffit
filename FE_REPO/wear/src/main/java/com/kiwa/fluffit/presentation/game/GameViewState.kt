@@ -2,28 +2,33 @@ package com.kiwa.fluffit.presentation.game
 
 import com.kiwa.fluffit.base.ViewState
 import com.kiwa.fluffit.model.battle.BattleResultUIModel
-
-interface BattleInfo {
-    val battleId: String
-    val battleType: BattleType
-}
+import com.kiwa.fluffit.model.battle.BattleType
+import com.kiwa.fluffit.model.battle.GameUIModel
+import com.kiwa.fluffit.model.battle.OpponentInfo
 
 sealed class GameViewState : ViewState {
 
     abstract val loading: Boolean
+    abstract val gameUIModel: GameUIModel
 
     data class MatchingCompleted(
-        override val battleId: String = "",
-        override val battleType: BattleType = BattleType.BreakStone("", "", ""),
         override val loading: Boolean = false,
-    ) : GameViewState(), BattleInfo
+        override val gameUIModel: GameUIModel = GameUIModel(
+            battleId = "", opponentInfo = OpponentInfo(
+                "", "", "", 0
+            ),
+            battleType = BattleType.BreakStone("", "", 0)
+        ),
+    ) : GameViewState()
 
     data class Battle(
-        override val battleType: BattleType,
-        val score: Int, override val loading: Boolean, override val battleId: String
-    ) : GameViewState(), BattleInfo
+        val score: Int,
+        override val loading: Boolean, override val gameUIModel: GameUIModel,
+    ) : GameViewState()
 
     data class BattleResult(
-        val result: BattleResultUIModel, override val loading: Boolean,
+        val result: BattleResultUIModel,
+        override val loading: Boolean,
+        override val gameUIModel: GameUIModel,
     ) : GameViewState()
 }

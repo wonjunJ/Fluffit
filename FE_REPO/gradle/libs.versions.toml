@@ -86,6 +86,7 @@ hilt-testing-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofitGson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okHttp" }
+okhttp-sse = { group = "com.squareup.okhttp3", name = "okhttp-sse", version.ref = "okHttp" }
 okhttpLogging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okHttp" }
 javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "inject" }
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
