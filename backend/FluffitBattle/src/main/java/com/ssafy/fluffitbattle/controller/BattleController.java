@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("")
+@RequestMapping()
 public class BattleController {
 
     private final BattleService battleService;
