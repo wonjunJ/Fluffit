@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-    private final Map<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     @Qualifier("stringRedisTemplate")
     private final RedisTemplate<String, String> redisTemplate;
@@ -28,7 +28,7 @@ public class NotificationService {
 //        return sink.asFlux();
 //    }
 
-    public SseEmitter createEmitter(Long userId) {
+    public SseEmitter createEmitter(String userId) {
         SseEmitter emitter = new SseEmitter(6000L * 5); // 5분 정도 연결
         emitters.put(userId, emitter);
         emitter.onCompletion(() -> {
@@ -51,11 +51,11 @@ public class NotificationService {
 //        return emitters.get(userId);
 //    }
 
-    public void ridOfUserFromWaitingQueue(Long userId) {
+    public void ridOfUserFromWaitingQueue(String userId) {
         ListOperations<String, String> listOps = redisTemplate.opsForList();
         String waitUser = listOps.leftPop(BATTLE_QUEUE_KEY);
-        if (waitUser != null && Long.parseLong(waitUser) != userId) {
-            listOps.rightPush(BATTLE_QUEUE_KEY, userId.toString());
+        if (waitUser != null && !waitUser.equals(userId)) {
+            listOps.rightPush(BATTLE_QUEUE_KEY, userId);
         }
     }
 
@@ -67,7 +67,7 @@ public class NotificationService {
 //        return emitter;
 //    }
 
-    public void notifyUser(Long userId, String eventName, Object message) {
+    public void notifyUser(String userId, String eventName, Object message) {
         SseEmitter emitter = emitters.get(userId);
 //        if (emitter == null) {
 //            createEmitter(userId);

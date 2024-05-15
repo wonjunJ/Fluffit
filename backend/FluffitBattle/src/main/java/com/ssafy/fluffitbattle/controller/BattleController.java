@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping()
+@RequestMapping
 public class BattleController {
 
     private final BattleService battleService;
@@ -21,18 +21,17 @@ public class BattleController {
     // 매칭 요청 처리
     @PostMapping("/wait")
     public ResponseEntity<SseEmitter> requestBattle(@RequestHeader("memberId") String memberId) {
-        Long userId = Long.parseLong(memberId);
-        System.out.println(userId+ "        !!!!!!");
-        SseEmitter sseEmitter = notificationService.createEmitter(userId);
-        battleService.requestBattle(userId);
+//        Long userId = Long.parseLong(memberId);
+        SseEmitter sseEmitter = notificationService.createEmitter(memberId);
+        battleService.requestBattle(memberId);
         return ResponseEntity.ok(sseEmitter);
     }
 
     // 대기 취소
     @PostMapping("/cancel")
     public ResponseEntity<Void> cancelWaiting(@RequestHeader("memberId") String memberId) {
-        Long userId = Long.parseLong(memberId);
-        notificationService.ridOfUserFromWaitingQueue(userId);
+//        Long userId = Long.parseLong(memberId);
+        notificationService.ridOfUserFromWaitingQueue(memberId);
         return ResponseEntity.ok().build();
     }
 
@@ -46,9 +45,9 @@ public class BattleController {
     // 배틀 결과 처리
     @PostMapping("/result")
     public ResponseEntity<SseEmitter> finishBattle(@RequestHeader("memberId") String memberId, @RequestBody BattleResultRequestDto battleResultRequestDto) {
-        Long userId = Long.parseLong(memberId);
-        SseEmitter sseEmitter = notificationService.createEmitter(userId);
-        battleService.submitBattleRecord(userId, battleResultRequestDto);
+//        Long userId = Long.parseLong(memberId);
+        SseEmitter sseEmitter = notificationService.createEmitter(memberId);
+        battleService.submitBattleRecord(memberId, battleResultRequestDto);
         return ResponseEntity.ok(sseEmitter);
     }
 }

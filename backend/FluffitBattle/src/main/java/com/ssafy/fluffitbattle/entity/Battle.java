@@ -19,9 +19,9 @@ public class Battle {
     @Column(name = "battle_id")
     private Long id;
 
-    private Long organizerId;
-    private Long participantId;
-    private Long winnerId;
+    private String organizerId;
+    private String participantId;
+    private String winnerId;
     private LocalDateTime battleDate;
 
     @Enumerated(EnumType.STRING)
@@ -31,7 +31,7 @@ public class Battle {
     private Integer participantScore;
 
     @Builder
-    public Battle(Long organizerId, Long participantId, BattleType battleType) {
+    public Battle(String organizerId, String participantId, BattleType battleType) {
         this.organizerId = organizerId;
         this.participantId = participantId;
         this.battleType = battleType;

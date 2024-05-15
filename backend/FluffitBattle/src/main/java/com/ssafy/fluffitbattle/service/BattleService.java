@@ -58,16 +58,16 @@ public class BattleService {
 
 
     // 매칭 요청 처리
-    public void requestBattle(Long userId) {
+    public void requestBattle(String userId) {
         ListOperations<String, String> listOps = redisTemplate.opsForList();
         String opponentId = listOps.leftPop(BATTLE_QUEUE_KEY);
 
         if (opponentId == null) {
-            listOps.rightPush(BATTLE_QUEUE_KEY, userId.toString());
+            listOps.rightPush(BATTLE_QUEUE_KEY, userId);
             redisTemplate.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
             notificationService.notifyUser(userId, WAIT_MATCHING_EVENTNAME,
                     BattleMatchingResponseDto.builder().result(false).build());
-        } else if (userId == Long.parseLong(opponentId)) {
+        } else if (Objects.equals(userId, opponentId)) {
             notificationService.notifyUser(userId, WAIT_MATCHING_EVENTNAME,
                     BattleMatchingResponseDto.builder().result(false).build());
         } else if (getUserBattle(userId) != null) {
@@ -81,7 +81,7 @@ public class BattleService {
 
             BattleType battleType = BattleType.values()[random.nextInt(BattleType.values().length)];
             Battle battle = Battle.builder()
-                    .organizerId(Long.parseLong(opponentId))
+                    .organizerId(opponentId)
                     .participantId(userId)
                     .battleType(battleType)
                     .build();
@@ -89,16 +89,16 @@ public class BattleService {
             Long battleId = theBattle.getId();
 
             notifyJustMatched(userId, opponentId, theBattle);
-            notifyJustMatched(Long.parseLong(opponentId), userId + "", theBattle);
+            notifyJustMatched(opponentId, userId + "", theBattle);
 
             setUser(userId, battleId);
-            setUser(Long.parseLong(opponentId), battleId);
+            setUser(opponentId, battleId);
 
             setBattle(theBattle);
         }
     }
 
-    private void notifyJustMatched(Long userId, String opponentId, Battle battle) {
+    private void notifyJustMatched(String userId, String opponentId, Battle battle) {
         notificationService.notifyUser(userId, JUST_NOW_MATCHED_EVENTNAME,
                 BattleMatchingResponseDto.builder()
                         .result(true)
@@ -108,7 +108,7 @@ public class BattleService {
                         .build());
     }
 
-    private String getUserBattle(Long userId) {
+    private String getUserBattle(String userId) {
         Object result = redisTemplate.opsForHash().get(USER_BATTLE_KEY, userId.toString());
         return result != null ? result.toString() : null;
     }
@@ -123,9 +123,9 @@ public class BattleService {
 //        return result != null ? result.toString() : null;
 //    }
 
-    private void setUser(Long userId, Long battleId) {
+    private void setUser(String userId, Long battleId) {
         redisTemplate.opsForValue().set("User:" + userId, "Battle:" + battleId, 80, TimeUnit.SECONDS);
-        redisTemplate.opsForHash().put(USER_BATTLE_KEY, userId.toString(), "Battle:" + battleId);
+        redisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
     }
 
     private void setBattle(Battle battle) {
@@ -135,10 +135,11 @@ public class BattleService {
 
 
 
-    private void writeRecord(String battleKey, Long userId, Integer score) {
+    private void writeRecord(String battleKey, String userId, Integer score) {
         Battle battle = getBattle(battleKey);
         boolean isOpponentSubmitted = false;
-        if (userId == battle.getOrganizerId()) {
+        assert battle != null;
+        if (userId.equals(battle.getOrganizerId())) {
             battle.setOrganizerScore(score);
             isOpponentSubmitted = battle.getParticipantScore() != null;
         } else {
@@ -149,7 +150,7 @@ public class BattleService {
         if (isOpponentSubmitted) calculateWinnerAndNotifyResult(battleKey);
     }
 
-    public void submitBattleRecord(Long userId, BattleResultRequestDto requestDto) {
+    public void submitBattleRecord(String userId, BattleResultRequestDto requestDto) {
         String battleKey = "Battle:" + requestDto.getBattleId();
         writeRecord(battleKey, userId, requestDto.getScore());
     }
@@ -157,8 +158,8 @@ public class BattleService {
     private void calculateWinnerAndNotifyResult(String battleKey) {
         Battle battle = getBattle(battleKey);
 
-        Long organizerId = battle.getOrganizerId();
-        Long participantId = battle.getParticipantId();
+        String organizerId = battle.getOrganizerId();
+        String participantId = battle.getParticipantId();
 
         /* TODO
             1. winner 배틀 점수 더해주기
@@ -185,7 +186,7 @@ public class BattleService {
         notifyBattleResult(participantId, battle);
     }
 
-    private void notifyBattleResult(Long userId, Battle battle) {
+    private void notifyBattleResult(String userId, Battle battle) {
         boolean isWin = Objects.equals(battle.getWinnerId(), userId);
         notificationService.notifyUser(userId, BATTLE_RESULT_EVENTNAME,
                 BattleResultResponseDto.builder()
@@ -196,7 +197,7 @@ public class BattleService {
     }
 
 
-    public void handleTimeout(Long userId) {
+    public void handleTimeout(String userId) {
         String battleKey = getUserBattle(userId);
 
         if (battleKey == null) return;

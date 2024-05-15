@@ -22,8 +22,8 @@ public class RedisKeyExpirationListener implements MessageListener {
         String expiredKey = message.toString();
         log.info("expire! {}", expiredKey);
         if (expiredKey.startsWith("User:")) {
-            Long userId = Long.parseLong(expiredKey.split(":")[1]);
-            battleService.handleTimeout(userId);
+//            Long userId = Long.parseLong(expiredKey.split(":")[1]);
+            battleService.handleTimeout(expiredKey.split(":")[1]);
         }
     }
 }
