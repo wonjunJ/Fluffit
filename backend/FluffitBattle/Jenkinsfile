@@ -24,7 +24,7 @@ pipeline {
         stage('Docker container run') {
             steps {
                 dir('backend/FluffitBattle') {
-                    sh 'docker run -d -p 8082:8080 --name battle -e TZ=Asia/Seoul --network develop-net battle'
+                    sh 'docker run -d --name battle -e TZ=Asia/Seoul --network dev-net battle'
                 }
             }
         }
