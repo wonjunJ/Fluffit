@@ -8,10 +8,16 @@ import lombok.Getter;
 @Builder
 public class BattleMatchingResponseDto {
     private Boolean result;
-    private String opponentName;
-    private String opponentFlupetName;
-    private String opponentFlupetImageUrl;
-    private Integer opponentBattlePoint;
-    private Long battleId;
-    private BattleType battleType;
+    @Builder.Default
+    private String opponentName = "";
+    @Builder.Default
+    private String opponentFlupetName = "";
+    @Builder.Default
+    private String opponentFlupetImageUrl = "";
+    @Builder.Default
+    private Integer opponentBattlePoint = 0;
+    @Builder.Default
+    private Long battleId = 0L;
+    @Builder.Default
+    private BattleType battleType = BattleType.ROCK;
 }

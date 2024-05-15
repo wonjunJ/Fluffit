@@ -70,6 +70,13 @@ public class BattleService {
         if (opponentId == null) {
             listOps.rightPush(BATTLE_QUEUE_KEY, userId);
             redisTemplate.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
+
+            // Redis에 값이 정상적으로 추가되었는지 확인
+            Long queueSize = listOps.size(BATTLE_QUEUE_KEY);  // 큐의 현재 크기를 가져옵니다.
+            List<String> queueContents = listOps.range(BATTLE_QUEUE_KEY, 0, -1);  // 큐의 전체 내용을 가져옵니다.
+            log.info("Current queue size after adding {}: {}", userId, queueSize);
+            log.info("Queue contents: {}", queueContents);
+
             notificationService.notifyUser(userId, WAIT_MATCHING_EVENTNAME,
                     BattleMatchingResponseDto.builder().result(false).build());
         } else if (Objects.equals(userId, opponentId)) {
