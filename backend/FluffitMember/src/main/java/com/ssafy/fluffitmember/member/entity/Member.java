@@ -80,4 +80,8 @@ public class Member {
     public void updateCoin(int coin) {
         this.coin = coin;
     }
+
+    public void updatePoint(int point) {
+        this.battlePoint = point;
+    }
 }

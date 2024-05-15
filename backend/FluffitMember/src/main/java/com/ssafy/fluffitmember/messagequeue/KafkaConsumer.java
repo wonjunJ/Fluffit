@@ -39,7 +39,7 @@ public class KafkaConsumer {
         }
     }
 
-    @KafkaListener(topics = "point-update", groupId = "consumerGroupId")
+    @KafkaListener(topics = "battle-point-update", groupId = "consumerGroupId")
     public void updateBattlePoint(String kafkaMessage) {
         log.info("Kafka Message: ->" + kafkaMessage);
 
@@ -54,7 +54,7 @@ public class KafkaConsumer {
 
         if(findMember.isPresent()){
             Member member = findMember.get();
-            member.updateCoin(member.getBattlePoint() + (Integer)map.get("point"));
+            member.updatePoint(member.getBattlePoint() + (Integer)map.get("battlePointChanges"));
         }
     }
 }
