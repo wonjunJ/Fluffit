@@ -111,10 +111,8 @@ public class BattleService {
 //                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
 //                        }
                         else {
-                            shouldRetry.set(!createAndNotifyBattle(operations, userId, opponentId)); // setBattle 결과에 따라 재시도 설정
+                            shouldRetry.set(!createAndNotifyBattle(userId, opponentId)); // setBattle 결과에 따라 재시도 설정
                         }
-
-//                        operations.opsForHash().put(USER_BATTLE_KEY, userId, "Battle: 들어가는지 확인 밖");
 
                         return operations.exec(); // 트랜잭션 완료
                     }
@@ -140,7 +138,7 @@ public class BattleService {
         logCurrentQueueState(BATTLE_QUEUE_KEY);
     }
 
-    private boolean createAndNotifyBattle(RedisOperations<String, String> operations, String userId, String opponentId) {
+    private boolean createAndNotifyBattle(String userId, String opponentId) {
         log.info("배틀 매칭 : {} vs {}", userId, opponentId);
         BattleType battleType = BattleType.values()[random.nextInt(BattleType.values().length)];
         Battle battle = Battle.builder()
@@ -154,8 +152,8 @@ public class BattleService {
         notifyJustMatched(userId, opponentId, theBattle);
         notifyJustMatched(opponentId, userId, theBattle);
 
-        setUser(operations, userId, battleId);
-        setUser(operations, opponentId, battleId);
+        setUser(userId, battleId);
+        setUser(opponentId, battleId);
 
         return setBattle(theBattle);
     }
@@ -193,7 +191,7 @@ public class BattleService {
 
     private String getUserBattle(String userId) {
         Object result = userBattleLongRedisTemplate.opsForHash().get(USER_BATTLE_KEY, userId);
-        return result != null ? "Battle:" + result.toString() : null;
+        return result != null ? result.toString() : null;
     }
 
     private Battle getBattle(String battleKey) {
@@ -201,7 +199,7 @@ public class BattleService {
         return result != null ? (Battle) result : null;
     }
 
-    private void setUser(RedisOperations<String, String> operations, String userId, Long battleId) {
+    private void setUser(String userId, Long battleId) {
         try {
             userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
             objectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);

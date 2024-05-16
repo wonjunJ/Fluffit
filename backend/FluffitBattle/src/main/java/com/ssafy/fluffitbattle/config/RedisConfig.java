@@ -110,7 +110,6 @@ public class RedisConfig {
 
     @Bean(name = "userBattleLongRedisTemplate")
     public RedisTemplate<String, Long> userBattleLongRedisTemplate() {
-        System.out.println("템플릿은 만들어지냐 ");
         RedisTemplate<String, Long> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactoryForUserBattle());
         template.setKeySerializer(new StringRedisSerializer());
