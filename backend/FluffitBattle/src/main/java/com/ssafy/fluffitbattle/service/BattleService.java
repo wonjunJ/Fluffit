@@ -5,6 +5,8 @@ import com.ssafy.fluffitbattle.client.MemberFeignClient;
 import com.ssafy.fluffitbattle.entity.Battle;
 import com.ssafy.fluffitbattle.entity.BattleType;
 import com.ssafy.fluffitbattle.entity.dto.*;
+import com.ssafy.fluffitbattle.exception.PetNotFoundException;
+import com.ssafy.fluffitbattle.exception.UserAlreadyInMatchingException;
 import com.ssafy.fluffitbattle.kafka.KafkaProducer;
 import com.ssafy.fluffitbattle.repository.BattleRepository;
 import jakarta.transaction.Transactional;
@@ -84,13 +86,11 @@ public class BattleService {
         //
 
         if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
-            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
-            return;
+            throw new PetNotFoundException(404, "Pet does not exist for user: " + userId);
         }
 
         if (getUserBattle(userId) != null) {
-            notificationService.notifyUser(userId, ALREADY_IN_MATCHING_EVENTNAME, "");
-            return;
+            throw new UserAlreadyInMatchingException(409, "User is already in a matching battle: " + userId);
         }
 
         boolean success = false;
@@ -241,21 +241,65 @@ public class BattleService {
 
 
     private void writeRecord(String battleKey, String userId, Integer score) {
-        Battle battle = getBattle(battleKey);
-        log.info("writeRecord 메서드 진입 " + battle.getId());
+        int maxRetries = 5;
+        int retries = 0;
+        boolean success = false;
 
-        boolean isOpponentSubmitted = false;
-        assert battle != null;
-        if (userId.equals(battle.getOrganizerId())) {
-            battle.setOrganizerScore(score);
-            isOpponentSubmitted = battle.getParticipantScore() != null;
-        } else {
-            battle.setParticipantScore(score);
-            isOpponentSubmitted = battle.getOrganizerScore() != null;
+        while (retries < maxRetries && !success) {
+            retries++;
+            success = Boolean.TRUE.equals(battleRedisTemplate.execute(new SessionCallback<Boolean>() {
+                @Override
+                public Boolean execute(RedisOperations operations) throws DataAccessException {
+                    operations.watch(battleKey);
+
+                    Battle battle = (Battle) operations.opsForValue().get(battleKey);
+                    if (battle == null) {
+                        log.error("Battle not found for key: " + battleKey);
+                        return false;
+                    }
+
+                    log.info("writeRecord 메서드 진입 " + battle.getId());
+
+                    boolean isOpponentSubmitted = false;
+                    if (userId.equals(battle.getOrganizerId())) {
+                        battle.setOrganizerScore(score);
+                        isOpponentSubmitted = battle.getParticipantScore() != null;
+                    } else {
+                        battle.setParticipantScore(score);
+                        isOpponentSubmitted = battle.getOrganizerScore() != null;
+                    }
+
+                    operations.multi();
+                    operations.opsForValue().set(battleKey, battle);
+                    List<Object> results = operations.exec();
+
+                    if (results == null || results.isEmpty()) {
+                        // 트랜잭션 실패
+                        log.info("Transaction failed, retrying...");
+                        return false;
+                    } else {
+                        // 트랜잭션 성공
+                        if (isOpponentSubmitted) {
+                            calculateWinnerAndNotifyResult(battleKey);
+                        }
+                        return true;
+                    }
+                }
+            }));
+
+            if (!success) {
+                try {
+                    Thread.sleep(100); // 재시도 간격 설정
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    log.error("Thread interrupted during retry sleep", e);
+                }
+            }
         }
 
-        battleRedisTemplate.opsForValue().set(battleKey, battle);
-        if (isOpponentSubmitted) calculateWinnerAndNotifyResult(battleKey);
+        if (!success) {
+            log.error("Failed to write record after " + maxRetries + " attempts");
+        }
     }
 
     public void submitBattleRecord(String userId, BattleResultRequestDto requestDto) {
