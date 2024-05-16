@@ -108,7 +108,27 @@ public class BattleService {
 //                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
 //                        }
                         else {
-                            shouldRetry.set(!createAndNotifyBattle(operations, userId, opponentId)); // setBattle 결과에 따라 재시도 설정
+//                            shouldRetry.set(!createAndNotifyBattle(operations, userId, opponentId)); // setBattle 결과에 따라 재시도 설정
+
+                            log.info("살려줘!!!!!!!!!!!!!!!: {} vs {}", userId, opponentId);
+                            BattleType battleType = BattleType.values()[random.nextInt(BattleType.values().length)];
+                            Battle battle = Battle.builder()
+                                    .organizerId(opponentId)
+                                    .participantId(userId)
+                                    .battleType(battleType)
+                                    .build();
+                            Battle theBattle = battleRepository.save(battle);
+                            Long battleId = theBattle.getId();
+
+                            notifyJustMatched(userId, opponentId, theBattle);
+                            notifyJustMatched(opponentId, userId, theBattle);
+
+                            setUser(operations, userId, battleId);
+                            setUser(operations, opponentId, battleId);
+
+                            setBattle(battle);
+
+
                             operations.opsForHash().put(USER_BATTLE_KEY, userId, "Battle: 들어가는지 확인");
                         }
 
@@ -202,8 +222,8 @@ public class BattleService {
     }
 
     private void setUser(RedisOperations operations, String userId, Long battleId) {
-        userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
-        System.out.println(" 레디스에 들어가는 거 맞잖아 맞다고 해 " + userBattleLongRedisTemplate.opsForValue().get("User:" + userId));
+        operations.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
+        System.out.println(" 레디스에 들어가는 거 맞잖아 맞다고 해 " + operations.opsForValue().get("User:" + userId));
         operations.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
         System.out.println(" 레디스에 해시도 들어가야 하는데 " + operations.opsForHash().get(USER_BATTLE_KEY, userId));
     }
