@@ -111,6 +111,8 @@ public class BattleService {
 //                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
 //                        }
                         else {
+                            userBattleObjectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, "check", "che");
+                            System.out.println("확인합니다 " + userBattleObjectRedisTemplate.opsForHash().get(USER_BATTLE_KEY, "check"));
                             shouldRetry.set(!createAndNotifyBattle(operations, userId, opponentId)); // setBattle 결과에 따라 재시도 설정
 
                             operations.opsForHash().put(USER_BATTLE_KEY, "안녕하세요", "Battle: 들어가는지 확인");
