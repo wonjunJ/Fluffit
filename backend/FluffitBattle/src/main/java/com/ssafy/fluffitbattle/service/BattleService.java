@@ -45,6 +45,8 @@ public class BattleService {
     private final RedisTemplate<String, String> redisTemplate;
     @Qualifier("battleRedisTemplate")
     private final RedisTemplate<String, Battle> battleRedisTemplate;
+    @Qualifier("userBattleRedisTemplate")
+    private final RedisTemplate<String, Long> userBattleRedisTemplate;
     //    @Qualifier("longStringRedisTemplate")
 //    private final RedisTemplate<Long, String> longStringRedisTemplate;
     @Qualifier("waitingQueueRedisTemplate")
@@ -74,8 +76,6 @@ public class BattleService {
         while (!success && retryCount < maxRetries) {
             retryCount++;
             AtomicBoolean shouldRetry = new AtomicBoolean(false);
-            AtomicBoolean canMatch = new AtomicBoolean(false);
-            final String[] opponentId = {""};
 
             try {
                 List<Object> results = redisTemplate.execute(new SessionCallback<List<Object>>() {
@@ -85,27 +85,26 @@ public class BattleService {
                         System.out.println("워치 설정은 성공한 듯");
 
                         ListOperations<String, String> listOps = operations.opsForList();
-                        opponentId[0] = listOps.leftPop(BATTLE_QUEUE_KEY);
-                        System.out.println("원래 큐에 있던 사람 " + (opponentId[0] != null ? opponentId[0] : "!!!없어요!!!"));
+                        String opponentId = listOps.leftPop(BATTLE_QUEUE_KEY);
+                        System.out.println("원래 큐에 있던 사람 " + (opponentId != null ? opponentId : "!!!없어요!!!"));
 
                         operations.multi(); // 레디스 트랜잭션 큐에 쌓기 시작
                         System.out.println("멀티 설정도 성공");
 
-                        if (opponentId[0] == null || getUserBattle(opponentId[0]) != null) {
+                        if (opponentId == null || getUserBattle(opponentId) != null) {
                             shouldRetry.set(true);
                             operations.opsForList().rightPush(BATTLE_QUEUE_KEY, userId);
                             operations.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
                             log.info(userId + " 배틀큐에 들어갔어요");
                             logCurrentQueueState(BATTLE_QUEUE_KEY); // Redis에 값이 정상적으로 추가되었는지 확인
-                        } else if (Objects.equals(userId, opponentId[0]) || getUserBattle(userId) != null) {
+                        } else if (Objects.equals(userId, opponentId) || getUserBattle(userId) != null) {
                             shouldRetry.set(false);
                         }
 //                        else if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
 //                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
 //                        }
                         else {
-                            shouldRetry.set(false); // setBattle 결과에 따라 재시도 설정
-                            canMatch.set(true);
+                            shouldRetry.set(!createAndNotifyBattle(userId, opponentId)); // setBattle 결과에 따라 재시도 설정
                         }
 
                         return operations.exec(); // 트랜잭션 완료
@@ -118,15 +117,6 @@ public class BattleService {
                     log.info("Transaction failed, retrying...");
                     System.out.println("트랜잭션 exec도 했는데 갑자기 실패함!!! 이거 뭐임!!!!!");
                     redisTemplate.unwatch(); // 트랜잭션 실패 시 unwatch 호출
-                } else if (canMatch.get()) {
-                    shouldRetry.set(!createAndNotifyBattle(userId, opponentId[0]));
-                    if (shouldRetry.get()) {
-                        ListOperations<String, String> listOps = redisTemplate.opsForList();
-                        listOps.rightPush(BATTLE_QUEUE_KEY, opponentId[0]);
-                        redisTemplate.unwatch();
-                    } else {
-                        success = true;
-                    }
                 } else {
                     success = true; // 트랜잭션 성공 시 루프 종료
                 }
@@ -194,8 +184,8 @@ public class BattleService {
     }
 
     private String getUserBattle(String userId) {
-        Object result = redisTemplate.opsForHash().get(USER_BATTLE_KEY, userId);
-        return result != null ? result.toString() : null;
+        Object result = userBattleRedisTemplate.opsForHash().get(USER_BATTLE_KEY, userId);
+        return result != null ? "Battle:" + result.toString() : null;
     }
 
     private Battle getBattle(String battleKey) {
@@ -204,12 +194,9 @@ public class BattleService {
     }
 
     private void setUser(String userId, Long battleId) {
-        redisTemplate.opsForValue().set("User:" + userId, "Battle:" + battleId, 80, TimeUnit.SECONDS);
-        System.out.println(" 레디스에 들어가는 거 맞잖아 맞다고 해 " + redisTemplate.opsForValue().get("User:" + userId));
-        redisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
-
-        System.out.println("userBattle 들어가는 거 ");
-        logCurrentQueueState(USER_BATTLE_KEY);
+        userBattleRedisTemplate.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
+        System.out.println(" 레디스에 들어가는 거 맞잖아 맞다고 해 " + userBattleRedisTemplate.opsForValue().get("User:" + userId));
+        userBattleRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
     }
 
     private boolean setBattle(Battle battle) {
