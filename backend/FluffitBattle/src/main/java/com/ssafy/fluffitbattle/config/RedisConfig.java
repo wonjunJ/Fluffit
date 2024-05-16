@@ -110,6 +110,7 @@ public class RedisConfig {
 
     @Bean(name = "userBattleLongRedisTemplate")
     public RedisTemplate<String, Long> userBattleLongRedisTemplate() {
+        System.out.println("템플릿은 만들어지냐 ");
         RedisTemplate<String, Long> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactoryForUserBattle());
         template.setKeySerializer(new StringRedisSerializer());
@@ -119,6 +120,7 @@ public class RedisConfig {
 
     @Bean(name = "userBattleObjectRedisTemplate")
     public StringRedisTemplate userBattleObjectRedisTemplate() {
+        System.out.println("그 오브젝트도 템플릿은 만들어지냐 ");
         return new StringRedisTemplate(redisConnectionFactoryForUserBattle());
     }
 

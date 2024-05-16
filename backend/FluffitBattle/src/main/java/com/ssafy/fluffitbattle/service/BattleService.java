@@ -72,6 +72,9 @@ public class BattleService {
     // 매칭 요청 처리
     public void requestBattle(String userId) {
         System.out.println("리퀘스트배틀 들어왔다 !!!!! {} "+ userId);
+
+        userBattleObjectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, "리퀘스트...", "들어가니");
+        System.out.println(userBattleObjectRedisTemplate.opsForHash().get(USER_BATTLE_KEY, "리퀘스트..."));
         boolean success = false;
 
         int retryCount = 0;
@@ -108,26 +111,7 @@ public class BattleService {
 //                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
 //                        }
                         else {
-//                            shouldRetry.set(!createAndNotifyBattle(operations, userId, opponentId)); // setBattle 결과에 따라 재시도 설정
-
-                            log.info("살려줘!!!!!!!!!!!!!!!: {} vs {}", userId, opponentId);
-                            BattleType battleType = BattleType.values()[random.nextInt(BattleType.values().length)];
-                            Battle battle = Battle.builder()
-                                    .organizerId(opponentId)
-                                    .participantId(userId)
-                                    .battleType(battleType)
-                                    .build();
-                            Battle theBattle = battleRepository.save(battle);
-                            Long battleId = theBattle.getId();
-
-                            notifyJustMatched(userId, opponentId, theBattle);
-                            notifyJustMatched(opponentId, userId, theBattle);
-
-                            setUser(operations, userId, battleId);
-                            setUser(operations, opponentId, battleId);
-
-                            setBattle(battle);
-
+                            shouldRetry.set(!createAndNotifyBattle(operations, userId, opponentId)); // setBattle 결과에 따라 재시도 설정
 
                             operations.opsForHash().put(USER_BATTLE_KEY, "안녕하세요", "Battle: 들어가는지 확인");
                         }
