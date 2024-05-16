@@ -29,7 +29,7 @@ public class BattleController {
     @GetMapping("/wait")
     public ResponseEntity<SseEmitter> requestBattle(@RequestHeader("memberId") String memberId) {
 //        Long userId = Long.parseLong(memberId);
-        SseEmitter sseEmitter = notificationService.createEmitter(memberId);
+        SseEmitter sseEmitter = notificationService.createEmitter(memberId, "wait");
         battleService.requestBattle(memberId);
         return ResponseEntity.ok(sseEmitter);
     }
@@ -53,7 +53,7 @@ public class BattleController {
     @PostMapping("/result")
     public ResponseEntity<SseEmitter> finishBattle(@RequestHeader("memberId") String memberId, @RequestBody BattleResultRequestDto battleResultRequestDto) {
 //        Long userId = Long.parseLong(memberId);
-        SseEmitter sseEmitter = notificationService.createEmitter(memberId);
+        SseEmitter sseEmitter = notificationService.createEmitter(memberId, "result");
         battleService.submitBattleRecord(memberId, battleResultRequestDto);
         return ResponseEntity.ok(sseEmitter);
     }

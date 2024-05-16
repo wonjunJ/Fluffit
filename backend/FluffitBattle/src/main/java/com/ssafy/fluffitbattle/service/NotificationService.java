@@ -1,6 +1,7 @@
 package com.ssafy.fluffitbattle.service;
 
 import com.ssafy.fluffitbattle.entity.Battle;
+import com.ssafy.fluffitbattle.entity.dto.BattleMatchingResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,14 +29,20 @@ public class NotificationService {
 //        return sink.asFlux();
 //    }
 
-    public SseEmitter createEmitter(String userId) {
+    public SseEmitter createEmitter(String userId, String whichController) {
         SseEmitter emitter = new SseEmitter(6000L * 5); // 5분 정도 연결
         emitters.put(userId, emitter);
         emitter.onCompletion(() -> {
+            if (whichController.equals("wait")) {
+                notifyUser(userId, "fail_matching", BattleMatchingResponseDto.builder().result(false).build());
+            }
             emitters.remove(userId);
             ridOfUserFromWaitingQueue(userId);
         });
         emitter.onError(ex -> {
+            if (whichController.equals("wait")) {
+                notifyUser(userId, "fail_matching", BattleMatchingResponseDto.builder().result(false).build());
+            }
             emitters.remove(userId);
             log.info("emitter error : {}", ex);
             ridOfUserFromWaitingQueue(userId);
