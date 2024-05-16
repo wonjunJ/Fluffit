@@ -87,6 +87,7 @@ public class BattleService {
             }
 
             List<Object> results = redisTemplate.exec(); // 트랜잭션 완료
+            System.out.println("execute 실행 됨??");
             transactionStarted = false;
             if (results == null || results.isEmpty()) {
                 log.info("Transaction failed, retrying...");
@@ -95,7 +96,8 @@ public class BattleService {
             }
 
         } catch (Exception e) {
-            log.error("Error during Redis transaction: {}", e.getMessage());
+            System.out.println("아 에러 제발");
+            e.printStackTrace();
             if (transactionStarted) {
                 redisTemplate.discard();  // 트랜잭션 취소
             }
