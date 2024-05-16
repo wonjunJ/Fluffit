@@ -1,10 +1,8 @@
 package com.kiwa.fluffit
 
-import android.content.Context
 import android.util.Log
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
-import com.google.android.gms.wearable.NodeClient
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
 import com.google.gson.Gson
@@ -17,8 +15,9 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 private const val TAG = "AccessTokenResponseServ"
+
 @AndroidEntryPoint
-class AccessTokenResponseService () : WearableListenerService(), CoroutineScope {
+class AccessTokenResponseService() : WearableListenerService(), CoroutineScope {
     @Inject lateinit var tokenManager: TokenManager
     private lateinit var messageClient: MessageClient
     override val coroutineContext: CoroutineContext
@@ -54,13 +53,11 @@ class AccessTokenResponseService () : WearableListenerService(), CoroutineScope 
             for (node in nodes) {
                 Log.d(TAG, "보내기: ${node.displayName}, ${node.id}")
                 messageClient.sendMessage(node.id, path, data).addOnSuccessListener {
-                    Log.d("MobileService", "토큰 : ${tokens}")
+                    Log.d("MobileService", "토큰 : $tokens")
                 }.addOnFailureListener {
                     Log.e("MobileService", "Failed to send AccessToken", it)
                 }
             }
         }
-
     }
-
 }
