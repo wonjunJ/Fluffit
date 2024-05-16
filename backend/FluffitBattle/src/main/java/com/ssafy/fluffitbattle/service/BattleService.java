@@ -227,10 +227,13 @@ public class BattleService {
         if (userId.equals(battle.getOrganizerId())) {
             battle.setOrganizerScore(score);
             isOpponentSubmitted = battle.getParticipantScore() != null;
+            System.out.println(battle.getOrganizerScore());
         } else {
             battle.setParticipantScore(score);
             isOpponentSubmitted = battle.getOrganizerScore() != null;
+            System.out.println(battle.getParticipantScore());
         }
+
         battleRedisTemplate.opsForValue().set(battleKey, battle);
         if (isOpponentSubmitted) calculateWinnerAndNotifyResult(battleKey);
     }
@@ -278,6 +281,8 @@ public class BattleService {
             participantKafkaDto = new BattlePointKafkaDto(participantId, -5);
         }
 
+        System.out.println("winner is " + battle.getWinnerId());
+
         kafkaProducer.send("battle-point-update", organizerKafkaDto);
         kafkaProducer.send("battle-point-update", participantKafkaDto);
     }
@@ -291,8 +296,8 @@ public class BattleService {
         stringRedisTemplate.delete(battleKey);
         stringRedisTemplate.delete("User:" + battle.getOrganizerId());
         stringRedisTemplate.delete("User:" + battle.getParticipantId());
-        stringRedisTemplate.opsForHash().delete(USER_BATTLE_KEY, battle.getOrganizerId());
-        stringRedisTemplate.opsForHash().delete(USER_BATTLE_KEY, battle.getParticipantId());
+        objectRedisTemplate.opsForHash().delete(USER_BATTLE_KEY, battle.getOrganizerId());
+        objectRedisTemplate.opsForHash().delete(USER_BATTLE_KEY, battle.getParticipantId());
     }
 
     private void notifyResults(Battle battle) {
@@ -316,15 +321,14 @@ public class BattleService {
     public void handleTimeout(String userId) {
         System.out.println("만료 유저 " + userId);
         String battleKey = getUserBattle(userId);
-        System.out.println(battleKey);
 
         if (battleKey == null) return;
         Battle battle = getBattle(battleKey);
-        System.out.println(battle.getId());
 
         boolean battleNull = battle == null;
         boolean organizer = Objects.equals(battle.getOrganizerId(), userId) && battle.getOrganizerScore() != null;
         boolean participant = Objects.equals(battle.getParticipantId(), userId) && battle.getParticipantScore() != null;
+        System.out.println(battleNull + " " + organizer + " " + participant);
         if (!battleNull && !organizer && !participant) {
             writeRecord(battleKey, userId, -1);
         }
