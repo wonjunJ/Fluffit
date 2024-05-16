@@ -65,6 +65,7 @@ public class BattleService {
         ListOperations<String, String> listOps = redisTemplate.opsForList();
 
         boolean transactionStarted = false;
+        boolean executeStarted = false;
 
         try {
             redisTemplate.watch(BATTLE_QUEUE_KEY); // 대기 큐에
@@ -89,14 +90,16 @@ public class BattleService {
             transactionStarted = false;
             if (results == null || results.isEmpty()) {
                 log.info("Transaction failed, retrying...");
+                System.out.println("트랜잭션 exec도 했는데 갑자기 실패함!!! 이거 뭐임!!!!!");
                 requestBattle(userId); // 트랜잭션이 실패하면 재시도
             }
 
         } catch (Exception e) {
+            log.error("Error during Redis transaction: {}", e.getMessage());
             if (transactionStarted) {
                 redisTemplate.discard();  // 트랜잭션 취소
             }
-            log.error("Error during Redis transaction: {}", e.getMessage());
+
 //            throw e;  // or handle error gracefully
         } finally {
             redisTemplate.unwatch();
