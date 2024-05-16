@@ -42,7 +42,7 @@ class KafkaConsumer(
         log.info("저장 로직 진입")
         val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         if(mflupet != null){
-            mflupet.steps = steps.toLong()
+            mflupet.steps += steps.toLong()
             withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingleOrNull() }
         }
     }
