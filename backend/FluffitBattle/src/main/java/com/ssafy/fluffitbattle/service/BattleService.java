@@ -61,6 +61,7 @@ public class BattleService {
 
     // 매칭 요청 처리
     public void requestBattle(String userId) {
+        System.out.println("리퀘스트배틀 들어왔다 !!!!! {} "+ userId);
         ListOperations<String, String> listOps = redisTemplate.opsForList();
 
         boolean transactionStarted = false;
@@ -85,6 +86,7 @@ public class BattleService {
             }
 
             List<Object> results = redisTemplate.exec(); // 트랜잭션 완료
+            transactionStarted = false;
             if (results == null || results.isEmpty()) {
                 log.info("Transaction failed, retrying...");
                 requestBattle(userId); // 트랜잭션이 실패하면 재시도
