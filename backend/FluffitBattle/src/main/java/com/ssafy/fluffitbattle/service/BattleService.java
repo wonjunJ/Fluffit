@@ -43,14 +43,17 @@ public class BattleService {
 
     @Qualifier("stringRedisTemplate")
     private final RedisTemplate<String, String> stringRedisTemplate;
-    private final RedisTemplate<String, Object> redisTemplate;
+//    private final RedisTemplate<String, Object> redisTemplate;
     @Qualifier("battleRedisTemplate")
     private final RedisTemplate<String, Battle> battleRedisTemplate;
 
+    @Qualifier("objectRedisTemplate")
+    private final RedisTemplate<String, Object> objectRedisTemplate;
+
     @Qualifier("userBattleLongRedisTemplate")
     private final RedisTemplate<String, Long> userBattleLongRedisTemplate;
-    @Qualifier("userBattleObjectRedisTemplate")
-    private final RedisTemplate<String, String> userBattleObjectRedisTemplate;
+//    @Qualifier("userBattleObjectRedisTemplate")
+//    private final RedisTemplate<String, String> userBattleObjectRedisTemplate;
 
     //    @Qualifier("longStringRedisTemplate")
 //    private final RedisTemplate<Long, String> longStringRedisTemplate;
@@ -74,8 +77,8 @@ public class BattleService {
     public void requestBattle(String userId) {
         System.out.println("리퀘스트배틀 들어왔다 !!!!! {} "+ userId);
 
-        redisTemplate.opsForHash().put(USER_BATTLE_KEY, "리퀘스트...", "들어가니");
-        System.out.println(redisTemplate.opsForHash().get(USER_BATTLE_KEY, "리퀘스트..."));
+        objectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, "리퀘스트...", "들어가니");
+        System.out.println(objectRedisTemplate.opsForHash().get(USER_BATTLE_KEY, "리퀘스트..."));
         boolean success = false;
 
         int retryCount = 0;
@@ -112,8 +115,8 @@ public class BattleService {
 //                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
 //                        }
                         else {
-                            redisTemplate.opsForHash().put(USER_BATTLE_KEY, "check", "che");
-                            System.out.println("확인합니다 " + redisTemplate.opsForHash().get(USER_BATTLE_KEY, "check"));
+                            objectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, "check", "che");
+                            System.out.println("확인합니다 " + objectRedisTemplate.opsForHash().get(USER_BATTLE_KEY, "check"));
                             shouldRetry.set(!createAndNotifyBattle(operations, userId, opponentId)); // setBattle 결과에 따라 재시도 설정
 
                             operations.opsForHash().put(USER_BATTLE_KEY, "안녕하세요", "Battle: 들어가는지 확인");
@@ -214,8 +217,8 @@ public class BattleService {
             System.out.println(" 레디스에 들어가는 거 맞잖아 맞다고 해 " + userBattleLongRedisTemplate.opsForValue().get("User:" + userId));
 
             System.out.println("Setting hash in Redis: " + USER_BATTLE_KEY + " -> " + userId + " : " + "Battle:" + battleId);
-            redisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
-            System.out.println(" 레디스에 해시도 들어가야 하는데 " + redisTemplate.opsForHash().get(USER_BATTLE_KEY, userId));
+            objectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
+            System.out.println(" 레디스에 해시도 들어가야 하는데 " + objectRedisTemplate.opsForHash().get(USER_BATTLE_KEY, userId));
         } catch (Exception e) {
             System.err.println("Failed to set user in Redis: " + e.getMessage());
             e.printStackTrace();

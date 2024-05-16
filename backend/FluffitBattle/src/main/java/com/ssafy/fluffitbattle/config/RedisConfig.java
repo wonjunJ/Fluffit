@@ -85,11 +85,11 @@ public class RedisConfig {
         return new LettuceConnectionFactory(config);
     }
 
-    @Bean
-    @Primary
-    public RedisTemplate<String, Object> redisTemplate() {
-        return createRedisTemplate(redisConnectionFactoryForBattle());
-    }
+//    @Bean
+//    @Primary
+//    public RedisTemplate<String, Object> redisTemplate() {
+//        return createRedisTemplate(redisConnectionFactoryForBattle());
+//    }
 
     @Bean
     public RedisTemplate<String, Battle> battleRedisTemplate() {
@@ -118,11 +118,11 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean(name = "userBattleObjectRedisTemplate")
-    public StringRedisTemplate userBattleObjectRedisTemplate() {
-        System.out.println("그 오브젝트도 템플릿은 만들어지냐 ");
-        return new StringRedisTemplate(redisConnectionFactoryForUserBattle());
-    }
+//    @Bean(name = "userBattleObjectRedisTemplate")
+//    public StringRedisTemplate userBattleObjectRedisTemplate() {
+//        System.out.println("그 오브젝트도 템플릿은 만들어지냐 ");
+//        return new StringRedisTemplate(redisConnectionFactoryForUserBattle());
+//    }
 
     @Primary
     @Bean(name = "stringRedisTemplate")
@@ -179,6 +179,27 @@ public class RedisConfig {
 //        template.afterPropertiesSet();
 //        return template;
 //    }
+
+    @Primary
+    @Bean(name = "objectRedisTemplate")
+    public RedisTemplate<String, Object> userBattleObjectRedisTemplate() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactoryForUserBattle());
+
+        template.setKeySerializer(new StringRedisSerializer());
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+        template.setValueSerializer(serializer);  // String 타입 값 직렬화
+
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new StringRedisSerializer());
+
+        template.afterPropertiesSet();
+        return template;
+    }
 
     @Bean
     public RedisTemplate<Long, LocalDateTime> waitingQueueRedisTemplate() {
