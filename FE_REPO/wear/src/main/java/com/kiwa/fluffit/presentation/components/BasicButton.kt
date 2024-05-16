@@ -1,5 +1,6 @@
 package com.kiwa.fluffit.presentation.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -26,7 +27,9 @@ internal fun BasicButton(buttonText: String, onClickButton: () -> Unit) {
                 .height(30.dp)
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 4.dp),
-            onClick = onClickButton
+            onClick = {
+                onClickButton()
+            }
         ) {
             Text(text = buttonText, fontFamily = fluffitWearFontFamily)
         }

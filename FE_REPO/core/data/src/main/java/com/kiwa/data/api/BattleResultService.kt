@@ -1,5 +1,7 @@
 package com.kiwa.data.api
 
+import com.kiwa.fluffit.model.battle.BattleResultResponse
+
 interface BattleResultService {
-    fun getBattleResult()
+    suspend fun getBattleResult(battleId: String, score: Int): Result<BattleResultResponse>
 }

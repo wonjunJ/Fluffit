@@ -1,6 +1,7 @@
 package com.kiwa.fluffit.presentation.game
 
 import androidx.lifecycle.viewModelScope
+import com.kiwa.domain.usecase.GetBattleResultUseCase
 import com.kiwa.fluffit.base.BaseViewModel
 import com.kiwa.fluffit.model.battle.BattleResultUIModel
 import com.kiwa.fluffit.model.battle.GameUIModel
@@ -9,7 +10,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GameViewModel @Inject constructor() : BaseViewModel<GameViewState, GameViewEvent>() {
+class GameViewModel @Inject constructor(
+    private val getBattleResultUseCase: GetBattleResultUseCase
+) : BaseViewModel<GameViewState, GameViewEvent>() {
     override fun createInitialState(): GameViewState = GameViewState.MatchingCompleted()
 
     override fun onTriggerEvent(event: GameViewEvent) {
@@ -22,7 +25,7 @@ class GameViewModel @Inject constructor() : BaseViewModel<GameViewState, GameVie
                 when (it) {
                     GameViewEvent.OnReadyForGame -> setState { showGame() }
                     GameViewEvent.OnFinishBattle -> TODO()
-                    is GameViewEvent.OnFinishGame -> getBattleResult()
+                    is GameViewEvent.OnFinishGame -> getBattleResult(it.battleId, it.score)
                     is GameViewEvent.Init -> setState { initUI(it.gameUIModel) }
                 }
             }
@@ -32,8 +35,11 @@ class GameViewModel @Inject constructor() : BaseViewModel<GameViewState, GameVie
     private fun initUI(gameUIModel: GameUIModel): GameViewState =
         GameViewState.MatchingCompleted(false, gameUIModel = gameUIModel)
 
-    private fun getBattleResult() {
-        setState { showBattleResult(BattleResultUIModel(true, "1234", "3424", 3242)) }
+    private suspend fun getBattleResult(battleId: String, score: Int) {
+        getBattleResultUseCase(battleId, score).fold(
+            onSuccess = { result -> setState { showBattleResult(result) } },
+            onFailure = { }
+        )
     }
 
     private fun GameViewState.showBattleResult(battleResultUIModel: BattleResultUIModel): GameViewState =

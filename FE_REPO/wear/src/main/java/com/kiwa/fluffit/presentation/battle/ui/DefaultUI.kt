@@ -40,8 +40,6 @@ internal fun DefaultUI(
         strokeWidth = 6.dp
     )
 
-    BasicButton(mainButtonText) { onClickMainButton() }
-
     Column(
         modifier = Modifier
             .wrapContentSize()
@@ -52,4 +50,6 @@ internal fun DefaultUI(
         Spacer(modifier = Modifier.height(12.dp))
         Text(text = battlePoint, style = MaterialTheme.typography.body2)
     }
+
+    BasicButton(mainButtonText) { onClickMainButton() }
 }

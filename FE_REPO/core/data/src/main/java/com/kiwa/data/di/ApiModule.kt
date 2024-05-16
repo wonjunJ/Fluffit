@@ -159,6 +159,7 @@ object ApiModule {
     @Provides
     fun provideBattleResultService(
         @NetworkModule.BattleSSEClient
-        okHttpClient: OkHttpClient
-    ): BattleResultService = BattleResultServiceImpl(okHttpClient)
+        okHttpClient: OkHttpClient,
+        tokenManager: TokenManager
+    ): BattleResultService = BattleResultServiceImpl(okHttpClient, tokenManager)
 }

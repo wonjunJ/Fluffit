@@ -4,8 +4,11 @@ import com.kiwa.data.datasource.BattleDataSource
 import com.kiwa.domain.repository.BattleRepository
 import com.kiwa.fluffit.model.battle.BattleLog
 import com.kiwa.fluffit.model.battle.BattleLogModel
+import com.kiwa.fluffit.model.battle.BattleResultResponse
+import com.kiwa.fluffit.model.battle.BattleResultUIModel
 import com.kiwa.fluffit.model.battle.GameUIModel
 import com.kiwa.fluffit.model.battle.toGameUIModel
+import okhttp3.internal.wait
 import javax.inject.Inject
 
 class BattleRepositoryImpl @Inject constructor(
@@ -24,4 +27,23 @@ class BattleRepositoryImpl @Inject constructor(
             onSuccess = { Result.success(it.toGameUIModel()) },
             onFailure = { Result.failure(it) }
         )
+
+    override suspend fun getBattleResult(
+        battleId: String,
+        score: Int
+    ): Result<BattleResultUIModel> =
+        battleDataSource.getBattleResult(battleId, score).fold(
+            onSuccess = {
+                Result.success(
+                    BattleResultUIModel(
+                        it.isWin,
+                        it.opponentBattleScore,
+                        it.myBattleScore,
+                        it.battlePoint,
+                        it.battlePointChanges
+                    )
+                )
+            },
+            onFailure = { Result.failure(it) })
+
 }

@@ -32,8 +32,11 @@ internal fun BattleResultUI(
     imageLoader: ImageLoader,
     onFinishBattle: () -> Unit,
 ) {
-    val pointBefore = 123
-    val pointAfter = 150
+    val pointBefore =
+        if (uiState.result.isWin) uiState.result.battlePoint - uiState.result.pointDiff
+        else uiState.result.battlePoint + uiState.result.pointDiff
+
+    val pointAfter = uiState.result.battlePoint
     val point = remember { mutableIntStateOf(pointBefore) }
 
     LaunchedEffect(Unit) {
@@ -77,7 +80,7 @@ internal fun BattleResultUI(
                     )
                 }
                 Text(
-                    text = uiState.result.myBattleScore,
+                    text = uiState.result.myBattleScore.toString(),
                     style = MaterialTheme.typography.display1.merge(
                         colorResource(id = R.color.watchBlue)
                     ),
@@ -105,7 +108,7 @@ internal fun BattleResultUI(
                     )
                 }
                 Text(
-                    text = uiState.result.opponentBattleScore,
+                    text = uiState.result.opponentBattleScore.toString(),
                     style = MaterialTheme.typography.display1.merge(
                         colorResource(id = R.color.watchRed)
                     ),

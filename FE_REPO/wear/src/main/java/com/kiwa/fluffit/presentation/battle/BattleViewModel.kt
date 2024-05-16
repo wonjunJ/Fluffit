@@ -1,5 +1,6 @@
 package com.kiwa.fluffit.presentation.battle
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.kiwa.domain.usecase.FindMatchingUseCase
 import com.kiwa.fluffit.base.BaseViewModel
@@ -55,26 +56,26 @@ class BattleViewModel @Inject constructor(
         when (this) {
             is BattleViewState.Default -> this.copy(
                 gameUIModel = gameUIModel,
+                findMatching = false,
                 loading = false,
             )
         }
 
 
-    private fun BattleViewState.cancelFindMatching(message: String = ""): BattleViewState =
-        when (this) {
+    private fun BattleViewState.cancelFindMatching(message: String = ""): BattleViewState {
+        Log.d("확인", "취소")
+        return when (this) {
             is BattleViewState.Default -> this.copy(
                 loading = false,
                 findMatching = false,
                 message = message
             )
-
-            else -> this
         }
+    }
 
     private fun BattleViewState.setLoading(): BattleViewState =
         when (this) {
             is BattleViewState.Default -> this.copy(loading = true, findMatching = true)
-            else -> this
         }
 
 

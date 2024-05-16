@@ -1,8 +1,10 @@
 package com.kiwa.fluffit.presentation.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -47,13 +49,12 @@ fun BattleScreen(
 
         when (uiState.loading) {
             true ->
-                LoadingUI(Modifier.align(Alignment.Center)) {
+                LoadingUI(Modifier.wrapContentSize().align(Alignment.Center)) {
                     if (uiState.findMatching) Text(
                         text = "상대를 찾는 중입니다.",
                         style = MaterialTheme.typography.caption3
                     )
                 }
-
             false -> {
             }
         }

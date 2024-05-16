@@ -3,6 +3,7 @@ package com.kiwa.data.datasource
 import com.kiwa.data.api.BattleResultService
 import com.kiwa.data.api.BattleService
 import com.kiwa.data.api.MatchingService
+import com.kiwa.fluffit.model.battle.BattleResultResponse
 import com.kiwa.fluffit.model.battle.MatchingResponse
 import javax.inject.Inject
 
@@ -24,4 +25,13 @@ class BattleDataSourceImpl @Inject constructor(
             onSuccess = { Result.success(it) },
             onFailure = { Result.failure(it) }
         )
+
+    override suspend fun getBattleResult(
+        battleId: String,
+        score: Int
+    ): Result<BattleResultResponse> =
+        battleResultService.getBattleResult(battleId, score).fold(
+            onSuccess = { Result.success(it) },
+            onFailure = { Result.failure(it) })
+
 }

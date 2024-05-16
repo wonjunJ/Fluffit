@@ -28,7 +28,11 @@ internal fun GameScreen(
 
     when (val uiState = viewModel.uiState.collectAsState().value) {
         is GameViewState.Battle -> when (uiState.gameUIModel.battleType) {
-            is BattleType.BreakStone -> BreakStoneGameUI(imageLoader) { it ->
+            is BattleType.BreakStone -> BreakStoneGameUI(
+                uiState.gameUIModel.battleType.time,
+                uiState.gameUIModel.battleType.description,
+                imageLoader
+            ) { it ->
                 viewModel.onTriggerEvent(
                     GameViewEvent.OnFinishGame(it, uiState.gameUIModel.battleId)
                 )

@@ -1,5 +1,6 @@
 package com.kiwa.data.datasource
 
+import com.kiwa.fluffit.model.battle.BattleResultResponse
 import com.kiwa.fluffit.model.battle.MatchingResponse
 
 interface BattleDataSource {
@@ -9,4 +10,6 @@ interface BattleDataSource {
     suspend fun getBattleStatistics()
 
     suspend fun findMatch(): Result<MatchingResponse>
+
+    suspend fun getBattleResult(battleId: String, score: Int): Result<BattleResultResponse>
 }

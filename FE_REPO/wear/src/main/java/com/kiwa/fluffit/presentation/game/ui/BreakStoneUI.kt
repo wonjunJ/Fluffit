@@ -25,16 +25,17 @@ import androidx.wear.compose.material.Text
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import com.kiwa.fluffit.R
+import com.kiwa.fluffit.model.battle.BattleType
 import com.kiwa.fluffit.presentation.util.formatTime
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 @Composable
-internal fun BreakStoneGameUI(imageLoader: ImageLoader, onFinishGame: (Int) -> Unit) {
+internal fun BreakStoneGameUI(gameTime: Int, description: String, imageLoader: ImageLoader, onFinishGame: (Int) -> Unit) {
     val descriptionVisibility = remember { mutableStateOf(false) }
     val descriptionCountDown = remember { mutableIntStateOf(3) }
 
-    val time = 10 * 1000L
+    val time = gameTime * 1000L
     val timer = remember { mutableStateOf(time.formatTime()) }
     val startTime = remember { mutableLongStateOf(0L) }
     val isTimerRunning = remember { mutableStateOf(false) }
@@ -148,7 +149,7 @@ internal fun BreakStoneGameUI(imageLoader: ImageLoader, onFinishGame: (Int) -> U
             )
             {
                 Text(
-                    text = "60초동안 최대한 많이 돌을 깨보세요!",
+                    text = description,
                     style = MaterialTheme.typography.display3
                 )
 
