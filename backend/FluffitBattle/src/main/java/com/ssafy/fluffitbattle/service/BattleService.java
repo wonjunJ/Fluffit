@@ -107,9 +107,10 @@ public class BattleService {
                         } else if (Objects.equals(userId, opponentId) || getUserBattle(userId) != null) {
                             shouldRetry.set(false);
                         }
-//                        else if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
-//                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
-//                        }
+                        else if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
+                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
+                            shouldRetry.set(false);
+                        }
                         else {
                             shouldRetry.set(!createAndNotifyBattle(userId, opponentId)); // setBattle 결과에 따라 재시도 설정
                         }
