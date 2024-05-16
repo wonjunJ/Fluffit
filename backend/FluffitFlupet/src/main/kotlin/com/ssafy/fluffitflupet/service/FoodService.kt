@@ -96,13 +96,14 @@ class FoodService(
                                                         else mflupetRst.fullness + food.fullnessEffect
                 mflupetRst.health = if(mflupetRst.health + food.healthEffect >= 100) 100
                                                         else mflupetRst.health + food.healthEffect
-                withContext(Dispatchers.IO) {
-                    memberFlupetRepository.save(mflupetRst).awaitSingle()
-                    food.stock--
-                    foodRepository.save(food)
-                }
-//            food.stock--
-//            withContext(Dispatchers.IO){ foodRepository.save(food) }
+//                withContext(Dispatchers.IO) {
+//                    memberFlupetRepository.save(mflupetRst).awaitSingle()
+//                    food.stock--
+//                    foodRepository.save(food)
+//                }
+                memberFlupetRepository.save(mflupetRst).awaitSingle()
+                food.stock--
+                foodRepository.save(food)
             }catch (e: InterruptedException){
                 //락을 얻으려고 시도하다가 인터럽트를 받았을 때 발생하는 예외
                 coinWait.cancel()
