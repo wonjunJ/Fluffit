@@ -67,13 +67,15 @@ class FoodService(
 
         var lockAcquired = false
         try {
-            val available = rLock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS).awaitSingle()
-            if(!available){
-                coinWait.cancel()
-                throw CustomBadRequestException(ErrorType.LOCK_NOT_AVAILABLE)
+            withContext(Dispatchers.IO){
+                val available = rLock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS).awaitSingle()
+                if(!available){
+                    coinWait.cancel()
+                    throw CustomBadRequestException(ErrorType.LOCK_NOT_AVAILABLE)
+                }
+                lockAcquired = true
             }
             //=== 락 획득 후 로직 수행 ===
-            lockAcquired = true
             log.info("락 획득 로직 수행 시작")
             food = foodWait.await() ?: throw CustomBadRequestException(ErrorType.INVALID_FOODID)
             if(food.stock <= 0){
@@ -109,7 +111,9 @@ class FoodService(
             throw CustomBadRequestException(ErrorType.LOCK_INTERRUPTED_ERROR)
         }finally {
             if(lockAcquired){
-                rLock.unlock().awaitSingle()
+                withContext(Dispatchers.IO) {
+                    rLock.unlock().awaitSingleOrNull()
+                }
             }
         }
         return@coroutineScope FeedingResponse(
