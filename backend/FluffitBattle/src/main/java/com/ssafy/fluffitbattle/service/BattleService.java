@@ -49,7 +49,7 @@ public class BattleService {
     @Qualifier("userBattleLongRedisTemplate")
     private final RedisTemplate<String, Long> userBattleLongRedisTemplate;
     @Qualifier("userBattleObjectRedisTemplate")
-    private final RedisTemplate<String, Object> userBattleObjectRedisTemplate;
+    private final RedisTemplate<String, String> userBattleObjectRedisTemplate;
 
     //    @Qualifier("longStringRedisTemplate")
 //    private final RedisTemplate<Long, String> longStringRedisTemplate;

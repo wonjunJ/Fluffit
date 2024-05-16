@@ -15,6 +15,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.*;
@@ -116,55 +117,60 @@ public class RedisConfig {
         return template;
     }
 
-    public class LoggingStringRedisSerializer extends StringRedisSerializer {
-        @Override
-        public byte[] serialize(String string) {
-            byte[] data = super.serialize(string);
-            System.out.println("Serializing string: " + string + " to bytes: " + Arrays.toString(data));
-            return data;
-        }
-
-        @Override
-        public String deserialize(byte[] bytes) {
-            String string = super.deserialize(bytes);
-            System.out.println("Deserializing bytes: " + Arrays.toString(bytes) + " to string: " + string);
-            return string;
-        }
-    }
-
-    public class LoggingJackson2JsonRedisSerializer<T> extends Jackson2JsonRedisSerializer<T> {
-        public LoggingJackson2JsonRedisSerializer(Class<T> type) {
-            super(type);
-        }
-
-        @Override
-        public byte[] serialize(T t) throws SerializationException {
-            byte[] data = super.serialize(t);
-            System.out.println("Serializing object: " + t + " to bytes: " + Arrays.toString(data));
-            return data;
-        }
-
-        @Override
-        public T deserialize(byte[] bytes) throws SerializationException {
-            T object = super.deserialize(bytes);
-            System.out.println("Deserializing bytes: " + Arrays.toString(bytes) + " to object: " + object);
-            return object;
-        }
-    }
-
-
     @Bean(name = "userBattleObjectRedisTemplate")
-    public RedisTemplate<String, Object> userBattleObjectRedisTemplate() {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactoryForUserBattle());
-        template.setKeySerializer(new LoggingStringRedisSerializer());
-        template.setValueSerializer(new LoggingJackson2JsonRedisSerializer<>(Object.class));
-        template.setHashKeySerializer(new LoggingStringRedisSerializer());
-        template.setHashValueSerializer(new LoggingJackson2JsonRedisSerializer<>(Object.class));
-
-        template.afterPropertiesSet();
-        return template;
+    public StringRedisTemplate userBattleObjectRedisTemplate() {
+        return new StringRedisTemplate(redisConnectionFactoryForUserBattle());
     }
+
+//    public class LoggingStringRedisSerializer extends StringRedisSerializer {
+//        @Override
+//        public byte[] serialize(String string) {
+//            byte[] data = super.serialize(string);
+//            System.out.println("Serializing string: " + string + " to bytes: " + Arrays.toString(data));
+//            return data;
+//        }
+//
+//        @Override
+//        public String deserialize(byte[] bytes) {
+//            String string = super.deserialize(bytes);
+//            System.out.println("Deserializing bytes: " + Arrays.toString(bytes) + " to string: " + string);
+//            return string;
+//        }
+//    }
+//
+//    public class LoggingJackson2JsonRedisSerializer<T> extends Jackson2JsonRedisSerializer<T> {
+//        public LoggingJackson2JsonRedisSerializer(Class<T> type) {
+//            super(type);
+//        }
+//
+//        @Override
+//        public byte[] serialize(T t) throws SerializationException {
+//            byte[] data = super.serialize(t);
+//            System.out.println("Serializing object: " + t + " to bytes: " + Arrays.toString(data));
+//            return data;
+//        }
+//
+//        @Override
+//        public T deserialize(byte[] bytes) throws SerializationException {
+//            T object = super.deserialize(bytes);
+//            System.out.println("Deserializing bytes: " + Arrays.toString(bytes) + " to object: " + object);
+//            return object;
+//        }
+//    }
+//
+//
+//    @Bean(name = "userBattleObjectRedisTemplate")
+//    public RedisTemplate<String, Object> userBattleObjectRedisTemplate() {
+//        RedisTemplate<String, Object> template = new RedisTemplate<>();
+//        template.setConnectionFactory(redisConnectionFactoryForUserBattle());
+//        template.setKeySerializer(new LoggingStringRedisSerializer());
+//        template.setValueSerializer(new LoggingJackson2JsonRedisSerializer<>(Object.class));
+//        template.setHashKeySerializer(new LoggingStringRedisSerializer());
+//        template.setHashValueSerializer(new LoggingJackson2JsonRedisSerializer<>(Object.class));
+//
+//        template.afterPropertiesSet();
+//        return template;
+//    }
 
     @Bean
     public RedisTemplate<Long, LocalDateTime> waitingQueueRedisTemplate() {
