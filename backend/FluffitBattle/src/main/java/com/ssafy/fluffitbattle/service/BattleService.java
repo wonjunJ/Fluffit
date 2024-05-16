@@ -79,10 +79,12 @@ public class BattleService {
                         System.out.println("멀티 설정도 성공");
 
                         String opponentId = (String) operations.opsForList().leftPop(BATTLE_QUEUE_KEY);
+                        System.out.println("원래 큐에 있던 사람 " + opponentId != null ? opponentId : "!!!없어요!!!");
 
                         if (opponentId == null || getUserBattle(opponentId) != null) {
                             operations.opsForList().rightPush(BATTLE_QUEUE_KEY, userId);
                             operations.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
+                            log.info(userId + " 배틀큐에 들어갔어요");
                             logCurrentQueueState(); // Redis에 값이 정상적으로 추가되었는지 확인
                         } else if (Objects.equals(userId, opponentId) || getUserBattle(userId) != null) {
                             // 아무것도 하지 않음
@@ -111,6 +113,7 @@ public class BattleService {
             }
         }
 
+        log.info("리퀘스트 배틀 메서드가 끝날 때의 로그");
         logCurrentQueueState();
     }
 
