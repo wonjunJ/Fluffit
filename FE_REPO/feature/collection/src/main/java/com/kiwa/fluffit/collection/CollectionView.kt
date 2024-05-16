@@ -43,7 +43,7 @@ internal fun CollectionView(
                 .align(Alignment.Center)
                 .padding(top = 30.dp)
         ) {
-            for (i in 1..collectionList.size - 1 step (1)) {
+            for (i in 1..3 step (1)) {
                 Text(
                     modifier = Modifier
                         .weight(0.2f)
@@ -67,9 +67,7 @@ internal fun CollectionView(
                     CollectionFlupetCard(
                         modifier = Modifier.weight(1f),
                         collectionList,
-                        // 테스트를 위해 i+1(다음 항목)이 아닌 i로 구분 (tier 1의 도트가 아직 없는 상태)
-//                        i + 1
-                        i
+                        i + 3
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                 }

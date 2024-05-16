@@ -10,3 +10,6 @@ dependencies {
     implementation(libs.hilt.core)
     implementation(project(":core:model"))
 }
+configurations.implementation {
+    exclude(group = "com.intellij", module = "annotations")
+}

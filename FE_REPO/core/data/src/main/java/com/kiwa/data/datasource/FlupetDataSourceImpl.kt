@@ -4,6 +4,7 @@ import com.kiwa.data.api.FlupetService
 import com.kiwa.data.model.FlupetStatusException
 import com.kiwa.fluffit.model.flupet.NicknameRequest
 import com.kiwa.fluffit.model.flupet.response.BasicResponse
+import com.kiwa.fluffit.model.flupet.response.FlupetHistory
 import com.kiwa.fluffit.model.main.FullnessUpdateInfo
 import com.kiwa.fluffit.model.main.HealthUpdateInfo
 import com.kiwa.fluffit.model.main.response.FlupetResponse
@@ -95,4 +96,9 @@ class FlupetDataSourceImpl @Inject constructor(
     } catch (e: Exception) {
         Result.failure(Exception("네트워크 에러"))
     }
+
+    override suspend fun loadHistory(): Result<FlupetHistory> =
+        runCatching {
+            flupetService.loadHistory()
+        }
 }
