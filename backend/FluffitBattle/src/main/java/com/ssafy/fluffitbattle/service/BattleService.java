@@ -105,10 +105,11 @@ public class BattleService {
                             log.info(userId + " 배틀큐에 들어갔어요");
                             logCurrentQueueState(BATTLE_QUEUE_KEY); // Redis에 값이 정상적으로 추가되었는지 확인
                         } else if (Objects.equals(userId, opponentId) || getUserBattle(userId) != null) {
+                            operations.opsForList().rightPush(BATTLE_QUEUE_KEY, opponentId);
                             shouldRetry.set(false);
-                        }
-                        else if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
+                        } else if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
                             notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
+                            operations.opsForList().rightPush(BATTLE_QUEUE_KEY, opponentId);
                             shouldRetry.set(false);
                         }
                         else {
