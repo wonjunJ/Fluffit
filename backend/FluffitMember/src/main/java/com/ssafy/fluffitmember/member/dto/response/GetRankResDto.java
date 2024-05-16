@@ -10,6 +10,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class GetRankResDto {
-    private List<RankDto> ranker;
+    private List<RankDto> ranking;
     private RankDto myRank;
 }

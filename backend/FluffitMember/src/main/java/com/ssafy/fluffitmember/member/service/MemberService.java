@@ -88,8 +88,9 @@ public class MemberService {
             throw new NotFoundUserException();
         }
 
+        Member myMember = findMember.get();
         // 요청한 멤버아이디의 랭크값을 얻어옴
-        Optional<Integer> memberRankById = memberRepository.findRankByMemberId(memberId);
+        Optional<Integer> memberRankById = memberRepository.findRankByMemberId(myMember.getMemberId());
         if(memberRankById.isEmpty()){
             throw new NotFoundUserException();
         }
@@ -97,7 +98,8 @@ public class MemberService {
 
         RankDto myRank = new RankDto();
         myRank.setRank(memberRankById.get());
-        myRank.setNickname(findMember.get().getNickname());
+        myRank.setUserNickname(myMember.getNickname());
+        myRank.setBattlePoint(myMember.getBattlePoint());
 
         List<Member> rankerList = memberRepository.findTop3ByBattlePoint();
         if(rankerList.isEmpty()){
@@ -123,7 +125,7 @@ public class MemberService {
             Integer rank = rankerRank.get(i);
             RankFlupetInfoDto rankFlupetInfoDto = flupetRanks.get(i);  // 순서를 맞추기 위해 동일 인덱스 사용
 
-            rankerInfo.add(new RankDto(rank, member.getNickname(), rankFlupetInfoDto.getFlupetNickname(), rankFlupetInfoDto.getFlupetImageUrl()));
+            rankerInfo.add(new RankDto(rank, member.getNickname(),member.getBattlePoint(), rankFlupetInfoDto.getFlupetNickname(), rankFlupetInfoDto.getFlupetImageUrl()));
         }
 
         RankFlupetInfoDto myflupet = flupetRanks.get(flupetRanks.size()-1);
@@ -131,7 +133,7 @@ public class MemberService {
         myRank.setFlupetImageUrl(myflupet.getFlupetImageUrl());
 
         GetRankResDto getRankResDto = new GetRankResDto();
-        getRankResDto.setRanker(rankerInfo);
+        getRankResDto.setRanking(rankerInfo);
         getRankResDto.setMyRank(myRank);
 
         return getRankResDto;

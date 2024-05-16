@@ -13,7 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 public class RankDto {
     private int rank;
-    private String nickname;
+    private String userNickname;
+    private int battlePoint;
     private String flupetNickname;
     private List<String> flupetImageUrl;
 }
