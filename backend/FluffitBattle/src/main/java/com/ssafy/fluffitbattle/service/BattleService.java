@@ -67,7 +67,11 @@ public class BattleService {
         System.out.println("리퀘스트배틀 들어왔다 !!!!! {} "+ userId);
         boolean success = false;
 
-        while (!success) {
+        int retryCount = 0;
+        int maxRetries = 5;
+
+        while (!success && retryCount < maxRetries) {
+            retryCount++;
             try {
                 List<Object> results = redisTemplate.execute(new SessionCallback<List<Object>>() {
                     @Override
@@ -75,12 +79,12 @@ public class BattleService {
                         operations.watch(BATTLE_QUEUE_KEY); // 대기 큐에
                         System.out.println("워치 설정은 성공한 듯");
 
-                        operations.multi(); // 레디스 트랜잭션 큐에 쌓기 시작
-                        System.out.println("멀티 설정도 성공");
-
                         ListOperations<String, String> listOps = operations.opsForList();
                         String opponentId = listOps.leftPop(BATTLE_QUEUE_KEY);
                         System.out.println("원래 큐에 있던 사람 " + (opponentId != null ? opponentId : "!!!없어요!!!"));
+
+                        operations.multi(); // 레디스 트랜잭션 큐에 쌓기 시작
+                        System.out.println("멀티 설정도 성공");
 
                         if (opponentId == null || getUserBattle(opponentId) != null) {
                             operations.opsForList().rightPush(BATTLE_QUEUE_KEY, userId);
@@ -97,7 +101,7 @@ public class BattleService {
                     }
                 });
 
-                System.out.println("execute 실행 됨??");
+                System.out.println("execute 실행 됨?? " + (results.isEmpty() ? " 아니요" : results.get(0)));
 
                 if (results == null || results.isEmpty()) {
                     log.info("Transaction failed, retrying...");
