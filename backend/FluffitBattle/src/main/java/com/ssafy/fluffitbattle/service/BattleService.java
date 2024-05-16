@@ -111,7 +111,7 @@ public class BattleService {
                         if (opponentId == null || getUserBattle(opponentId) != null || userId.equals(opponentId)) {
                             shouldRetry.set(true);
                             operations.opsForList().rightPush(BATTLE_QUEUE_KEY, userId);
-                            operations.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
+                            if (!userId.equals(opponentId)) operations.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
                             log.info(userId + " 배틀큐에 들어갔어요");
                             logCurrentQueueState(BATTLE_QUEUE_KEY); // Redis에 값이 정상적으로 추가되었는지 확인
                         }
