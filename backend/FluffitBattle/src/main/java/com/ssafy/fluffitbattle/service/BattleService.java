@@ -78,8 +78,9 @@ public class BattleService {
                         operations.multi(); // 레디스 트랜잭션 큐에 쌓기 시작
                         System.out.println("멀티 설정도 성공");
 
-                        String opponentId = (String) operations.opsForList().leftPop(BATTLE_QUEUE_KEY);
-                        System.out.println("원래 큐에 있던 사람 " + opponentId != null ? opponentId : "!!!없어요!!!");
+                        ListOperations<String, String> listOps = operations.opsForList();
+                        String opponentId = listOps.leftPop(BATTLE_QUEUE_KEY);
+                        System.out.println("원래 큐에 있던 사람 " + (opponentId != null ? opponentId : "!!!없어요!!!"));
 
                         if (opponentId == null || getUserBattle(opponentId) != null) {
                             operations.opsForList().rightPush(BATTLE_QUEUE_KEY, userId);
