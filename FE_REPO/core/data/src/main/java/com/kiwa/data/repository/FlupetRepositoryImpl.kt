@@ -5,13 +5,16 @@ import com.kiwa.data.model.FlupetStatusException
 import com.kiwa.domain.repository.FlupetRepository
 import com.kiwa.fluffit.model.flupet.FlupetStatus
 import com.kiwa.fluffit.model.flupet.response.BasicResponse
+import com.kiwa.fluffit.model.flupet.response.MyFlupets
 import com.kiwa.fluffit.model.main.FullnessUpdateInfo
 import com.kiwa.fluffit.model.main.HealthUpdateInfo
 import com.kiwa.fluffit.model.main.MainUIModel
 import com.kiwa.fluffit.model.main.response.toMainUIModel
 import javax.inject.Inject
 
-class FlupetRepositoryImpl @Inject constructor(private val flupetDataSource: FlupetDataSource) :
+class FlupetRepositoryImpl @Inject constructor(
+    private val flupetDataSource: FlupetDataSource
+) :
     FlupetRepository {
 
     override suspend fun getMainUIInfo(): Result<MainUIModel> =
@@ -103,4 +106,26 @@ class FlupetRepositoryImpl @Inject constructor(private val flupetDataSource: Flu
         },
         onFailure = { Result.failure(it) }
     )
+
+    override suspend fun getHistory(): Result<List<MyFlupets>> =
+        flupetDataSource.loadHistory().fold(
+            onSuccess = { response ->
+                Result.success(
+                    response.flupets.map {
+                        MyFlupets(
+                            it.species,
+                            it.name,
+                            it.imageUrl,
+                            it.birthDay,
+                            it.endDay,
+                            it.age,
+                            it.steps
+                        )
+                    }
+                )
+            },
+            onFailure = {
+                Result.failure(it)
+            }
+        )
 }

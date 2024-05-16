@@ -11,12 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.Text
 import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 
 @Composable
-fun CoinDisplay(coin: Long?, textColor: Color = Color.White) {
+fun CoinDisplay(coin: Int?, textColor: Color = Color.White) {
     val formattedCoin = DecimalFormat("#,###").format(coin ?: 0)
 
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -26,9 +27,9 @@ fun CoinDisplay(coin: Long?, textColor: Color = Color.White) {
             contentDescription = "footprint"
         )
         Text(
+            fontSize = 15.sp,
             text = "$formattedCoin",
             color = textColor,
-            fontFamily = fluffitWearFontFamily
         )
     }
 }

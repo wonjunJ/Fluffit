@@ -12,6 +12,6 @@ internal fun HomeSnackBarHost(modifier: Modifier, snackBarHostState: SnackbarHos
         modifier = modifier,
         hostState = snackBarHostState
     ) { data ->
-        FluffitSnackBar(data, R.drawable.rabbit_white)
+        FluffitSnackBar(data)
     }
 }

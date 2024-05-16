@@ -7,7 +7,7 @@ import retrofit2.http.GET
 
 interface RankingService {
 
-    @GET("ranking/battle")
+    @GET("member-service/member/battle-rank")
     suspend fun fetchBattleRanking(): Response<BattleRankingResponse>
 
     @GET("flupet-service/flupet/age")

@@ -3,6 +3,7 @@ package com.kiwa.fluffit.presentation
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.ViewConfiguration
 import androidx.activity.ComponentActivity
@@ -14,13 +15,8 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -41,16 +37,12 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.InputDeviceCompat
 import androidx.core.view.MotionEventCompat
 import androidx.core.view.ViewConfigurationCompat
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Text
 import com.example.wearapp.presentation.HealthViewModel
-import com.kiwa.fluffit.model.battle.GameUIModel
 import com.kiwa.fluffit.presentation.components.FeedButton
 import com.kiwa.fluffit.presentation.screens.BattleScreen
 import com.kiwa.fluffit.presentation.screens.ExerciseScreen
@@ -62,13 +54,26 @@ import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val healthViewModel: HealthViewModel by viewModels()
+    private val tokenViewModel: TokenViewModel by viewModels()
+
+    private val requestMultiplePermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        if (permissions.all { it.value }) {
+            // 모든 권한이 승인되었을 때 UI 설정
+            setContent {
+                FluffitTheme {
+                    WearApp()
+                }
+            }
+        } else {
+            // 권한이 거부되었을 때 다시 요청
+            checkPermissionsAndSetContent()
+        }
+    }
 
     override fun onGenericMotionEvent(event: MotionEvent?): Boolean {
         if (event != null) {
             if (event.action == MotionEvent.ACTION_SCROLL &&
-                event.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)
-            ) {
+                event.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)) {
 
                 val delta = -event.getAxisValue(MotionEventCompat.AXIS_SCROLL) *
                     ViewConfigurationCompat.getScaledVerticalScrollFactor(
@@ -91,29 +96,49 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACTIVITY_RECOGNITION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // 권한이 승인되지 않았다면 요청
-            val REQUEST_CODE_ACTIVITY_RECOGNITION = 1
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
-                REQUEST_CODE_ACTIVITY_RECOGNITION
-            )
-        }
+        tokenViewModel.fetchConnectedNodes()
 
-        setContent {
-            FluffitTheme {
-                WearNavHost()
+        checkPermissionsAndSetContent()
+
+        tokenViewModel.nodes.observe(this) { nodes ->
+            if (nodes.isNullOrEmpty()) {
+                // 연결된 노드가 없을 때
+                setContent {
+                    CheckPhoneScreen()
+                }
+            } else {
+                // 연결된 노드가 있을 때
+                tokenViewModel.requestAccessToken()
+
+            }
+        }
+    }
+
+    private fun checkPermissionsAndSetContent() {
+        val permissions = arrayOf(
+            Manifest.permission.BODY_SENSORS,
+            Manifest.permission.ACTIVITY_RECOGNITION
+        )
+
+        val permissionsNeeded = permissions.filter {
+            ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+        }.toTypedArray()
+
+        if (permissionsNeeded.isNotEmpty()) {
+            // 하나 이상의 권한이 승인되지 않았다면 모든 필요 권한 요청
+            requestMultiplePermissions.launch(permissionsNeeded)
+        } else {
+            // 모든 권한이 있을 때 UI 설정
+            setContent {
+                FluffitTheme {
+                    WearApp()
+                }
             }
         }
     }
 
     companion object {
-        const val PAGE_COUNT = 4;
+        const val PAGE_COUNT = 4
     }
 }
 
@@ -144,10 +169,9 @@ fun WearNavHost(
 @Composable
 fun WearApp(onNavigateToGame: (GameUIModel) -> Unit) {
     val currentPage by MainActivityViewModel.currentPage.collectAsState()
-    val pagerState =
+    val pagerState = rememberPagerState(pageCount = { MainActivity.PAGE_COUNT }, initialPage = currentPage)
         rememberPagerState(pageCount = { MainActivity.PAGE_COUNT }, initialPage = currentPage)
     var showIndicator by remember { mutableStateOf(false) }
-
 
     val pageIndicatorState: PageIndicatorState = remember {
         object : PageIndicatorState {
@@ -188,7 +212,7 @@ fun WearApp(onNavigateToGame: (GameUIModel) -> Unit) {
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            when (page) {
+            when(page){
                 0 -> MainScreen()
                 1 -> FeedScreen()
                 2 -> ExerciseScreen()
@@ -200,7 +224,7 @@ fun WearApp(onNavigateToGame: (GameUIModel) -> Unit) {
 
 @Composable
 fun Greeting(greetingName: String) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box (modifier = Modifier.fillMaxSize()){
         CircularProgressIndicator(
             modifier = Modifier.fillMaxSize(),
             indicatorColor = Color.White,

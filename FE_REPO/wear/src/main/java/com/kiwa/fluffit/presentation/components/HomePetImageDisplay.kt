@@ -13,9 +13,14 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
 
 @Composable
-fun HomePetImageDisplay(image: Painter) {
+fun HomePetImageDisplay(imageUrl: String) {
 //    val image = painterResource(R.drawable.dog_white)
     val context = LocalContext.current
     var lastVibrationTime = 0L
@@ -35,6 +40,15 @@ fun HomePetImageDisplay(image: Painter) {
         }
     }
 
+    val painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(context)
+        .data(imageUrl)
+        .apply {
+            // Use ImageDecoderDecoder if API level is 28 or higher, else use GifDecoder
+            decoderFactory(if (Build.VERSION.SDK_INT >= 28) ImageDecoderDecoder.Factory() else GifDecoder.Factory())
+        }
+        .build())
+
     Image(
         modifier =
         Modifier
@@ -53,7 +67,7 @@ fun HomePetImageDisplay(image: Painter) {
                 }
             }
         ,
-        painter = image,
+        painter = painter,
         contentDescription = "home page pet image"
     )
 }

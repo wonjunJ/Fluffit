@@ -15,18 +15,18 @@ class RankingRepositoryImpl @Inject constructor(
                 val rankingList = it.ranking.map { info ->
                     RankingInfo(
                         info.rank,
-                        info.userName,
+                        info.userNickname,
                         "${info.battlePoint}점",
-                        info.petName,
-                        info.petImageUrl.first()
+                        info.flupetNickname,
+                        info.flupetImageUrl.first()
                     )
                 }
                 val myRank = RankingInfo(
                     it.myRank.rank,
-                    it.myRank.userName,
+                    it.myRank.userNickname,
                     "${it.myRank.battlePoint}점",
-                    it.myRank.petName,
-                    it.myRank.petImageUrl.first()
+                    it.myRank.flupetNickname,
+                    it.myRank.flupetImageUrl.first()
                 )
                 Result.success(RankingUIModel(rankingList, myRank))
             },

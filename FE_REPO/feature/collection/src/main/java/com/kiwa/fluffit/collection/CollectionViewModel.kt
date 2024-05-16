@@ -1,7 +1,6 @@
 package com.kiwa.fluffit.collection
 
 import androidx.lifecycle.viewModelScope
-import com.kiwa.domain.TokenManager
 import com.kiwa.domain.usecase.LoadCollectionUseCase
 import com.kiwa.fluffit.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,8 +9,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CollectionViewModel @Inject constructor(
-    private val loadCollectionUseCase: LoadCollectionUseCase,
-    private val tokenManager: TokenManager
+    private val loadCollectionUseCase: LoadCollectionUseCase
 ) : BaseViewModel<CollectionViewState, CollectionViewEvent>() {
     override fun createInitialState(): CollectionViewState =
         CollectionViewState.Init()

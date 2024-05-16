@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.designsystem.ui
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -16,10 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.kiwa.fluffit.designsystem.R
 import com.kiwa.fluffit.designsystem.theme.fluffitTypography
 
 @Composable
-fun FluffitSnackBar(data: SnackbarData, @DrawableRes image: Int) {
+fun FluffitSnackBar(data: SnackbarData) {
     Snackbar(
         containerColor = Color.White,
         action = {
@@ -37,7 +37,7 @@ fun FluffitSnackBar(data: SnackbarData, @DrawableRes image: Int) {
                     modifier = Modifier
                         .width(32.dp)
                         .height(32.dp),
-                    painter = painterResource(id = image),
+                    painter = painterResource(id = R.drawable.rabbit_white),
                     contentDescription = null
                 )
                 Text(

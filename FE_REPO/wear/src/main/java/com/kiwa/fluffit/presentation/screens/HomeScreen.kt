@@ -11,28 +11,33 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.CircularProgressIndicator
-import com.example.wearapp.presentation.HealthViewModel
 import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.components.CoinDisplay
 import com.kiwa.fluffit.presentation.components.HomePetImageDisplay
 import com.kiwa.fluffit.presentation.components.StepsDisplay
+import com.kiwa.fluffit.presentation.home.HomeViewModel
 
 @Composable
 fun MainScreen() {
+    val homeViewModel:HomeViewModel = hiltViewModel()
+    homeViewModel.loadFlupetStatus()
 
+    val fullness by homeViewModel.fullness.collectAsState()
+    val health by homeViewModel.health.collectAsState()
+    val imageUrl by homeViewModel.imageUrl.collectAsState()
+    val coin by homeViewModel.coin.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         CircularProgressIndicator(
             modifier = Modifier
                 .fillMaxSize()
                 .scale(scaleX = -1f, scaleY = 1f),
-            progress = 0.5f,
+            progress = fullness / 100.0f,
             startAngle = -88f,
             endAngle = 35f,
             indicatorColor = colorResource(id = R.color.watchGreen),
@@ -42,7 +47,7 @@ fun MainScreen() {
 
         CircularProgressIndicator(
             modifier = Modifier.fillMaxSize(),
-            progress = 0.5f,
+            progress = health / 100.0f,
             startAngle = -88f,
             endAngle = 35f,
             indicatorColor = colorResource(id = R.color.watchBlue),
@@ -60,13 +65,13 @@ fun MainScreen() {
         Box(modifier = Modifier.align(Alignment.Center)){
             val image = painterResource(R.drawable.dog_white)
 //        Spacer(modifier = Modifier.height(16.dp))
-            HomePetImageDisplay(image)
+            HomePetImageDisplay(imageUrl.getOrNull(0) ?: "")
         }
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
-            CoinDisplay(coin = 13420)
+            CoinDisplay(coin = coin)
             Spacer(modifier = Modifier.height(15.dp))
         }
     }

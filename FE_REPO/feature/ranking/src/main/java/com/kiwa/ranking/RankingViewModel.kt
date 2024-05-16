@@ -27,6 +27,7 @@ class RankingViewModel @Inject constructor(
                 when (it) {
                     RankingViewEvent.OnClickAgeRankingButton -> getAgeRanking()
                     RankingViewEvent.OnClickBattleRankingButton -> getBattleRanking()
+                    RankingViewEvent.OnDismissSnackBar -> setState { resetMessage() }
                 }
             }
         }
@@ -38,10 +39,23 @@ class RankingViewModel @Inject constructor(
         }
     }
 
+    private fun RankingViewState.onUpdateMessage(message: String): RankingViewState {
+        return when (this) {
+            is RankingViewState.AgeRanking -> this.copy(message = message)
+            is RankingViewState.BattleRanking -> this.copy(message = message)
+        }
+    }
+
+    private fun RankingViewState.resetMessage(): RankingViewState =
+        when (this) {
+            is RankingViewState.AgeRanking -> this.copy(message = "")
+            is RankingViewState.BattleRanking -> this.copy(message = "")
+        }
+
     private suspend fun getBattleRanking() {
         getBattleRankingUseCase().fold(
             onSuccess = { setState { showBattleRanking(it) } },
-            onFailure = {}
+            onFailure = { setState { onUpdateMessage(it.message.toString()) } }
         )
     }
 
@@ -50,7 +64,7 @@ class RankingViewModel @Inject constructor(
             onSuccess = {
                 setState { showAgeRanking(it) }
             },
-            onFailure = {}
+            onFailure = { setState { onUpdateMessage(it.message.toString()) } }
         )
     }
 

@@ -6,4 +6,6 @@ sealed class RankingViewEvent : ViewEvent {
     data object OnClickAgeRankingButton : RankingViewEvent()
 
     data object OnClickBattleRankingButton : RankingViewEvent()
+
+    data object OnDismissSnackBar : RankingViewEvent()
 }

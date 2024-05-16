@@ -2,6 +2,7 @@ package com.kiwa.data.api
 
 import com.kiwa.fluffit.model.flupet.NicknameRequest
 import com.kiwa.fluffit.model.flupet.response.BasicResponse
+import com.kiwa.fluffit.model.flupet.response.FlupetHistory
 import com.kiwa.fluffit.model.main.FullnessUpdateInfo
 import com.kiwa.fluffit.model.main.HealthUpdateInfo
 import com.kiwa.fluffit.model.main.response.FlupetResponse
@@ -32,4 +33,7 @@ interface FlupetService {
 
     @POST("flupet-service/flupet/evolution")
     suspend fun evolve(): Response<NewFlupetResponse>
+
+    @GET("flupet-service/flupet/history")
+    suspend fun loadHistory(): FlupetHistory
 }
