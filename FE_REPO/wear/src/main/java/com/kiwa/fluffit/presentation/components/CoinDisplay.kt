@@ -17,7 +17,7 @@ import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 
 @Composable
-fun CoinDisplay(coin: Long?, textColor: Color = Color.White) {
+fun CoinDisplay(coin: Int?, textColor: Color = Color.White) {
     val formattedCoin = DecimalFormat("#,###").format(coin ?: 0)
 
     Row(verticalAlignment = Alignment.CenterVertically) {
