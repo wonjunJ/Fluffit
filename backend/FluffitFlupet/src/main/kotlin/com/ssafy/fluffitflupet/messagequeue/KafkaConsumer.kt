@@ -38,10 +38,11 @@ class KafkaConsumer(
         }
 
         val userId = map["memberId"] as String
-        val steps = map["steps"] as Long
+        val steps = map["steps"] as Int
+        log.info("저장 로직 진입")
         val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         if(mflupet != null){
-            mflupet.steps = steps
+            mflupet.steps = steps.toLong()
             withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingleOrNull() }
         }
     }
