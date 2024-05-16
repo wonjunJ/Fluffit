@@ -112,6 +112,8 @@ public class BattleService {
                             operations.opsForHash().put(USER_BATTLE_KEY, userId, "Battle: 들어가는지 확인");
                         }
 
+                        operations.opsForHash().put(USER_BATTLE_KEY, userId, "Battle: 들어가는지 확인 밖");
+
                         return operations.exec(); // 트랜잭션 완료
                     }
                 });
