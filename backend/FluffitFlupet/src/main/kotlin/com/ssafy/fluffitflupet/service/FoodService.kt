@@ -93,9 +93,9 @@ class FoodService(
                 kafkaProducer.send("coin-update", CoinKafkaDto(memberId = userId, price = food.price))
 
                 mflupetRst.fullness = if(mflupetRst.fullness + food.fullnessEffect >= 100) 100
-                else mflupetRst.fullness + food.fullnessEffect
+                                                        else mflupetRst.fullness + food.fullnessEffect
                 mflupetRst.health = if(mflupetRst.health + food.healthEffect >= 100) 100
-                else mflupetRst.health + food.healthEffect
+                                                        else mflupetRst.health + food.healthEffect
                 withContext(Dispatchers.IO) {
                     memberFlupetRepository.save(mflupetRst).awaitSingle()
                     food.stock--
@@ -109,7 +109,7 @@ class FoodService(
                 log.error(e.message)
                 throw CustomBadRequestException(ErrorType.LOCK_INTERRUPTED_ERROR)
             }finally {
-                if(lockAcquired){
+                if(rLock.isLocked.awaitSingle()){
                     log.info("여기 왔는데 왜 자꾸 오류냐??")
                     rLock.unlock().awaitSingleOrNull()
                     log.info("unlock 끝???")
