@@ -117,16 +117,16 @@ public class RedisConfig {
         return template;
     }
 
-//    @Bean
-//    @Qualifier("userBattleStringRedisTemplate")
-//    public RedisTemplate<String, Object> userBattleStringRedisTemplate() {
-//        RedisTemplate<String, Object> template = new RedisTemplate<>();
-//        template.setConnectionFactory(redisConnectionFactoryForUserBattle());
-//        template.setKeySerializer(new StringRedisSerializer());
-//        template.setHashKeySerializer(new StringRedisSerializer());
-//        template.setHashValueSerializer(new StringRedisSerializer());
-//        return template;
-//    }
+    @Bean(name = "userBattleObjectRedisTemplate")
+    public RedisTemplate<String, Object> userBattleObjectRedisTemplate() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactoryForUserBattle());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+        return template;
+    }
 
     @Bean
     public RedisTemplate<Long, LocalDateTime> waitingQueueRedisTemplate() {
