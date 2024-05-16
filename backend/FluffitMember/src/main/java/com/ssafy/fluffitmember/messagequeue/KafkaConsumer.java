@@ -37,7 +37,7 @@ public class KafkaConsumer {
 
         if(findMember.isPresent()){
             Member member = findMember.get();
-            member.updateCoin(member.getCoin() - (Integer)map.get("coin"));
+            member.updateCoin(member.getCoin() - (Integer)map.get("price"));
             memberRepository.save(member);
         }
     }
