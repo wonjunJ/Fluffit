@@ -305,6 +305,7 @@ public class BattleService {
 
     public void handleTimeout(String userId) {
         String battleKey = getUserBattle(userId);
+        System.out.println("배틀 키 ~~~~~ " + battleKey);
 
         if (battleKey == null) return;
         Battle battle = getBattle(battleKey);
