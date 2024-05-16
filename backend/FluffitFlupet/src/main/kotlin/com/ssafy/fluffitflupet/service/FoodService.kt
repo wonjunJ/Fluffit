@@ -69,7 +69,7 @@ class FoodService(
         val leaseTime = 4L //락을 최대 임대하는 시간
 
         var lockAcquired = false
-        withContext(singleThreadContext){
+        withContext(Dispatchers.Default){
             try {
                 val available = rLock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS).awaitSingle()
                 if(!available){
@@ -120,56 +120,6 @@ class FoodService(
                 }
             }
         }
-//        try {
-//            withContext(Dispatchers.IO){
-//                val available = rLock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS).awaitSingle()
-//                if(!available){
-//                    coinWait.cancel()
-//                    throw CustomBadRequestException(ErrorType.LOCK_NOT_AVAILABLE)
-//                }
-//                lockAcquired = true
-//            }
-//            //=== 락 획득 후 로직 수행 ===
-//            log.info("락 획득 로직 수행 시작")
-//            food = foodWait.await() ?: throw CustomBadRequestException(ErrorType.INVALID_FOODID)
-//            if(food.stock <= 0){
-//                throw CustomBadRequestException(ErrorType.INSUFFICIENT_FOOD_STOCK)
-//            }
-//            val mflupetRst = mflupet.await() ?: throw CustomBadRequestException(ErrorType.INVALID_USERID)
-//            if(mflupetRst.fullness == 100){
-//                throw CustomBadRequestException(ErrorType.NOT_REQUIRED_FULLNESS)
-//            }
-//            coin = coinWait.await().coin
-//            if(coin < food.price){
-//                throw CustomBadRequestException(ErrorType.INSUFFICIENT_COIN)
-//            }
-//            //여기에서 카프카로 코인 데이터 동기화 요청
-//            log.info("카프카 요청 시작")
-//            kafkaProducer.send("coin-update", CoinKafkaDto(memberId = userId, price = food.price))
-//
-//            mflupetRst.fullness = if(mflupetRst.fullness + food.fullnessEffect >= 100) 100
-//                                                        else mflupetRst.fullness + food.fullnessEffect
-//            mflupetRst.health = if(mflupetRst.health + food.healthEffect >= 100) 100
-//                                                        else mflupetRst.health + food.healthEffect
-//            withContext(Dispatchers.IO) {
-//                memberFlupetRepository.save(mflupetRst).awaitSingle()
-//                food.stock--
-//                foodRepository.save(food)
-//            }
-////            food.stock--
-////            withContext(Dispatchers.IO){ foodRepository.save(food) }
-//        }catch (e: InterruptedException){
-//            //락을 얻으려고 시도하다가 인터럽트를 받았을 때 발생하는 예외
-//            coinWait.cancel()
-//            log.error(e.message)
-//            throw CustomBadRequestException(ErrorType.LOCK_INTERRUPTED_ERROR)
-//        }finally {
-//            if(lockAcquired){
-//                withContext(Dispatchers.IO) {
-//                    rLock.unlock().awaitSingleOrNull()
-//                }
-//            }
-//        }
         return@coroutineScope FeedingResponse(
             totalCoin = coin - food.price,
             fullnessEffect = food.fullnessEffect,
