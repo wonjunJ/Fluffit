@@ -9,4 +9,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface FlupetFeignClient {
     @GetMapping("/flupet/info")
     FlupetInfoTempClientDto getFlupetInfo(@RequestHeader("memberId") String memberId);
+
+//    @GetMapping("/flupet")
 }
