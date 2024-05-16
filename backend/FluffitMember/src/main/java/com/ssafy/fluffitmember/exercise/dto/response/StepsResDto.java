@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class StepsResDto {
-    private int reword;
+    private int reward;
 }

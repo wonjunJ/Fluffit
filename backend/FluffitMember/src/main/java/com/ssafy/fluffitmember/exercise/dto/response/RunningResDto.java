@@ -10,5 +10,5 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 public class RunningResDto {
-    private int reword;
+    private int reward;
 }

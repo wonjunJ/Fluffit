@@ -1,5 +1,7 @@
 package com.ssafy.fluffitmember.exercise.service;
 
+import com.ssafy.fluffitmember._common.exception.InvalidDistanceSpeed;
+import com.ssafy.fluffitmember._common.exception.InvalidStartEndTime;
 import com.ssafy.fluffitmember._common.exception.NotFoundUserException;
 import com.ssafy.fluffitmember.exercise.dto.StepsKafkaDto;
 import com.ssafy.fluffitmember.exercise.dto.request.RunningReqDto;
@@ -56,11 +58,16 @@ public class ExerciseService {
     private int calculateRunningReward(RunningReqDto runningReq) {
         // 달린 시간 계산
         long durationInSeconds = Duration.between(runningReq.getStartTime(), runningReq.getEndTime()).getSeconds();
+        if(durationInSeconds<=0){
+            throw new InvalidStartEndTime();
+        }
         double durationInHours = durationInSeconds / 3600.0; //달린 시간 계산 -> 시간 단위
 
         // 평균 속도 계산 (km/h)
         double averageSpeedKmh = runningReq.getDistance() / durationInHours;
-
+        if (runningReq.getDistance() <= 0 || averageSpeedKmh < 0) {
+            throw new InvalidDistanceSpeed();
+        }
         // 기본 보상: 달린 거리에 따라 포인트를 계산
         int baseReward = (int) (runningReq.getDistance() * 10); // 1km당 10 포인트
 
