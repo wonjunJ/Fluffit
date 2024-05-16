@@ -137,6 +137,7 @@ public class BattleService {
     private void logCurrentQueueState() { // 큐 상태 로깅
         ListOperations<String, String> listOps = redisTemplate.opsForList();
         Long queueSize = listOps.size(BATTLE_QUEUE_KEY); // 큐의 현재 크기를 가져옵니다.
+        if (queueSize == null) queueSize = 0L;
         List<String> queueContents = listOps.range(BATTLE_QUEUE_KEY, 0, queueSize); // 큐의 전체 내용을 가져옵니다.
         log.info("Current queue size: {}", queueSize);
         log.info("Queue contents: {}", queueContents);
