@@ -77,10 +77,15 @@ public class BattleService {
     public void requestBattle(String userId) {
         log.info("리퀘스트배틀 진입 "+ userId);
 
-//        if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
-//            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
-//            return;
-//        }
+        if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
+            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
+            return;
+        }
+
+        if (getUserBattle(userId) != null) {
+            notificationService.notifyUser(userId, ALREADY_IN_MATCHING_EVENTNAME, "");
+            return;
+        }
 
         boolean success = false;
 
@@ -103,21 +108,22 @@ public class BattleService {
                         operations.multi(); // 레디스 트랜잭션 큐에 쌓기 시작
                         log.info("워치, leftPop, 멀티 설정도 성공");
 
-                        if (opponentId == null || getUserBattle(opponentId) != null) {
+                        if (opponentId == null || getUserBattle(opponentId) != null || userId.equals(opponentId)) {
                             shouldRetry.set(true);
                             operations.opsForList().rightPush(BATTLE_QUEUE_KEY, userId);
                             operations.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
                             log.info(userId + " 배틀큐에 들어갔어요");
                             logCurrentQueueState(BATTLE_QUEUE_KEY); // Redis에 값이 정상적으로 추가되었는지 확인
-                        } else if (userId.equals(opponentId) || getUserBattle(userId) != null) {
-                            operations.opsForList().rightPush(BATTLE_QUEUE_KEY, opponentId);
-                            shouldRetry.set(true);
-                        } else if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
-                            System.out.println(" 다시 큐에 원상복구해 " + opponentId);
-                            operations.opsForList().rightPush(BATTLE_QUEUE_KEY, opponentId);
-                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
-                            shouldRetry.set(true);
                         }
+//                        else if (userId.equals(opponentId)) {
+//                            operations.opsForList().rightPush(BATTLE_QUEUE_KEY, opponentId);
+//                            shouldRetry.set(false);
+//                        } else if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
+//                            System.out.println(" 다시 큐에 원상복구해 " + opponentId);
+//                            operations.opsForList().rightPush(BATTLE_QUEUE_KEY, opponentId);
+//                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
+//                            shouldRetry.set(false);
+//                        }
                         else {
                             shouldRetry.set(!createAndNotifyBattle(userId, opponentId)); // setBattle 결과에 따라 재시도 설정
                         }
