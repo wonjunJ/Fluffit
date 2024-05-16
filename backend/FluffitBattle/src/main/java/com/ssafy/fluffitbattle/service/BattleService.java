@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @Transactional
@@ -72,6 +73,7 @@ public class BattleService {
 
         while (!success && retryCount < maxRetries) {
             retryCount++;
+            AtomicBoolean shouldRetry = new AtomicBoolean(false);
             try {
                 List<Object> results = redisTemplate.execute(new SessionCallback<List<Object>>() {
                     @Override
@@ -87,14 +89,15 @@ public class BattleService {
                         System.out.println("멀티 설정도 성공");
 
                         if (opponentId == null || getUserBattle(opponentId) != null) {
+                            shouldRetry.set(true);
                             operations.opsForList().rightPush(BATTLE_QUEUE_KEY, userId);
                             operations.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
                             log.info(userId + " 배틀큐에 들어갔어요");
                             logCurrentQueueState(); // Redis에 값이 정상적으로 추가되었는지 확인
                         } else if (Objects.equals(userId, opponentId) || getUserBattle(userId) != null) {
-                            // 아무것도 하지 않음
+                            shouldRetry.set(false);
                         } else {
-                            createAndNotifyBattle(userId, opponentId);
+                            shouldRetry.set(!createAndNotifyBattle(userId, opponentId)); // setBattle 결과에 따라 재시도 설정
                         }
 
                         return operations.exec(); // 트랜잭션 완료
@@ -103,7 +106,7 @@ public class BattleService {
 
                 System.out.println("execute 실행 됨?? " + (results.isEmpty() ? " 아니요" : results.get(0)));
 
-                if (results == null || results.isEmpty()) {
+                if (results == null || (results.isEmpty() && shouldRetry.get())) {
                     log.info("Transaction failed, retrying...");
                     System.out.println("트랜잭션 exec도 했는데 갑자기 실패함!!! 이거 뭐임!!!!!");
                     redisTemplate.unwatch(); // 트랜잭션 실패 시 unwatch 호출
@@ -122,7 +125,7 @@ public class BattleService {
         logCurrentQueueState();
     }
 
-    private void createAndNotifyBattle(String userId, String opponentId) {
+    private boolean createAndNotifyBattle(String userId, String opponentId) {
         log.info("살려줘!!!!!!!!!!!!!!!: {} vs {}", userId, opponentId);
         BattleType battleType = BattleType.values()[random.nextInt(BattleType.values().length)];
         Battle battle = Battle.builder()
@@ -139,7 +142,7 @@ public class BattleService {
         setUser(userId, battleId);
         setUser(opponentId, battleId);
 
-        setBattle(theBattle);
+        return setBattle(theBattle);
     }
 
     private void logCurrentQueueState() { // 큐 상태 로깅
@@ -187,8 +190,14 @@ public class BattleService {
         redisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
     }
 
-    private void setBattle(Battle battle) {
-        battleRedisTemplate.opsForValue().set("Battle:" + battle.getId(), battle, 1, TimeUnit.HOURS);
+    private boolean setBattle(Battle battle) {
+        try {
+            battleRedisTemplate.opsForValue().set("Battle:" + battle.getId(), battle, 1, TimeUnit.HOURS);
+            return true;
+        } catch (Exception e) {
+            log.error("Failed to set battle in Redis", e);
+            return false;
+        }
     }
 
 
