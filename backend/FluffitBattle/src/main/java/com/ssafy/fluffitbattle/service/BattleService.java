@@ -107,7 +107,7 @@ public class BattleService {
 //                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
 //                        }
                         else {
-                            shouldRetry.set(!createAndNotifyBattle(userId, opponentId)); // setBattle 결과에 따라 재시도 설정
+                            shouldRetry.set(!createAndNotifyBattle(operations, userId, opponentId)); // setBattle 결과에 따라 재시도 설정
                         }
 
                         return operations.exec(); // 트랜잭션 완료
@@ -135,7 +135,7 @@ public class BattleService {
         logCurrentQueueState(BATTLE_QUEUE_KEY);
     }
 
-    private boolean createAndNotifyBattle(String userId, String opponentId) {
+    private boolean createAndNotifyBattle(RedisOperations operations, String userId, String opponentId) {
         log.info("살려줘!!!!!!!!!!!!!!!: {} vs {}", userId, opponentId);
         BattleType battleType = BattleType.values()[random.nextInt(BattleType.values().length)];
         Battle battle = Battle.builder()
@@ -149,8 +149,8 @@ public class BattleService {
         notifyJustMatched(userId, opponentId, theBattle);
         notifyJustMatched(opponentId, userId, theBattle);
 
-        setUser(userId, battleId);
-        setUser(opponentId, battleId);
+        setUser(operations, userId, battleId);
+        setUser(operations, opponentId, battleId);
 
         return setBattle(theBattle);
     }
@@ -196,11 +196,11 @@ public class BattleService {
         return result != null ? (Battle) result : null;
     }
 
-    private void setUser(String userId, Long battleId) {
-        userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
-        System.out.println(" 레디스에 들어가는 거 맞잖아 맞다고 해 " + userBattleLongRedisTemplate.opsForValue().get("User:" + userId));
-        redisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
-        System.out.println(" 레디스에 해시도 들어가야 하는데 " + redisTemplate.opsForHash().get(USER_BATTLE_KEY, userId));
+    private void setUser(RedisOperations operations, String userId, Long battleId) {
+        operations.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
+        System.out.println(" 레디스에 들어가는 거 맞잖아 맞다고 해 " + operations.opsForValue().get("User:" + userId));
+        operations.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
+        System.out.println(" 레디스에 해시도 들어가야 하는데 " + operations.opsForHash().get(USER_BATTLE_KEY, userId));
     }
 
     private boolean setBattle(Battle battle) {
