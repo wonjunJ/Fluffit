@@ -63,9 +63,14 @@ public class BattleService {
     public void requestBattle(String userId) {
         ListOperations<String, String> listOps = redisTemplate.opsForList();
 
+        boolean transactionStarted = false;
+
         try {
             redisTemplate.watch(BATTLE_QUEUE_KEY); // 대기 큐에
+            System.out.println("워치 설정은 성공한 듯");
             redisTemplate.multi(); // 레디스 트랜잭션 큐에 쌓기 시작
+            System.out.println("멀티 설정도 성공");
+            transactionStarted = true;
 
             String opponentId = listOps.leftPop(BATTLE_QUEUE_KEY);
 
@@ -86,7 +91,9 @@ public class BattleService {
             }
 
         } catch (Exception e) {
-            redisTemplate.discard();  // 트랜잭션 취소
+            if (transactionStarted) {
+                redisTemplate.discard();  // 트랜잭션 취소
+            }
             log.error("Error during Redis transaction: {}", e.getMessage());
 //            throw e;  // or handle error gracefully
         } finally {
