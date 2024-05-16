@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.ViewConfiguration
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.spring
@@ -37,6 +38,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.InputDeviceCompat
 import androidx.core.view.MotionEventCompat
 import androidx.core.view.ViewConfigurationCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.MaterialTheme
@@ -58,15 +60,30 @@ private const val TAG = "MainActivity"
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val tokenViewModel: TokenViewModel by viewModels()
+
+    private val requestMultiplePermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        if (permissions.all { it.value }) {
+            // 모든 권한이 승인되었을 때 UI 설정
+            setContent {
+                FluffitTheme {
+                    WearApp()
+                }
+            }
+        } else {
+            // 권한이 거부되었을 때 다시 요청
+            checkPermissionsAndSetContent()
+        }
+    }
+
     override fun onGenericMotionEvent(event: MotionEvent?): Boolean {
         if (event != null) {
             if (event.action == MotionEvent.ACTION_SCROLL &&
                 event.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)) {
 
                 val delta = -event.getAxisValue(MotionEventCompat.AXIS_SCROLL) *
-                        ViewConfigurationCompat.getScaledVerticalScrollFactor(
-                            ViewConfiguration.get(this), this
-                        )
+                    ViewConfigurationCompat.getScaledVerticalScrollFactor(
+                        ViewConfiguration.get(this), this
+                    )
                 if (delta > 0) {
                     MainActivityViewModel.nextPage()
                 } else if (delta < 0) {
@@ -79,12 +96,15 @@ class MainActivity : ComponentActivity() {
         }
         return super.onGenericMotionEvent(event)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
 
         super.onCreate(savedInstanceState)
 
         tokenViewModel.fetchConnectedNodes()
+
+        checkPermissionsAndSetContent()
 
         tokenViewModel.nodes.observe(this) { nodes ->
             if (nodes.isNullOrEmpty()) {
@@ -95,7 +115,7 @@ class MainActivity : ComponentActivity() {
             } else {
                 // 연결된 노드가 있을 때
                 tokenViewModel.requestAccessToken()
-                checkPermissionsAndSetContent()
+
             }
         }
     }
@@ -112,8 +132,7 @@ class MainActivity : ComponentActivity() {
 
         if (permissionsNeeded.isNotEmpty()) {
             // 하나 이상의 권한이 승인되지 않았다면 모든 필요 권한 요청
-            val REQUEST_CODE_PERMISSIONS = 101
-            ActivityCompat.requestPermissions(this, permissionsNeeded, REQUEST_CODE_PERMISSIONS)
+            requestMultiplePermissions.launch(permissionsNeeded)
         } else {
             // 모든 권한이 있을 때 UI 설정
             setContent {
@@ -124,9 +143,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
     companion object {
-        const val PAGE_COUNT = 4;
+        const val PAGE_COUNT = 4
     }
 }
 
@@ -134,9 +152,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun WearApp() {
     val currentPage by MainActivityViewModel.currentPage.collectAsState()
-    val pagerState = rememberPagerState(pageCount = {MainActivity.PAGE_COUNT}, initialPage = currentPage)
+    val pagerState = rememberPagerState(pageCount = { MainActivity.PAGE_COUNT }, initialPage = currentPage)
     var showIndicator by remember { mutableStateOf(false) }
-
 
     val pageIndicatorState: PageIndicatorState = remember {
         object : PageIndicatorState {
@@ -160,8 +177,8 @@ fun WearApp() {
         AnimatedVisibility(
             visible = showIndicator,
             enter = slideInVertically { 5 },
-            exit = slideOutVertically { 5 })
-        {
+            exit = slideOutVertically { 5 }
+        ) {
             HorizontalPageIndicator(
                 pageIndicatorState = pageIndicatorState,
                 modifier = Modifier
@@ -174,7 +191,7 @@ fun WearApp() {
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            when(page){
+            when (page) {
                 0 -> MainScreen()
                 1 -> FeedScreen()
                 2 -> ExerciseScreen()
@@ -186,7 +203,7 @@ fun WearApp() {
 
 @Composable
 fun Greeting(greetingName: String) {
-    Box (modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize()) {
         CircularProgressIndicator(
             modifier = Modifier.fillMaxSize(),
             indicatorColor = Color.White,
