@@ -326,7 +326,7 @@ public class BattleService {
             writeRecord(battleKey, userId, -1);
         }
 
-        stringRedisTemplate.opsForHash().delete(USER_BATTLE_KEY, userId);
+        objectRedisTemplate.opsForHash().delete(USER_BATTLE_KEY, userId);
     }
 
     public Slice<BattleRecordItemDto> getBattleRecords(String userId, Pageable pageable) {
