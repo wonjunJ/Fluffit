@@ -7,8 +7,8 @@ data class BattleRankingResponse(
 
 data class BattleRankingInfo(
     val rank: Int,
-    val userName: String,
+    val userNickname: String,
     val battlePoint: Int,
-    val petName: String,
-    val petImageUrl: List<String>
+    val flupetNickname: String,
+    val flupetImageUrl: List<String>
 )
