@@ -119,12 +119,7 @@ public class RedisConfig {
 
     @Bean(name = "userBattleStringRedisTemplate")
     public RedisTemplate<String, Object> userBattleStringRedisTemplate() {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactoryForUserBattle());
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(new StringRedisSerializer());
-        return template;
+        return createRedisTemplate(redisConnectionFactoryForUserBattle());
     }
 
     @Bean
