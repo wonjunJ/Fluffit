@@ -14,6 +14,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class AppStatusService {
         return new NewVersionResDto(save.getVersion());
     }
 
+    @Transactional
     public UpdateVersionResDto updateVersion(UpdateVersionReqDto updateVersionReqDto) {
         Optional<AppStatus> appStatusByVersion = appStatusRepository.findAppStatusByVersion(
                 updateVersionReqDto.getBeforeVersion());
@@ -44,7 +46,7 @@ public class AppStatusService {
 
         AppStatus appStatus = appStatusByVersion.get();
         appStatus.updateVersion(updateVersionReqDto.getUpdateVersion());
-
+        appStatusRepository.save(appStatus);
         return new UpdateVersionResDto(appStatus.getVersion());
     }
 }

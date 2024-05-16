@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -21,6 +22,7 @@ public class KafkaConsumer {
     private final MemberRepository memberRepository;
 
     @KafkaListener(topics = "coin-update", groupId = "consumerGroupId")
+    @Transactional
     public void updateCoin(String kafkaMessage) {
         log.info("Kafka Message: ->" + kafkaMessage);
 
@@ -36,10 +38,12 @@ public class KafkaConsumer {
         if(findMember.isPresent()){
             Member member = findMember.get();
             member.updateCoin(member.getCoin() - (Integer)map.get("coin"));
+            memberRepository.save(member);
         }
     }
 
     @KafkaListener(topics = "battle-point-update", groupId = "consumerGroupId")
+    @Transactional
     public void updateBattlePoint(String kafkaMessage) {
         log.info("Kafka Message: ->" + kafkaMessage);
 
@@ -55,6 +59,7 @@ public class KafkaConsumer {
         if(findMember.isPresent()){
             Member member = findMember.get();
             member.updatePoint(member.getBattlePoint() + (Integer)map.get("battlePointChanges"));
+            memberRepository.save(member);
         }
     }
 }
