@@ -182,4 +182,28 @@ class MemberFlupetRepositoryImpl(
             .asFlow()
     }
 
+    override suspend fun findBattleInfo(userId: String): BattleInfoDto? {
+        return Mono.from(
+            dslContext
+                .select(
+                    MEMBER_FLUPET.NAME,
+                    FLUPET.IMG_URL
+                )
+                .from(MEMBER_FLUPET)
+                .join(FLUPET)
+                .on(MEMBER_FLUPET.FLUPET_ID.eq(FLUPET.ID))
+                .where(MEMBER_FLUPET.MEMBER_ID.eq(userId)
+                    .and(MEMBER_FLUPET.IS_DEAD.isFalse))
+                .limit(1)
+        )
+            .map { record ->
+                val img = record.get(FLUPET.IMG_URL, String::class.java).split(",")
+                BattleInfoDto(
+                    flupetNickname = record.get(MEMBER_FLUPET.NAME, String::class.java),
+                    flupetImageUrl = if(img.size == 1) img[0] else img[1]
+                )
+            }
+            .awaitFirstOrNull()
+    }
+
 }

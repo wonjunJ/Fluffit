@@ -325,6 +325,7 @@ class FlupetService(
 
     suspend fun getFlupetBattleRank(memberIds: List<String>): List<RankFlupetInfoDto> = coroutineScope {
         if(memberIds.size == 4){
+            // 만약 랭킹에 올라있는 사용자의 펫이 죽어있다면 가장 최근 펫을 조회하기 위해
             val info1 = async { memberFlupetRepository.findMainInfoByUserId(memberIds[0]) }
             val info2 = async { memberFlupetRepository.findMainInfoByUserId(memberIds[1]) }
             val info3 = async { memberFlupetRepository.findMainInfoByUserId(memberIds[2]) }
@@ -384,5 +385,14 @@ class FlupetService(
             launch(Dispatchers.IO) { reactiveRedisTemplate.opsForValue().set("patTime: $userId", LocalDateTime.now().toString()).awaitSingle() }
             launch(Dispatchers.IO) { memberFlupetRepository.save(mf).awaitSingle() }
         }
+    }
+
+    suspend fun getBattleInfo(userId: String): BattleInfoDto {
+        log.info("battle-service에서 요청 들어왔다.")
+        val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findBattleInfo(userId) }
+        if(mflupet == null){
+            return BattleInfoDto()
+        }
+        return mflupet
     }
 }

@@ -76,4 +76,10 @@ class FlupetController(
         flupetService.patMyFlupet(userId)
         return mapOf("result" to "SUCCESS")
     }
+
+    //battle-service에서 요청
+    @GetMapping("/battle-info")
+    suspend fun getBattleInfo(@RequestHeader("memberId") userId: String): BattleInfoDto {
+        return flupetService.getBattleInfo(userId)
+    }
 }

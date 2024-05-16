@@ -9,4 +9,5 @@ interface MemberFlupetRepositoryCustom {
     suspend fun findByMemberIdAndFlupet(userId: String): MyFlupetStateDto?
     fun findHistoryByUserId(userId: String): Flow<HistoryResponse.MyPet>
     fun findFlupetRank(userId: String): Flow<RankDto>
+    suspend fun findBattleInfo(userId: String): BattleInfoDto?
 }
