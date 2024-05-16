@@ -108,12 +108,23 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean(name = "userBattleRedisTemplate")
-    public RedisTemplate<String, Long> userBattleRedisTemplate() {
+    @Bean(name = "userBattleLongRedisTemplate")
+    public RedisTemplate<String, Long> userBattleLongRedisTemplate() {
         RedisTemplate<String, Long> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactoryForUserBattle());
         template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new GenericToStringSerializer<>(Long.class));
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new GenericToStringSerializer<>(Long.class));
+        return template;
+    }
+
+    @Bean(name = "userBattleObjectRedisTemplate")
+    public RedisTemplate<String, Object> userBattleObjectRedisTemplate() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactoryForUserBattle());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
         return template;
     }
 

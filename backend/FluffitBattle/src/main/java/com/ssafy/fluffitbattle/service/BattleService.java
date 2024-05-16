@@ -45,8 +45,11 @@ public class BattleService {
     private final RedisTemplate<String, String> redisTemplate;
     @Qualifier("battleRedisTemplate")
     private final RedisTemplate<String, Battle> battleRedisTemplate;
-    @Qualifier("userBattleRedisTemplate")
-    private final RedisTemplate<String, Long> userBattleRedisTemplate;
+    @Qualifier("userBattleObjectRedisTemplate")
+    private final RedisTemplate<String, Object> userBattleObjectRedisTemplate;
+    @Qualifier("userBattleLongRedisTemplate")
+    private final RedisTemplate<String, Long> userBattleLongRedisTemplate;
+
     //    @Qualifier("longStringRedisTemplate")
 //    private final RedisTemplate<Long, String> longStringRedisTemplate;
     @Qualifier("waitingQueueRedisTemplate")
@@ -184,7 +187,7 @@ public class BattleService {
     }
 
     private String getUserBattle(String userId) {
-        Object result = userBattleRedisTemplate.opsForHash().get(USER_BATTLE_KEY, userId);
+        Object result = userBattleLongRedisTemplate.opsForHash().get(USER_BATTLE_KEY, userId);
         return result != null ? "Battle:" + result.toString() : null;
     }
 
@@ -194,9 +197,9 @@ public class BattleService {
     }
 
     private void setUser(String userId, Long battleId) {
-        userBattleRedisTemplate.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
-        System.out.println(" 레디스에 들어가는 거 맞잖아 맞다고 해 " + userBattleRedisTemplate.opsForValue().get("User:" + userId));
-        userBattleRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
+        userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
+        System.out.println(" 레디스에 들어가는 거 맞잖아 맞다고 해 " + userBattleLongRedisTemplate.opsForValue().get("User:" + userId));
+        userBattleObjectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
     }
 
     private boolean setBattle(Battle battle) {
