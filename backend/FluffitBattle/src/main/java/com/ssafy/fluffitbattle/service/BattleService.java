@@ -146,7 +146,7 @@ public class BattleService {
         System.out.println(redisTemplate.opsForHash().get(USER_BATTLE_KEY, userId));
     }
 
-    private boolean createAndNotifyBattle(RedisOperations operations, String userId, String opponentId) {
+    private boolean createAndNotifyBattle(RedisOperations<String, String> operations, String userId, String opponentId) {
         log.info("살려줘!!!!!!!!!!!!!!!: {} vs {}", userId, opponentId);
         BattleType battleType = BattleType.values()[random.nextInt(BattleType.values().length)];
         Battle battle = Battle.builder()

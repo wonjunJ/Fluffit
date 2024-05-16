@@ -124,6 +124,12 @@ public class RedisConfig {
         return new StringRedisTemplate(redisConnectionFactoryForUserBattle());
     }
 
+    @Primary
+    @Bean(name = "stringRedisTemplate")
+    public StringRedisTemplate stringRedisTemplate() {
+        return new StringRedisTemplate(redisConnectionFactory());
+    }
+
 //    public class LoggingStringRedisSerializer extends StringRedisSerializer {
 //        @Override
 //        public byte[] serialize(String string) {
