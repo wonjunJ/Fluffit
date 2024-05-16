@@ -77,6 +77,11 @@ public class BattleService {
     public void requestBattle(String userId) {
         log.info("리퀘스트배틀 진입 "+ userId);
 
+//        if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
+//            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
+//            return;
+//        }
+
         boolean success = false;
 
         int retryCount = 0;
@@ -104,13 +109,14 @@ public class BattleService {
                             operations.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
                             log.info(userId + " 배틀큐에 들어갔어요");
                             logCurrentQueueState(BATTLE_QUEUE_KEY); // Redis에 값이 정상적으로 추가되었는지 확인
-                        } else if (Objects.equals(userId, opponentId) || getUserBattle(userId) != null) {
+                        } else if (userId.equals(opponentId) || getUserBattle(userId) != null) {
                             operations.opsForList().rightPush(BATTLE_QUEUE_KEY, opponentId);
-                            shouldRetry.set(false);
+                            shouldRetry.set(true);
                         } else if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
-                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
+                            System.out.println(" 다시 큐에 원상복구해 " + opponentId);
                             operations.opsForList().rightPush(BATTLE_QUEUE_KEY, opponentId);
-                            shouldRetry.set(false);
+                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
+                            shouldRetry.set(true);
                         }
                         else {
                             shouldRetry.set(!createAndNotifyBattle(userId, opponentId)); // setBattle 결과에 따라 재시도 설정
