@@ -47,6 +47,5 @@ internal fun FlupetHistoryView(
                 FlupetLog(flupetHistoryList[index])
             }
         }
-
     }
 }
