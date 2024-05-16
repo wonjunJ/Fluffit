@@ -66,7 +66,7 @@ class FoodService(
         val leaseTime = 4L //락을 최대 임대하는 시간
 
         var lockAcquired = false
-        withContext(Dispatchers.Default){
+        withContext(Dispatchers.IO){
             try {
                 val available = rLock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS).awaitSingle()
                 if(!available){
@@ -110,7 +110,9 @@ class FoodService(
                 throw CustomBadRequestException(ErrorType.LOCK_INTERRUPTED_ERROR)
             }finally {
                 if(lockAcquired){
+                    log.info("여기 왔는데 왜 자꾸 오류냐??")
                     rLock.unlock().awaitSingleOrNull()
+                    log.info("unlock 끝???")
                 }
             }
         }
