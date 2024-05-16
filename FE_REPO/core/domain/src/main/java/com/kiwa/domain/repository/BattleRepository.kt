@@ -2,7 +2,6 @@ package com.kiwa.domain.repository
 
 import com.kiwa.fluffit.model.battle.BattleLog
 import com.kiwa.fluffit.model.battle.BattleLogModel
-import com.kiwa.fluffit.model.battle.BattleResultResponse
 import com.kiwa.fluffit.model.battle.BattleResultUIModel
 import com.kiwa.fluffit.model.battle.GameUIModel
 

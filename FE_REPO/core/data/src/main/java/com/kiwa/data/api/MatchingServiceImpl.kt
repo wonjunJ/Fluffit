@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 class MatchingServiceImpl @Inject constructor(
     private val okHttpClient: OkHttpClient,
-    private val tokenManager: TokenManager,
+    private val tokenManager: TokenManager
 ) : MatchingService {
     override suspend fun getMatching(): Result<MatchingResponse> {
         val url = "${BuildConfig.BASE_URL}battle-service/wait"
@@ -35,7 +35,7 @@ class MatchingServiceImpl @Inject constructor(
                         eventSource: EventSource,
                         id: String?,
                         type: String?,
-                        data: String,
+                        data: String
                     ) {
                         super.onEvent(eventSource, id, type, data)
                         Log.d("확인", eventSource.toString())
@@ -49,7 +49,7 @@ class MatchingServiceImpl @Inject constructor(
                     override fun onFailure(
                         eventSource: EventSource,
                         t: Throwable?,
-                        response: Response?,
+                        response: Response?
                     ) {
                         super.onFailure(eventSource, t, response)
                         Log.d("확인", "실패")

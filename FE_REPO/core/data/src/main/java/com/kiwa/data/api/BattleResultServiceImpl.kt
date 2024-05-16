@@ -6,7 +6,6 @@ import com.kiwa.domain.TokenManager
 import com.kiwa.fluffit.data.BuildConfig
 import com.kiwa.fluffit.model.battle.BattleResultRequest
 import com.kiwa.fluffit.model.battle.BattleResultResponse
-import com.kiwa.fluffit.model.battle.MatchingResponse
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -22,9 +21,12 @@ import javax.inject.Inject
 
 class BattleResultServiceImpl @Inject constructor(
     private val okHttpClient: OkHttpClient,
-    private val tokenManager: TokenManager,
+    private val tokenManager: TokenManager
 ) : BattleResultService {
-    override suspend fun getBattleResult(battleId: String, score: Int): Result<BattleResultResponse> {
+    override suspend fun getBattleResult(
+        battleId: String,
+        score: Int
+    ): Result<BattleResultResponse> {
         val url = "${BuildConfig.BASE_URL}battle-service/result"
         var result: Result<BattleResultResponse>? = null
         try {
@@ -40,7 +42,7 @@ class BattleResultServiceImpl @Inject constructor(
                         eventSource: EventSource,
                         id: String?,
                         type: String?,
-                        data: String,
+                        data: String
                     ) {
                         super.onEvent(eventSource, id, type, data)
                         Log.d("확인", eventSource.toString())
@@ -49,13 +51,15 @@ class BattleResultServiceImpl @Inject constructor(
                         Log.d("확인", data)
                         val battleResultResponse =
                             Gson().fromJson(data, BattleResultResponse::class.java)
-                        continuation.resumeWith(Result.success(Result.success(battleResultResponse)))
+                        continuation.resumeWith(
+                            Result.success(Result.success(battleResultResponse))
+                        )
                     }
 
                     override fun onFailure(
                         eventSource: EventSource,
                         t: Throwable?,
-                        response: Response?,
+                        response: Response?
                     ) {
                         super.onFailure(eventSource, t, response)
                         Log.d("확인", "실패")

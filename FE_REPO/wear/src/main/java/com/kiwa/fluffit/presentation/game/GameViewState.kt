@@ -17,7 +17,10 @@ sealed class GameViewState : ViewState {
             battleId = "", opponentInfo = OpponentInfo(
                 "", "", "", 0
             ),
-            battleType = BattleType.BreakStone("", "", 0)
+            key = "",
+            title = "",
+            description = "",
+            time = 10
         ),
     ) : GameViewState()
 

@@ -32,6 +32,6 @@ class BattleDataSourceImpl @Inject constructor(
     ): Result<BattleResultResponse> =
         battleResultService.getBattleResult(battleId, score).fold(
             onSuccess = { Result.success(it) },
-            onFailure = { Result.failure(it) })
-
+            onFailure = { Result.failure(it) }
+        )
 }

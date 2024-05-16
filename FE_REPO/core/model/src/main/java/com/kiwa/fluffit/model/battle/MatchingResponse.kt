@@ -26,17 +26,8 @@ fun MatchingResponse.toGameUIModel() =
             opponentFlupetImage = this.opponentFlupetImageUrl,
             opponentBattlePoint = this.opponentBattlePoint
         ),
-        battleType = when (this.battleTypeResponse.key) {
-            "BATTLE_ROCK" -> BattleType.BreakStone(
-                title = this.battleTypeResponse.title,
-                description = this.battleTypeResponse.description,
-                time = this.battleTypeResponse.time
-            )
-
-            else -> BattleType.RaisingHeartBeat(
-                title = this.battleTypeResponse.title,
-                description = this.battleTypeResponse.description,
-                time = this.battleTypeResponse.time
-            )
-        }
+        key = this.battleTypeResponse.key,
+        title = this.battleTypeResponse.title,
+        description = this.battleTypeResponse.description,
+        time = this.battleTypeResponse.time
     )

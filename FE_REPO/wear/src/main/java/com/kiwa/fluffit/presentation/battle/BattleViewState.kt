@@ -17,7 +17,10 @@ sealed class BattleViewState : ViewState {
             battleId = "", opponentInfo = OpponentInfo(
                 "", "", "", 0
             ),
-            battleType = BattleType.BreakStone("", "", 0)
+            key = "",
+            title = "",
+            description = "",
+            0
         ),
         override val loading: Boolean = false,
         val findMatching: Boolean = false,

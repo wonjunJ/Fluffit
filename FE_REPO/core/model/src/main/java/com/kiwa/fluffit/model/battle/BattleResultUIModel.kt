@@ -5,5 +5,5 @@ data class BattleResultUIModel(
     val opponentBattleScore: Int,
     val myBattleScore: Int,
     val battlePoint: Int,
-    val pointDiff: Int,
+    val pointDiff: Int
 )

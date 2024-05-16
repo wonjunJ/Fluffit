@@ -1,6 +1,6 @@
 package com.kiwa.fluffit.model.battle
 
-data class BattleResultRequest (
+data class BattleResultRequest(
     val battleId: String,
     val score: Int
 )

@@ -1,17 +1,21 @@
 package com.kiwa.fluffit.presentation.game
 
 import androidx.lifecycle.viewModelScope
+import com.example.wearapp.presentation.HealthRepository
 import com.kiwa.domain.usecase.GetBattleResultUseCase
 import com.kiwa.fluffit.base.BaseViewModel
 import com.kiwa.fluffit.model.battle.BattleResultUIModel
 import com.kiwa.fluffit.model.battle.GameUIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    private val getBattleResultUseCase: GetBattleResultUseCase
+    private val getBattleResultUseCase: GetBattleResultUseCase,
 ) : BaseViewModel<GameViewState, GameViewEvent>() {
     override fun createInitialState(): GameViewState = GameViewState.MatchingCompleted()
 

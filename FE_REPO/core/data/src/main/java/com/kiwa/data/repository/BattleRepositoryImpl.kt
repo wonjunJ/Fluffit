@@ -4,11 +4,9 @@ import com.kiwa.data.datasource.BattleDataSource
 import com.kiwa.domain.repository.BattleRepository
 import com.kiwa.fluffit.model.battle.BattleLog
 import com.kiwa.fluffit.model.battle.BattleLogModel
-import com.kiwa.fluffit.model.battle.BattleResultResponse
 import com.kiwa.fluffit.model.battle.BattleResultUIModel
 import com.kiwa.fluffit.model.battle.GameUIModel
 import com.kiwa.fluffit.model.battle.toGameUIModel
-import okhttp3.internal.wait
 import javax.inject.Inject
 
 class BattleRepositoryImpl @Inject constructor(
@@ -44,6 +42,6 @@ class BattleRepositoryImpl @Inject constructor(
                     )
                 )
             },
-            onFailure = { Result.failure(it) })
-
+            onFailure = { Result.failure(it) }
+        )
 }

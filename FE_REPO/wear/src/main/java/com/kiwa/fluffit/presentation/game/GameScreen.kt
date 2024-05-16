@@ -1,6 +1,8 @@
 package com.kiwa.fluffit.presentation.game
 
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,13 +26,19 @@ internal fun GameScreen(
             add(ImageDecoderDecoder.Factory())
         }.build()
 
-    viewModel.onTriggerEvent(GameViewEvent.Init(gameUIModel))
+    LaunchedEffect(Unit) {
+        viewModel.onTriggerEvent(GameViewEvent.Init(gameUIModel))
+    }
 
-    when (val uiState = viewModel.uiState.collectAsState().value) {
-        is GameViewState.Battle -> when (uiState.gameUIModel.battleType) {
-            is BattleType.BreakStone -> BreakStoneGameUI(
-                uiState.gameUIModel.battleType.time,
-                uiState.gameUIModel.battleType.description,
+    val uiState = viewModel.uiState.collectAsState().value
+
+    Log.d("확인", uiState.toString())
+
+    when (uiState) {
+        is GameViewState.Battle -> when (uiState.gameUIModel.key) {
+            "BATTLE_ROCK" -> BreakStoneGameUI(
+                uiState.gameUIModel.time,
+                uiState.gameUIModel.description,
                 imageLoader
             ) { it ->
                 viewModel.onTriggerEvent(
@@ -38,7 +46,15 @@ internal fun GameScreen(
                 )
             }
 
-            is BattleType.RaisingHeartBeat -> RaisingHeartBeatUI()
+            else -> RaisingHeartBeatUI(
+                uiState.gameUIModel.time,
+                uiState.gameUIModel.description,
+                imageLoader,
+            ) { it ->
+                viewModel.onTriggerEvent(
+                    GameViewEvent.OnFinishGame(it, uiState.gameUIModel.battleId)
+                )
+            }
         }
 
         is GameViewState.BattleResult -> BattleResultUI(uiState, imageLoader) { onFinishBattle() }

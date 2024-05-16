@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.kiwa.domain.usecase.FindMatchingUseCase
 import com.kiwa.fluffit.base.BaseViewModel
 import com.kiwa.fluffit.model.battle.BattleLogModel
+import com.kiwa.fluffit.model.battle.BattleType
 import com.kiwa.fluffit.model.battle.GameUIModel
+import com.kiwa.fluffit.model.battle.OpponentInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -45,11 +47,23 @@ class BattleViewModel @Inject constructor(
         }
 
     private suspend fun findMatching() {
-        setState { setLoading() }
-        findMatchingUseCase().fold(
-            onSuccess = { setState { findMatchingCompleted(it) } },
-            onFailure = { setState { cancelFindMatching("매칭에 실패했습니다.") } }
-        )
+//        setState { setLoading() }
+//        findMatchingUseCase().fold(
+//            onSuccess = { setState { findMatchingCompleted(it) } },
+//            onFailure = { setState { cancelFindMatching("매칭에 실패했습니다.") } }
+//        )
+        setState {
+            findMatchingCompleted(
+                GameUIModel(
+                    battleId = "123",
+                    key =  "",
+                    title = "",
+                    description = "30초동안 높은 심박수를 기로하세요",
+                    time = 10,
+                    opponentInfo = OpponentInfo("적이에용ㅎㅇ", "누가날제끼나", "", 1200)
+                )
+            )
+        }
     }
 
     private fun BattleViewState.findMatchingCompleted(gameUIModel: GameUIModel): BattleViewState =
@@ -63,7 +77,6 @@ class BattleViewModel @Inject constructor(
 
 
     private fun BattleViewState.cancelFindMatching(message: String = ""): BattleViewState {
-        Log.d("확인", "취소")
         return when (this) {
             is BattleViewState.Default -> this.copy(
                 loading = false,
