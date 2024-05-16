@@ -109,6 +109,7 @@ public class BattleService {
 //                        }
                         else {
                             shouldRetry.set(!createAndNotifyBattle(operations, userId, opponentId)); // setBattle 결과에 따라 재시도 설정
+                            operations.opsForHash().put(USER_BATTLE_KEY, userId, "Battle: 들어가는지 확인");
                         }
 
                         return operations.exec(); // 트랜잭션 완료
@@ -134,6 +135,7 @@ public class BattleService {
 
         log.info("리퀘스트 배틀 메서드가 끝날 때의 로그");
         logCurrentQueueState(BATTLE_QUEUE_KEY);
+        System.out.println(redisTemplate.opsForHash().get(USER_BATTLE_KEY, userId));
     }
 
     private boolean createAndNotifyBattle(RedisOperations operations, String userId, String opponentId) {
