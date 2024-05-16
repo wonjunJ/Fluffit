@@ -64,10 +64,9 @@ public class BattleService {
         ListOperations<String, String> listOps = redisTemplate.opsForList();
 
         redisTemplate.watch(BATTLE_QUEUE_KEY); // 대기 큐에
+        redisTemplate.multi(); // 레디스 트랜잭션 큐에 쌓기 시작
 
         try {
-            redisTemplate.multi(); // 레디스 트랜잭션 큐에 쌓기 시작
-
             String opponentId = listOps.leftPop(BATTLE_QUEUE_KEY);
 
             if (opponentId == null || getUserBattle(opponentId) != null) {
@@ -122,10 +121,11 @@ public class BattleService {
     }
 
     private void notifyJustMatched(String userId, String opponentId, Battle battle) {
-        FlupetInfoTempClientDto opponentFlupetInfoDto = flupetFeignClient.getFlupetInfo(opponentId);
+        FlupetInfoClientDto opponentFlupetInfoDto = flupetFeignClient.getFlupetInfo(opponentId);
+
         String imgUrl;
-        if (opponentFlupetInfoDto.getImageUrl() != null && !opponentFlupetInfoDto.getImageUrl().isEmpty()) {
-            imgUrl = opponentFlupetInfoDto.getImageUrl().get(opponentFlupetInfoDto.getImageUrl().size() - 1);
+        if (opponentFlupetInfoDto.getFlupetImageUrl() != null) {
+            imgUrl = opponentFlupetInfoDto.getFlupetImageUrl();
         } else {
             imgUrl = "";
         }
@@ -134,7 +134,7 @@ public class BattleService {
                         .result(true)
                         .opponentName(memberFeignClient.getNickName(opponentId).getNickname())
                         .opponentBattlePoint(memberFeignClient.getBattlePoint(opponentId).getPoint())
-                        .opponentFlupetName(opponentFlupetInfoDto.getFlupetName())
+                        .opponentFlupetName(opponentFlupetInfoDto.getFlupetNickname())
                         .opponentFlupetImageUrl(imgUrl)
                         .battleId(battle.getId())
                         .battleType(battle.getBattleType())
