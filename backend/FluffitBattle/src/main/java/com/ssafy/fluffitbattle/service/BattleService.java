@@ -93,7 +93,7 @@ public class BattleService {
                             operations.opsForList().rightPush(BATTLE_QUEUE_KEY, userId);
                             operations.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
                             log.info(userId + " 배틀큐에 들어갔어요");
-                            logCurrentQueueState(); // Redis에 값이 정상적으로 추가되었는지 확인
+                            logCurrentQueueState(BATTLE_QUEUE_KEY); // Redis에 값이 정상적으로 추가되었는지 확인
                         } else if (Objects.equals(userId, opponentId) || getUserBattle(userId) != null) {
                             shouldRetry.set(false);
                         } else {
@@ -122,7 +122,7 @@ public class BattleService {
         }
 
         log.info("리퀘스트 배틀 메서드가 끝날 때의 로그");
-        logCurrentQueueState();
+        logCurrentQueueState(BATTLE_QUEUE_KEY);
     }
 
     private boolean createAndNotifyBattle(String userId, String opponentId) {
@@ -145,11 +145,11 @@ public class BattleService {
         return setBattle(theBattle);
     }
 
-    private void logCurrentQueueState() { // 큐 상태 로깅
+    private void logCurrentQueueState(String key) { // 큐 상태 로깅
         ListOperations<String, String> listOps = redisTemplate.opsForList();
-        Long queueSize = listOps.size(BATTLE_QUEUE_KEY); // 큐의 현재 크기를 가져옵니다.
+        Long queueSize = listOps.size(key); // 큐의 현재 크기를 가져옵니다.
         if (queueSize == null) queueSize = 0L;
-        List<String> queueContents = listOps.range(BATTLE_QUEUE_KEY, 0, queueSize); // 큐의 전체 내용을 가져옵니다.
+        List<String> queueContents = listOps.range(key, 0, queueSize); // 큐의 전체 내용을 가져옵니다.
         log.info("Current queue size: {}", queueSize);
         log.info("Queue contents: {}", queueContents);
     }
@@ -163,12 +163,13 @@ public class BattleService {
         } else {
             imgUrl = "";
         }
+
         notificationService.notifyUser(userId, JUST_NOW_MATCHED_EVENTNAME,
                 BattleMatchingResponseDto.builder()
                         .result(true)
                         .opponentName(memberFeignClient.getNickName(opponentId).getNickname())
                         .opponentBattlePoint(memberFeignClient.getBattlePoint(opponentId).getPoint())
-                        .opponentFlupetName(opponentFlupetInfoDto.getFlupetNickname())
+                        .opponentFlupetName(opponentFlupetInfoDto.getFlupetNickname() == null ? "" : opponentFlupetInfoDto.getFlupetNickname())
                         .opponentFlupetImageUrl(imgUrl)
                         .battleId(battle.getId())
                         .battleType(battle.getBattleType())
@@ -188,6 +189,9 @@ public class BattleService {
     private void setUser(String userId, Long battleId) {
         redisTemplate.opsForValue().set("User:" + userId, "Battle:" + battleId, 80, TimeUnit.SECONDS);
         redisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
+
+        System.out.println("userBattle 들어가는 거 ");
+        logCurrentQueueState(USER_BATTLE_KEY);
     }
 
     private boolean setBattle(Battle battle) {
