@@ -1,6 +1,7 @@
 package com.ssafy.fluffitflupet.scheduler
 
 import com.ssafy.fluffitflupet.entity.MemberFlupet
+import com.ssafy.fluffitflupet.repository.FoodRepository
 import com.ssafy.fluffitflupet.repository.MemberFlupetRepository
 import com.ssafy.fluffitflupet.service.FlupetService
 import jakarta.annotation.PreDestroy
@@ -23,7 +24,8 @@ class PetTaskScheduler(
     private val memberFlupetRepository: MemberFlupetRepository,
     private val env: Environment,
     private val reactiveRedisTemplate: ReactiveRedisTemplate<String, String>,
-    private val achaCalculator: AchaCalculator
+    private val achaCalculator: AchaCalculator,
+    private val foodRepository: FoodRepository
 ): CoroutineScope { //CoroutineScope를 컴포넌트 레벨에서 구현하여 각 스케쥴된 작업이 자신의 CoroutineScope를 가지게 된다.
     private val job = Job()
     override val coroutineContext: CoroutineContext
@@ -138,6 +140,22 @@ class PetTaskScheduler(
         for(mf in dropPat){
             mf.patCnt = 5
             launch(Dispatchers.IO) { memberFlupetRepository.save(mf).awaitSingle() }
+        }
+
+        launch(Dispatchers.IO) { initStock() }
+    }
+
+    suspend fun initStock(){
+        val foods = foodRepository.findAll()
+        foods.collect{value ->
+            if(value.id == 1L){ //기본
+                value.stock = 70
+            }else if(value.id == 2L){ //인스턴스
+                value.stock = 100
+            }else{ //고급
+                value.stock = 10
+            }
+            withContext(Dispatchers.IO) { foodRepository.save(value) }
         }
     }
 
