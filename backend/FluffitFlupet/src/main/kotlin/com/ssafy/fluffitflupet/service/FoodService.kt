@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.redis.core.ReactiveRedisTemplate
 import org.springframework.stereotype.Service
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantLock
 
 @Service
 class FoodService(
@@ -31,6 +32,7 @@ class FoodService(
 ) {
     //lombok slf4j를 쓰기 위해
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
+    private val lockHolder = ThreadLocal<RLockReactive>()
 
     suspend fun getFeedList(userId: String): FoodListResponse = coroutineScope {
         val foods = ArrayList<FoodListResponse.Food>()
@@ -73,6 +75,7 @@ class FoodService(
                     coinWait.cancel()
                     throw CustomBadRequestException(ErrorType.LOCK_NOT_AVAILABLE)
                 }
+                lockHolder.set(rLock)
                 lockAcquired = true
                 //=== 락 획득 후 로직 수행 ===
                 log.info("락 획득 로직 수행 시작")
@@ -110,9 +113,9 @@ class FoodService(
                 log.error(e.message)
                 throw CustomBadRequestException(ErrorType.LOCK_INTERRUPTED_ERROR)
             }finally {
-                if(rLock.isLocked.awaitSingle()){
+                if(lockHolder.get().isLocked.awaitSingle()){
                     log.info("여기 왔는데 왜 자꾸 오류냐??")
-                    rLock.unlock().awaitSingleOrNull()
+                    lockHolder.get().unlock().awaitSingleOrNull()
                     log.info("unlock 끝???")
                 }
             }
