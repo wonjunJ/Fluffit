@@ -88,7 +88,7 @@ public class RedisConfig {
     @Bean
     @Primary
     public RedisTemplate<String, Object> redisTemplate() {
-        return createRedisTemplate(redisConnectionFactory());
+        return createRedisTemplate(redisConnectionFactoryForBattle());
     }
 
     @Bean

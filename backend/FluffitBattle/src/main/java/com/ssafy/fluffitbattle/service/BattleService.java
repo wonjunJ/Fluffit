@@ -42,7 +42,8 @@ public class BattleService {
     private final KafkaProducer kafkaProducer;
 
     @Qualifier("stringRedisTemplate")
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> stringRedisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     @Qualifier("battleRedisTemplate")
     private final RedisTemplate<String, Battle> battleRedisTemplate;
 
@@ -73,8 +74,8 @@ public class BattleService {
     public void requestBattle(String userId) {
         System.out.println("리퀘스트배틀 들어왔다 !!!!! {} "+ userId);
 
-        userBattleObjectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, "리퀘스트...", "들어가니");
-        System.out.println(userBattleObjectRedisTemplate.opsForHash().get(USER_BATTLE_KEY, "리퀘스트..."));
+        redisTemplate.opsForHash().put(USER_BATTLE_KEY, "리퀘스트...", "들어가니");
+        System.out.println(redisTemplate.opsForHash().get(USER_BATTLE_KEY, "리퀘스트..."));
         boolean success = false;
 
         int retryCount = 0;
@@ -85,7 +86,7 @@ public class BattleService {
             AtomicBoolean shouldRetry = new AtomicBoolean(false);
 
             try {
-                List<Object> results = redisTemplate.execute(new SessionCallback<List<Object>>() {
+                List<Object> results = stringRedisTemplate.execute(new SessionCallback<List<Object>>() {
                     @Override
                     public List<Object> execute(RedisOperations operations) throws DataAccessException {
                         operations.watch(BATTLE_QUEUE_KEY); // 대기 큐에
@@ -111,8 +112,8 @@ public class BattleService {
 //                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
 //                        }
                         else {
-                            userBattleObjectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, "check", "che");
-                            System.out.println("확인합니다 " + userBattleObjectRedisTemplate.opsForHash().get(USER_BATTLE_KEY, "check"));
+                            redisTemplate.opsForHash().put(USER_BATTLE_KEY, "check", "che");
+                            System.out.println("확인합니다 " + redisTemplate.opsForHash().get(USER_BATTLE_KEY, "check"));
                             shouldRetry.set(!createAndNotifyBattle(operations, userId, opponentId)); // setBattle 결과에 따라 재시도 설정
 
                             operations.opsForHash().put(USER_BATTLE_KEY, "안녕하세요", "Battle: 들어가는지 확인");
@@ -129,7 +130,7 @@ public class BattleService {
                 if (results == null || (results.isEmpty() && shouldRetry.get())) {
                     log.info("Transaction failed, retrying...");
                     System.out.println("트랜잭션 exec도 했는데 갑자기 실패함!!! 이거 뭐임!!!!!");
-                    redisTemplate.unwatch(); // 트랜잭션 실패 시 unwatch 호출
+                    stringRedisTemplate.unwatch(); // 트랜잭션 실패 시 unwatch 호출
                 } else {
                     success = true; // 트랜잭션 성공 시 루프 종료
                 }
@@ -137,13 +138,13 @@ public class BattleService {
             } catch (Exception e) {
                 System.out.println("아 에러 제발");
                 e.printStackTrace();
-                redisTemplate.unwatch(); // 예외 발생 시 unwatch 호출
+                stringRedisTemplate.unwatch(); // 예외 발생 시 unwatch 호출
             }
         }
 
         log.info("리퀘스트 배틀 메서드가 끝날 때의 로그");
         logCurrentQueueState(BATTLE_QUEUE_KEY);
-        System.out.println(redisTemplate.opsForHash().get(USER_BATTLE_KEY, userId));
+        System.out.println(stringRedisTemplate.opsForHash().get(USER_BATTLE_KEY, userId));
     }
 
     private boolean createAndNotifyBattle(RedisOperations<String, String> operations, String userId, String opponentId) {
@@ -167,7 +168,7 @@ public class BattleService {
     }
 
     private void logCurrentQueueState(String key) { // 큐 상태 로깅
-        ListOperations<String, String> listOps = redisTemplate.opsForList();
+        ListOperations<String, String> listOps = stringRedisTemplate.opsForList();
         Long queueSize = listOps.size(key); // 큐의 현재 크기를 가져옵니다.
         if (queueSize == null) queueSize = 0L;
         List<String> queueContents = listOps.range(key, 0, queueSize); // 큐의 전체 내용을 가져옵니다.
@@ -211,14 +212,10 @@ public class BattleService {
         try {
             userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
             System.out.println(" 레디스에 들어가는 거 맞잖아 맞다고 해 " + userBattleLongRedisTemplate.opsForValue().get("User:" + userId));
-            operations.opsForValue().set("User:" + userId, "Battle:" + battleId, 80, TimeUnit.SECONDS);
-            System.out.println(" operations 들어가는 거 맞잖아 맞다고 해 " + operations.opsForValue().get("User:" + userId));
 
             System.out.println("Setting hash in Redis: " + USER_BATTLE_KEY + " -> " + userId + " : " + "Battle:" + battleId);
-            userBattleObjectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
-            System.out.println(" 레디스에 해시도 들어가야 하는데 " + userBattleObjectRedisTemplate.opsForHash().get(USER_BATTLE_KEY, userId));
-            operations.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
-            System.out.println(" 레디스에 해시도 들어가야 하는데 " + operations.opsForHash().get(USER_BATTLE_KEY, userId));
+            redisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
+            System.out.println(" 레디스에 해시도 들어가야 하는데 " + redisTemplate.opsForHash().get(USER_BATTLE_KEY, userId));
         } catch (Exception e) {
             System.err.println("Failed to set user in Redis: " + e.getMessage());
             e.printStackTrace();
@@ -304,11 +301,11 @@ public class BattleService {
     }
 
     private void cleanUpRedisEntries(Battle battle, String battleKey) {
-        redisTemplate.delete(battleKey);
-        redisTemplate.delete("User:" + battle.getOrganizerId());
-        redisTemplate.delete("User:" + battle.getParticipantId());
-        redisTemplate.opsForHash().delete(USER_BATTLE_KEY, battle.getOrganizerId());
-        redisTemplate.opsForHash().delete(USER_BATTLE_KEY, battle.getParticipantId());
+        stringRedisTemplate.delete(battleKey);
+        stringRedisTemplate.delete("User:" + battle.getOrganizerId());
+        stringRedisTemplate.delete("User:" + battle.getParticipantId());
+        stringRedisTemplate.opsForHash().delete(USER_BATTLE_KEY, battle.getOrganizerId());
+        stringRedisTemplate.opsForHash().delete(USER_BATTLE_KEY, battle.getParticipantId());
     }
 
     private void notifyResults(Battle battle) {
@@ -343,7 +340,7 @@ public class BattleService {
             writeRecord(battleKey, userId, -1);
         }
 
-        redisTemplate.opsForHash().delete(USER_BATTLE_KEY, userId);
+        stringRedisTemplate.opsForHash().delete(USER_BATTLE_KEY, userId);
     }
 
     public Slice<BattleRecordItemDto> getBattleRecords(String userId, Pageable pageable) {
