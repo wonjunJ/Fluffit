@@ -11,10 +11,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -62,49 +65,50 @@ public class BattleService {
     // 매칭 요청 처리
     public void requestBattle(String userId) {
         System.out.println("리퀘스트배틀 들어왔다 !!!!! {} "+ userId);
-        ListOperations<String, String> listOps = redisTemplate.opsForList();
+        boolean success = false;
 
-        boolean transactionStarted = false;
-        boolean executeStarted = false;
+        while (!success) {
+            try {
+                List<Object> results = redisTemplate.execute(new SessionCallback<List<Object>>() {
+                    @Override
+                    public List<Object> execute(RedisOperations operations) throws DataAccessException {
+                        operations.watch(BATTLE_QUEUE_KEY); // 대기 큐에
+                        System.out.println("워치 설정은 성공한 듯");
 
-        try {
-            redisTemplate.watch(BATTLE_QUEUE_KEY); // 대기 큐에
-            System.out.println("워치 설정은 성공한 듯");
-            redisTemplate.multi(); // 레디스 트랜잭션 큐에 쌓기 시작
-            System.out.println("멀티 설정도 성공");
-            transactionStarted = true;
+                        operations.multi(); // 레디스 트랜잭션 큐에 쌓기 시작
+                        System.out.println("멀티 설정도 성공");
 
-            String opponentId = listOps.leftPop(BATTLE_QUEUE_KEY);
+                        String opponentId = (String) operations.opsForList().leftPop(BATTLE_QUEUE_KEY);
 
-            if (opponentId == null || getUserBattle(opponentId) != null) {
-                listOps.rightPush(BATTLE_QUEUE_KEY, userId);
-                redisTemplate.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
-                logCurrentQueueState(); // Redis에 값이 정상적으로 추가되었는지 확인
-            } else if (Objects.equals(userId, opponentId) || getUserBattle(userId) != null) {
+                        if (opponentId == null || getUserBattle(opponentId) != null) {
+                            operations.opsForList().rightPush(BATTLE_QUEUE_KEY, userId);
+                            operations.expire(BATTLE_QUEUE_KEY, 1, TimeUnit.MINUTES);
+                            logCurrentQueueState(); // Redis에 값이 정상적으로 추가되었는지 확인
+                        } else if (Objects.equals(userId, opponentId) || getUserBattle(userId) != null) {
+                            // 아무것도 하지 않음
+                        } else {
+                            createAndNotifyBattle(userId, opponentId);
+                        }
 
-            } else {
-                createAndNotifyBattle(userId, opponentId);
+                        return operations.exec(); // 트랜잭션 완료
+                    }
+                });
+
+                System.out.println("execute 실행 됨??");
+
+                if (results == null || results.isEmpty()) {
+                    log.info("Transaction failed, retrying...");
+                    System.out.println("트랜잭션 exec도 했는데 갑자기 실패함!!! 이거 뭐임!!!!!");
+                    redisTemplate.unwatch(); // 트랜잭션 실패 시 unwatch 호출
+                } else {
+                    success = true; // 트랜잭션 성공 시 루프 종료
+                }
+
+            } catch (Exception e) {
+                System.out.println("아 에러 제발");
+                e.printStackTrace();
+                redisTemplate.unwatch(); // 예외 발생 시 unwatch 호출
             }
-
-            List<Object> results = redisTemplate.exec(); // 트랜잭션 완료
-            System.out.println("execute 실행 됨??");
-            transactionStarted = false;
-            if (results == null || results.isEmpty()) {
-                log.info("Transaction failed, retrying...");
-                System.out.println("트랜잭션 exec도 했는데 갑자기 실패함!!! 이거 뭐임!!!!!");
-                requestBattle(userId); // 트랜잭션이 실패하면 재시도
-            }
-
-        } catch (Exception e) {
-            System.out.println("아 에러 제발");
-            e.printStackTrace();
-            if (transactionStarted) {
-                redisTemplate.discard();  // 트랜잭션 취소
-            }
-
-//            throw e;  // or handle error gracefully
-        } finally {
-            redisTemplate.unwatch();
         }
 
         logCurrentQueueState();
