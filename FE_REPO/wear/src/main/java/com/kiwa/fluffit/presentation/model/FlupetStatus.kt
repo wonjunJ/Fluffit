@@ -10,5 +10,5 @@ data class FlupetStatus(
     val isEvolutionAvailable: Boolean,
     val nextFullnessUpdateTime: Long,
     val nextHealthUpdateTime: Long,
-    val coin: String
+    val coin: Int
 )
