@@ -200,8 +200,8 @@ public class BattleService {
     private void setUser(RedisOperations operations, String userId, Long battleId) {
         userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
         System.out.println(" 레디스에 들어가는 거 맞잖아 맞다고 해 " + userBattleLongRedisTemplate.opsForValue().get("User:" + userId));
-        userBattleObjectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
-        System.out.println(" 레디스에 해시도 들어가야 하는데 " + userBattleObjectRedisTemplate.opsForHash().get(USER_BATTLE_KEY, userId));
+        operations.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
+        System.out.println(" 레디스에 해시도 들어가야 하는데 " + operations.opsForHash().get(USER_BATTLE_KEY, userId));
     }
 
     private boolean setBattle(Battle battle) {
