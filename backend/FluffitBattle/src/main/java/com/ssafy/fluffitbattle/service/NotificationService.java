@@ -33,7 +33,7 @@ public class NotificationService {
         SseEmitter emitter = new SseEmitter(6000L * 5); // 5분 정도 연결
         emitters.put(userId, emitter);
         emitter.onCompletion(() -> {
-            if (whichController.equals("wait")) {
+            if (whichController.equals("wait") && redisTemplate.opsForList().leftPop(BATTLE_QUEUE_KEY).equals(userId)) {
                 notifyUser(userId, "fail_matching", BattleMatchingResponseDto.builder().result(false).build());
             }
             emitters.remove(userId);
