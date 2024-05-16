@@ -32,7 +32,8 @@ class FoodService(
 ) {
     //lombok slf4j를 쓰기 위해
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
-    private val lockHolder = ThreadLocal<RLockReactive>()
+    val singleThreadContext = newSingleThreadContext("MyThread")
+    //private val lockHolder = ThreadLocal<RLockReactive>()
 
     suspend fun getFeedList(userId: String): FoodListResponse = coroutineScope {
         val foods = ArrayList<FoodListResponse.Food>()
@@ -68,14 +69,13 @@ class FoodService(
         val leaseTime = 4L //락을 최대 임대하는 시간
 
         var lockAcquired = false
-        withContext(Dispatchers.IO){
+        withContext(singleThreadContext){
             try {
                 val available = rLock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS).awaitSingle()
                 if(!available){
                     coinWait.cancel()
                     throw CustomBadRequestException(ErrorType.LOCK_NOT_AVAILABLE)
                 }
-                lockHolder.set(rLock)
                 lockAcquired = true
                 //=== 락 획득 후 로직 수행 ===
                 log.info("락 획득 로직 수행 시작")
@@ -99,23 +99,23 @@ class FoodService(
                                                         else mflupetRst.fullness + food.fullnessEffect
                 mflupetRst.health = if(mflupetRst.health + food.healthEffect >= 100) 100
                                                         else mflupetRst.health + food.healthEffect
-//                withContext(Dispatchers.IO) {
-//                    memberFlupetRepository.save(mflupetRst).awaitSingle()
-//                    food.stock--
-//                    foodRepository.save(food)
-//                }
-                memberFlupetRepository.save(mflupetRst).awaitSingle()
-                food.stock--
-                foodRepository.save(food)
+                withContext(Dispatchers.IO) {
+                    memberFlupetRepository.save(mflupetRst).awaitSingle()
+                    food.stock--
+                    foodRepository.save(food)
+                }
+//                memberFlupetRepository.save(mflupetRst).awaitSingle()
+//                food.stock--
+//                foodRepository.save(food)
             }catch (e: InterruptedException){
                 //락을 얻으려고 시도하다가 인터럽트를 받았을 때 발생하는 예외
                 coinWait.cancel()
                 log.error(e.message)
                 throw CustomBadRequestException(ErrorType.LOCK_INTERRUPTED_ERROR)
             }finally {
-                if(lockHolder.get().isLocked.awaitSingle()){
+                if(rLock.isLocked.awaitSingle()){
                     log.info("여기 왔는데 왜 자꾸 오류냐??")
-                    lockHolder.get().unlock().awaitSingleOrNull()
+                    rLock.unlock().awaitSingleOrNull()
                     log.info("unlock 끝???")
                 }
             }
