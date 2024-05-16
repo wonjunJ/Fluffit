@@ -1,5 +1,6 @@
-package com.kiwa.fluffit.presentation.components
+package com.kiwa.fluffit.presentation.feed.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -22,19 +23,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.Text
 import com.kiwa.fluffit.R
+import com.kiwa.fluffit.presentation.components.CoinDisplay
 import com.kiwa.fluffit.presentation.feed.FeedViewModel
+import com.kiwa.fluffit.presentation.feed.FeedViewState
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun FeedDescriptionBox() {
-    val feedViewModel : FeedViewModel = hiltViewModel()
+fun FeedDescriptionBox(
+    feedViewState: FeedViewState,
+    feedViewModel: FeedViewModel
+) {
     val visible by feedViewModel.showDescription.collectAsState()
-
+    val preset = if (feedViewState.foodList[feedViewState.feedNum].health < 0) "" else "+"
 
     AnimatedVisibility(
         modifier =
@@ -54,47 +60,54 @@ fun FeedDescriptionBox() {
         exit = fadeOut(animationSpec = tween(durationMillis = 300))  // 점점 어두워지며 사라지는 효과
     ) {
         Box() {
-            Box(modifier = Modifier
-                .align(Alignment.Center)
-                .width(120.dp)
-                .height(120.dp)
-                .background(color = Color.White, shape = RoundedCornerShape(30.dp))
-                .padding(5.dp) ){
+            Box(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .width(120.dp)
+                    .height(120.dp)
+                    .background(color = Color.White, shape = RoundedCornerShape(30.dp))
+                    .padding(5.dp)
+            ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.align(Alignment.Center)
                 ) {
                     Text(
                         modifier = Modifier.padding(5.dp),
-                        text = "건강한 음식",
+                        text = feedViewState.foodList[feedViewState.feedNum].info,
                         style = TextStyle(
                             fontFamily = fluffitWearFontFamily,
                             color = Color.Black,
-                            fontSize = 16.sp
-                        )
+                            fontSize = 12.sp
+                        ),
+                        textAlign = TextAlign.Center
                     )
                     Text(
                         modifier = Modifier.padding(2.dp),
-                        text = "건강 +2",
+                        text = "건강 " + preset + feedViewState.foodList[feedViewState.feedNum].health,
                         style = TextStyle(
                             fontFamily = fluffitWearFontFamily,
                             color = colorResource(id = R.color.watchGreen),
                             fontSize = 12.sp
-                        )
+                        ),
+                        textAlign = TextAlign.Center
                     )
                     Text(
                         modifier = Modifier.padding(2.dp),
-                        text = "포만감 +2",
+                        text = "포만감 +" + feedViewState.foodList[feedViewState.feedNum].fullness,
                         style = TextStyle(
                             fontFamily = fluffitWearFontFamily,
                             color = colorResource(id = R.color.watchBlue),
                             fontSize = 12.sp
-                        )
+                        ),
+                        textAlign = TextAlign.Center
                     )
-                    Box(modifier =
+                    Box(
+                        modifier =
                         Modifier.padding(top = 5.dp)
                     ) {
-                        CoinDisplay(coin = 500, textColor = Color.Black)
+                        CoinDisplay(coin = feedViewState.foodList[feedViewState.feedNum].price, textColor = Color.Black)
+//                        CoinDisplay(coin = feedViewState.foodList[feedViewModel.selectedButtonIndex.value!!].price.toLong(), textColor = Color.Black)
                     }
                 }
             }

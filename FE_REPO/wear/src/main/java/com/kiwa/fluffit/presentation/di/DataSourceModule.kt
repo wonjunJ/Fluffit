@@ -2,6 +2,8 @@ package com.kiwa.fluffit.presentation.di
 
 import com.kiwa.fluffit.presentation.datasource.BattleDataSource
 import com.kiwa.fluffit.presentation.datasource.BattleDataSourceImpl
+import com.kiwa.fluffit.presentation.datasource.FeedDataSource
+import com.kiwa.fluffit.presentation.datasource.FeedDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,4 +17,9 @@ abstract class DataSourceModule {
     @Singleton
     abstract fun bindBattleDataSource(battleDataSourceImpl: BattleDataSourceImpl):
         BattleDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindFeedDataSource(feedDataSourceImpl: FeedDataSourceImpl):
+        FeedDataSource
 }

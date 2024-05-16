@@ -10,11 +10,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.Text
 import com.kiwa.fluffit.R
-import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 
 @Composable
 fun CoinDisplay(coin: Int?, textColor: Color = Color.White) {
@@ -22,7 +22,9 @@ fun CoinDisplay(coin: Int?, textColor: Color = Color.White) {
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
-            modifier = Modifier.size(15.dp).padding(end = 3.dp),
+            modifier = Modifier
+                .size(15.dp)
+                .padding(end = 3.dp),
             painter = painterResource(R.drawable.coin),
             contentDescription = "footprint"
         )
@@ -30,6 +32,7 @@ fun CoinDisplay(coin: Int?, textColor: Color = Color.White) {
             fontSize = 15.sp,
             text = "$formattedCoin",
             color = textColor,
+            textAlign = TextAlign.Center
         )
     }
 }

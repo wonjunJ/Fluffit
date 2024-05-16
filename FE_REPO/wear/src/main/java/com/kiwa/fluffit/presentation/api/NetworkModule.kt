@@ -96,4 +96,10 @@ object NetworkModule {
         tokenRepository: TokenRepository
     ): BattleResultService =
         BattleResultServiceImpl(okHttpClient, tokenRepository)
+
+    @Singleton
+    @Provides
+    fun provideFeedService(
+        retrofit:Retrofit,
+    ) : FeedService = retrofit.create(FeedService::class.java)
 }

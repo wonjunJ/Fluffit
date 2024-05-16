@@ -50,7 +50,7 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Text
 import com.kiwa.fluffit.model.battle.GameUIModel
-import com.kiwa.fluffit.presentation.components.FeedButton
+import com.kiwa.fluffit.presentation.feed.ui.FeedButton
 import com.kiwa.fluffit.presentation.screens.BattleScreen
 import com.kiwa.fluffit.presentation.screens.CheckPhoneScreen
 import com.kiwa.fluffit.presentation.screens.ExerciseScreen
@@ -230,21 +230,21 @@ fun WearApp(onNavigateToGame: (GameUIModel) -> Unit) {
     }
 }
 
-@Composable
-fun Greeting(greetingName: String) {
-    Box (modifier = Modifier.fillMaxSize()){
-        CircularProgressIndicator(
-            modifier = Modifier.fillMaxSize(),
-            indicatorColor = Color.White,
-            trackColor = Color.White.copy(alpha = 0.1f),
-            strokeWidth = 4.dp
-        )
-        Text(
-            modifier = Modifier.align(Alignment.Center),
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colors.primary,
-            text = "$greetingName"
-        )
-        FeedButton()
-    }
-}
+//@Composable
+//fun Greeting(greetingName: String) {
+//    Box (modifier = Modifier.fillMaxSize()){
+//        CircularProgressIndicator(
+//            modifier = Modifier.fillMaxSize(),
+//            indicatorColor = Color.White,
+//            trackColor = Color.White.copy(alpha = 0.1f),
+//            strokeWidth = 4.dp
+//        )
+//        Text(
+//            modifier = Modifier.align(Alignment.Center),
+//            textAlign = TextAlign.Center,
+//            color = MaterialTheme.colors.primary,
+//            text = "$greetingName"
+//        )
+//        FeedButton()
+//    }
+//}

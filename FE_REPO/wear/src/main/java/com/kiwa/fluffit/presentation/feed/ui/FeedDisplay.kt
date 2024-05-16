@@ -1,5 +1,7 @@
-package com.kiwa.fluffit.presentation.components
+package com.kiwa.fluffit.presentation.feed.ui
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,32 +16,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
 import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.feed.FeedViewModel
+import com.kiwa.fluffit.presentation.feed.FeedViewState
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 
+private const val TAG = "FeedDisplay 싸피"
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun FeedDisplay() {
-    val feedViewModel : FeedViewModel = hiltViewModel()
-
+fun FeedDisplay(
+    feedViewState: FeedViewState,
+    feedViewModel: FeedViewModel
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
-        ) {
+    ) {
         Button( // 물음표 버튼
             modifier = Modifier.size(38.dp),
             onClick = {
-                      feedViewModel.turnOnDescription()
+                feedViewModel.turnOnDescription()
             },
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.White,)
+                backgroundColor = Color.White,
+            )
         ) {
             Image(
                 modifier = Modifier.size(30.dp),
@@ -48,11 +55,13 @@ fun FeedDisplay() {
             )
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Log.d(TAG, "FeedDisplay: ${feedViewState.feedNum}")
             Text(
-                fontSize = 15.sp,
                 modifier = Modifier.padding(bottom = 8.dp),
-                text = "건강식",
-                color = Color.White
+                text = feedViewState.foodList[feedViewState.feedNum].name,
+                fontFamily = fluffitWearFontFamily,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center
             )
             Image(
                 modifier = Modifier.size(50.dp),
@@ -65,3 +74,4 @@ fun FeedDisplay() {
     }
 
 }
+
