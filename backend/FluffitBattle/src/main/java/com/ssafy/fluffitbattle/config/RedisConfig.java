@@ -41,7 +41,8 @@ public class RedisConfig {
 
     private final int BASIC_DATABASE = 0;
     private final int BATTLE_DATABASE = 1;
-    private final int WAIT_QUEUE_DATABASE = 2;
+    private final int USER_BATTLE_DATEBASE = 2;
+    private final int WAIT_QUEUE_DATABASE = 4;
 
 
     @Bean
@@ -53,6 +54,11 @@ public class RedisConfig {
     @Bean
     public LettuceConnectionFactory redisConnectionFactoryForBattle() {
         return createLettuceConnectionFactory(BATTLE_DATABASE);  // Additional connection factory for database 1
+    }
+
+    @Bean
+    public LettuceConnectionFactory redisConnectionFactoryForUserBattle() {
+        return createLettuceConnectionFactory(USER_BATTLE_DATEBASE);
     }
 
     @Bean
@@ -99,6 +105,15 @@ public class RedisConfig {
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
         template.setValueSerializer(serializer);  // String 타입 값 직렬화
 
+        return template;
+    }
+
+    @Bean
+    public RedisTemplate<String, String> userBattleRedisTemplate() {
+        RedisTemplate<String, String> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactoryForUserBattle());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
         return template;
     }
 
