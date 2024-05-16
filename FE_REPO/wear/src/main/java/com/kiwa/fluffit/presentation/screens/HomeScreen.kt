@@ -11,21 +11,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.CircularProgressIndicator
-import com.example.wearapp.presentation.HealthViewModel
 import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.components.CoinDisplay
 import com.kiwa.fluffit.presentation.components.HomePetImageDisplay
 import com.kiwa.fluffit.presentation.components.StepsDisplay
+import com.kiwa.fluffit.presentation.home.HomeViewModel
 
 @Composable
 fun MainScreen() {
-
+    val homeViewModel:HomeViewModel = hiltViewModel()
+    homeViewModel.loadFlupetStatus()
 
     Box(modifier = Modifier.fillMaxSize()) {
         CircularProgressIndicator(

@@ -28,8 +28,12 @@ class TokenViewModel @Inject constructor(
 
     fun fetchConnectedNodes() {
         nodeClient.connectedNodes.addOnSuccessListener { nodes ->
-            _nodes.postValue(nodes)
-            Log.d(TAG, "연결 기기: ${nodes[0].displayName}")
+            if (nodes.isNotEmpty()) {
+                _nodes.postValue(nodes)
+                Log.d(TAG, "연결된 기기: ${nodes[0].displayName}")
+            } else {
+                Log.d(TAG, "연결된 기기가 없습니다.")
+            }
         }.addOnFailureListener {
             Log.e("Node Info", "Failed to get connected nodes", it)
         }
