@@ -96,7 +96,11 @@ public class BattleService {
                             logCurrentQueueState(BATTLE_QUEUE_KEY); // Redis에 값이 정상적으로 추가되었는지 확인
                         } else if (Objects.equals(userId, opponentId) || getUserBattle(userId) != null) {
                             shouldRetry.set(false);
-                        } else {
+                        }
+//                        else if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
+//                            notificationService.notifyUser(userId, PET_DOES_NOT_EXIST_EVENTNAME, "");
+//                        }
+                        else {
                             shouldRetry.set(!createAndNotifyBattle(userId, opponentId)); // setBattle 결과에 따라 재시도 설정
                         }
 
@@ -188,6 +192,7 @@ public class BattleService {
 
     private void setUser(String userId, Long battleId) {
         redisTemplate.opsForValue().set("User:" + userId, "Battle:" + battleId, 80, TimeUnit.SECONDS);
+        System.out.println(" 레디스에 들어가는 거 맞잖아 맞다고 해 " + redisTemplate.opsForValue().get("User:" + userId));
         redisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
 
         System.out.println("userBattle 들어가는 거 ");
