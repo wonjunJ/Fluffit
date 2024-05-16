@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
@@ -48,9 +49,10 @@ fun FeedDisplay() {
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
+                fontSize = 15.sp,
                 modifier = Modifier.padding(bottom = 8.dp),
                 text = "건강식",
-                fontFamily = fluffitWearFontFamily
+                color = Color.White
             )
             Image(
                 modifier = Modifier.size(50.dp),

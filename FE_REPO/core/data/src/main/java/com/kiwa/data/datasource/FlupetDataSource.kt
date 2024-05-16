@@ -20,5 +20,5 @@ interface FlupetDataSource {
 
     suspend fun evolve(): Result<NewFlupetResponse>
 
-    suspend fun loadHistory() : Result<FlupetHistory>
+    suspend fun loadHistory(): Result<FlupetHistory>
 }
