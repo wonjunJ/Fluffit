@@ -190,7 +190,7 @@ public class BattleService {
     }
 
     private String getUserBattle(String userId) {
-        Object result = userBattleLongRedisTemplate.opsForHash().get(USER_BATTLE_KEY, userId);
+        Object result = objectRedisTemplate.opsForHash().get(USER_BATTLE_KEY, userId);
         return result != null ? result.toString() : null;
     }
 
@@ -314,10 +314,13 @@ public class BattleService {
 
 
     public void handleTimeout(String userId) {
+        System.out.println("만료 유저 " + userId);
         String battleKey = getUserBattle(userId);
+        System.out.println(battleKey);
 
         if (battleKey == null) return;
         Battle battle = getBattle(battleKey);
+        System.out.println(battle.getId());
 
         boolean battleNull = battle == null;
         boolean organizer = Objects.equals(battle.getOrganizerId(), userId) && battle.getOrganizerScore() != null;
@@ -326,6 +329,7 @@ public class BattleService {
             writeRecord(battleKey, userId, -1);
         }
 
+        System.out.println(userId);
         objectRedisTemplate.opsForHash().delete(USER_BATTLE_KEY, userId);
     }
 
