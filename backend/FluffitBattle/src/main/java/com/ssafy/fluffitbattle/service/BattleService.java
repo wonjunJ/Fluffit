@@ -242,6 +242,8 @@ public class BattleService {
 
     private void writeRecord(String battleKey, String userId, Integer score) {
         Battle battle = getBattle(battleKey);
+        log.info("writeRecord 메서드 진입 " + battle.getId());
+
         boolean isOpponentSubmitted = false;
         assert battle != null;
         if (userId.equals(battle.getOrganizerId())) {
@@ -263,7 +265,9 @@ public class BattleService {
 
     private void calculateWinnerAndNotifyResult(String battleKey) {
         Battle battle = getBattle(battleKey);
+
         if (battle == null) return;  // Null 체크 추가
+        log.info("calculate winner 메서드 진입 " + battle.getId());
 
         // 승자 결정 및 카프카 메시지 생성
         determineWinnerAndUpdatePoints(battle);
@@ -298,6 +302,8 @@ public class BattleService {
             organizerKafkaDto = new BattlePointKafkaDto(organizerId, -5);
             participantKafkaDto = new BattlePointKafkaDto(participantId, -5);
         }
+
+        log.info("determineWinner 메서드 진입 " + battle.getId());
 
         kafkaProducer.send("battle-point-update", organizerKafkaDto);
         kafkaProducer.send("battle-point-update", participantKafkaDto);
@@ -337,6 +343,7 @@ public class BattleService {
     public void handleTimeout(String userId) {
         log.info("만료 유저 " + userId);
         String battleKey = getUserBattle(userId);
+        log.info("만료 유저의 배틀 " + battleKey);
 
         if (battleKey == null) return;
         Battle battle = getBattle(battleKey);
@@ -345,6 +352,7 @@ public class BattleService {
         boolean organizer = Objects.equals(battle.getOrganizerId(), userId) && battle.getOrganizerScore() != null;
         boolean participant = Objects.equals(battle.getParticipantId(), userId) && battle.getParticipantScore() != null;
 
+        log.info(battleNull + " " + organizer + " " + participant);
         if (!battleNull && !organizer && !participant) {
             writeRecord(battleKey, userId, -1);
         }
