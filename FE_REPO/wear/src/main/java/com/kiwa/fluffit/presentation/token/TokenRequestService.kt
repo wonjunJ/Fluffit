@@ -2,16 +2,11 @@ package com.kiwa.fluffit.presentation.token
 
 import android.content.Context
 import android.util.Log
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
-import com.google.android.gms.wearable.Node
-import com.google.android.gms.wearable.NodeClient
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
 import com.google.gson.Gson
-import com.kiwa.fluffit.presentation.exercise.ExerciseViewModel
-import kotlinx.coroutines.launch
 
 private const val TAG = "TokenRequestService 이창곤"
 class TokenRequestService : WearableListenerService() {
@@ -32,6 +27,8 @@ class TokenRequestService : WearableListenerService() {
             val jsonData = String(messageEvent.data, Charsets.UTF_8)
             val tokens = Gson().fromJson(jsonData, TokenData::class.java)
 
+            Log.d(TAG, "$tokens")
+
             //here
             tokenRepository.updateTokens(tokens.accessToken, tokens.refreshToken)
 
@@ -39,4 +36,3 @@ class TokenRequestService : WearableListenerService() {
         }
     }
 }
-

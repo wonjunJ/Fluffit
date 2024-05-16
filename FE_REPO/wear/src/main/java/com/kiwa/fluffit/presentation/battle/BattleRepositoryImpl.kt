@@ -1,12 +1,11 @@
-package com.kiwa.data.repository
+package com.kiwa.fluffit.presentation.battle
 
-import com.kiwa.data.datasource.BattleDataSource
-import com.kiwa.domain.repository.BattleRepository
 import com.kiwa.fluffit.model.battle.BattleLog
 import com.kiwa.fluffit.model.battle.BattleLogModel
 import com.kiwa.fluffit.model.battle.BattleResultUIModel
 import com.kiwa.fluffit.model.battle.GameUIModel
 import com.kiwa.fluffit.model.battle.toGameUIModel
+import com.kiwa.fluffit.presentation.datasource.BattleDataSource
 import javax.inject.Inject
 
 class BattleRepositoryImpl @Inject constructor(

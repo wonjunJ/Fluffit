@@ -1,6 +1,6 @@
 package com.kiwa.data.util
 
-import com.kiwa.fluffit.data.BuildConfig
+import com.kiwa.fluffit.base.BuildConfig
 import java.security.InvalidKeyException
 import java.security.NoSuchAlgorithmException
 import java.util.Base64

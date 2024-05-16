@@ -1,6 +1,6 @@
-package com.kiwa.domain.usecase
+package com.kiwa.fluffit.presentation.battle.usecase
 
-import com.kiwa.domain.repository.BattleRepository
+import com.kiwa.fluffit.presentation.battle.BattleRepository
 import javax.inject.Inject
 
 class FindMatchingUseCase @Inject constructor(private val battleRepository: BattleRepository) {

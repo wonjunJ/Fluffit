@@ -1,4 +1,4 @@
-package com.kiwa.data.api
+package com.kiwa.fluffit.presentation.api
 
 import com.kiwa.fluffit.model.battle.BattleResultResponse
 

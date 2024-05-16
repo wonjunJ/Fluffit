@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(project(":core:designsystem"))
+    implementation(project(":core:base"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

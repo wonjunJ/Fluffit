@@ -35,28 +35,6 @@ object NetworkModule {
     @Retention(AnnotationRetention.BINARY)
     annotation class AuthClient
 
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class BattleSSEClient
-
-    @Singleton
-    @Provides
-    @BattleSSEClient
-    fun provideSSEClient(
-        authInterceptor: AuthInterceptor,
-        authAuthenticator: AuthAuthenticator
-    ): OkHttpClient {
-        val builder = OkHttpClient.Builder()
-        builder.apply {
-            readTimeout(60, TimeUnit.SECONDS)
-            connectTimeout(60, TimeUnit.SECONDS)
-            addInterceptor(authInterceptor)
-            addInterceptor(loggingInterceptor)
-            authenticator(authAuthenticator)
-        }
-        return builder.build()
-    }
-
     @Singleton
     @Provides
     @FluffitClient

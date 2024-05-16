@@ -1,4 +1,4 @@
-package com.kiwa.data.api
+package com.kiwa.fluffit.presentation.api
 
 interface BattleService {
     suspend fun getBattleLogs()

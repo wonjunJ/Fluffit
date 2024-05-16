@@ -1,18 +1,12 @@
 package com.kiwa.data.di
 
 import com.kiwa.data.api.AuthService
-import com.kiwa.data.api.BattleResultService
-import com.kiwa.data.api.BattleResultServiceImpl
-import com.kiwa.data.api.BattleService
 import com.kiwa.data.api.CollectionService
 import com.kiwa.data.api.FlupetService
-import com.kiwa.data.api.MatchingService
-import com.kiwa.data.api.MatchingServiceImpl
 import com.kiwa.data.api.NaverAuthService
 import com.kiwa.data.api.NaverLoginService
 import com.kiwa.data.api.RankingService
-import com.kiwa.domain.TokenManager
-import com.kiwa.fluffit.data.BuildConfig
+import com.kiwa.fluffit.base.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -139,27 +133,4 @@ object ApiModule {
         @NaverAuthRetrofit
         retrofit: Retrofit
     ): NaverAuthService = retrofit.create((NaverAuthService::class.java))
-
-    @Singleton
-    @Provides
-    fun provideBattleService(
-        @FluffitRetrofit
-        retrofit: Retrofit
-    ): BattleService = retrofit.create((BattleService::class.java))
-
-    @Singleton
-    @Provides
-    fun provideMatchingService(
-        @NetworkModule.BattleSSEClient
-        okHttpClient: OkHttpClient,
-        tokenManager: TokenManager
-    ): MatchingService = MatchingServiceImpl(okHttpClient, tokenManager)
-
-    @Singleton
-    @Provides
-    fun provideBattleResultService(
-        @NetworkModule.BattleSSEClient
-        okHttpClient: OkHttpClient,
-        tokenManager: TokenManager
-    ): BattleResultService = BattleResultServiceImpl(okHttpClient, tokenManager)
 }

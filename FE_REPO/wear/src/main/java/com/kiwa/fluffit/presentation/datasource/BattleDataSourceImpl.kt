@@ -1,16 +1,13 @@
-package com.kiwa.data.datasource
+package com.kiwa.fluffit.presentation.datasource
 
-import com.kiwa.data.api.BattleResultService
-import com.kiwa.data.api.BattleService
-import com.kiwa.data.api.MatchingService
 import com.kiwa.fluffit.model.battle.BattleResultResponse
 import com.kiwa.fluffit.model.battle.MatchingResponse
 import javax.inject.Inject
 
 class BattleDataSourceImpl @Inject constructor(
-    private val battleService: BattleService,
-    private val matchingService: MatchingService,
-    private val battleResultService: BattleResultService
+    private val battleService: com.kiwa.fluffit.presentation.api.BattleService,
+    private val matchingService: com.kiwa.fluffit.presentation.api.MatchingService,
+    private val battleResultService: com.kiwa.fluffit.presentation.api.BattleResultService
 ) : BattleDataSource {
     override suspend fun getBattleLogs() {
         TODO("Not yet implemented")

@@ -1,4 +1,4 @@
-package com.kiwa.domain.repository
+package com.kiwa.fluffit.presentation.battle
 
 import com.kiwa.fluffit.model.battle.BattleLog
 import com.kiwa.fluffit.model.battle.BattleLogModel

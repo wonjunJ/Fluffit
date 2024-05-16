@@ -1,6 +1,7 @@
 package com.kiwa.fluffit
 
 import android.app.Application
+import com.kiwa.fluffit.base.BuildConfig
 import com.navercorp.nid.NaverIdLoginSDK
 import dagger.hilt.android.HiltAndroidApp
 

@@ -1,8 +1,14 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.fluffit.hilt)
     id("kotlin-kapt")
+}
+
+val properties = Properties().apply {
+    load(project.rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -29,6 +35,14 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+
+    defaultConfig {
+        buildConfigField(
+            "String",
+            "BASE_URL",
+            "\"${properties["BASE_URL"]}\""
+        )
     }
 
     configurations.implementation {
@@ -72,7 +86,6 @@ dependencies {
     implementation(libs.coil.gif)
     implementation(libs.retrofitGson)
     implementation(project(":core:base"))
-    implementation(project(":core:data"))
     implementation(project(":core:domain"))
     implementation(project(":core:model"))
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -81,6 +94,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.retrofitGson)
     implementation(libs.coil)
+    implementation(libs.okhttp.sse)
+    implementation(libs.okhttpLogging)
 
 //    implementation(libs.hilt.android)
 //    kapt(libs.hilt.compiler)

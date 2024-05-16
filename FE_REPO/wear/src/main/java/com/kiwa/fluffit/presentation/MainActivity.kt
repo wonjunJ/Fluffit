@@ -3,11 +3,11 @@ package com.kiwa.fluffit.presentation
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.MotionEvent
 import android.view.ViewConfiguration
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.spring
@@ -15,8 +15,13 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -31,24 +36,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.InputDeviceCompat
 import androidx.core.view.MotionEventCompat
 import androidx.core.view.ViewConfigurationCompat
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Text
-import com.example.wearapp.presentation.HealthViewModel
+import com.kiwa.fluffit.model.battle.GameUIModel
 import com.kiwa.fluffit.presentation.components.FeedButton
 import com.kiwa.fluffit.presentation.screens.BattleScreen
+import com.kiwa.fluffit.presentation.screens.CheckPhoneScreen
 import com.kiwa.fluffit.presentation.screens.ExerciseScreen
 import com.kiwa.fluffit.presentation.screens.FeedScreen
 import com.kiwa.fluffit.presentation.screens.MainScreen
 import com.kiwa.fluffit.presentation.theme.FluffitTheme
+import com.kiwa.fluffit.presentation.token.TokenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 
@@ -61,7 +70,7 @@ class MainActivity : ComponentActivity() {
             // 모든 권한이 승인되었을 때 UI 설정
             setContent {
                 FluffitTheme {
-                    WearApp()
+                    WearNavHost()
                 }
             }
         } else {
@@ -131,7 +140,7 @@ class MainActivity : ComponentActivity() {
             // 모든 권한이 있을 때 UI 설정
             setContent {
                 FluffitTheme {
-                    WearApp()
+                    WearNavHost()
                 }
             }
         }
@@ -170,7 +179,6 @@ fun WearNavHost(
 fun WearApp(onNavigateToGame: (GameUIModel) -> Unit) {
     val currentPage by MainActivityViewModel.currentPage.collectAsState()
     val pagerState = rememberPagerState(pageCount = { MainActivity.PAGE_COUNT }, initialPage = currentPage)
-        rememberPagerState(pageCount = { MainActivity.PAGE_COUNT }, initialPage = currentPage)
     var showIndicator by remember { mutableStateOf(false) }
 
     val pageIndicatorState: PageIndicatorState = remember {
