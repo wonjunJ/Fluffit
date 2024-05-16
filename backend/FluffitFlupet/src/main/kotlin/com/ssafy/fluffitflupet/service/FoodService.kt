@@ -69,7 +69,7 @@ class FoodService(
         val leaseTime = 4L //락을 최대 임대하는 시간
 
         var lockAcquired = false
-        withContext(Dispatchers.Default){
+        withContext(singleThreadContext) {
             try {
                 val available = rLock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS).awaitSingle()
                 if(!available){

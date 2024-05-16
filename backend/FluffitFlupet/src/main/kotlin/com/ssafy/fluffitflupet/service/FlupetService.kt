@@ -234,9 +234,23 @@ class FlupetService(
         val flupets = flupetsWait.await()
         var flag = false
         if(flupets.isNotEmpty() && mflupet != null){
-            flag = flupets[0].birthDay.isEqual(mflupet.createTime!!.toLocalDate())
+            flag = flupets[0].birthDay.isEqual(mflupet.createTime)
         }
-        return@coroutineScope HistoryResponse(if(flupets.isEmpty()) flupets else flupets.subList(if(flag) 1 else 0, flupets.size))
+        var tmp: ArrayList<HistoryResponse.MyPet> = arrayListOf()
+        flupets.map { value ->
+            tmp.add(
+                HistoryResponse.MyPet(
+                    species = value.species,
+                    name = value.name,
+                    imageUrl = value.imageUrl,
+                    birthDay = value.birthDay.toLocalDate(),
+                    endDay = value.endDay,
+                    age = value.age,
+                    steps = value.steps
+                )
+            )
+        }
+        return@coroutineScope HistoryResponse(if(flupets.isEmpty()) tmp else tmp.subList(if(flag) 1 else 0, tmp.size))
     }
 
     suspend fun getFlupetRank(userId: String): RankingResponse = coroutineScope {

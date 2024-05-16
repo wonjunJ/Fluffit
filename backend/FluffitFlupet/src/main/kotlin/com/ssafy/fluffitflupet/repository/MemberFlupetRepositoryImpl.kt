@@ -109,7 +109,7 @@ class MemberFlupetRepositoryImpl(
             .awaitFirstOrNull()
     }
 
-    override fun findHistoryByUserId(userId: String): Flow<HistoryResponse.MyPet> {
+    override fun findHistoryByUserId(userId: String): Flow<HistoryPetDto> {
         return Flux.from(
             dslContext
                 .select(
@@ -130,11 +130,11 @@ class MemberFlupetRepositoryImpl(
                 )
         )
             .map { record ->
-                HistoryResponse.MyPet(
+                HistoryPetDto(
                     species = record.get("species", String::class.java),
                     name = record.get("name", String::class.java),
                     imageUrl = record.get(FLUPET.IMG_URL, String::class.java).split(","),
-                    birthDay = record.get(MEMBER_FLUPET.CREATE_TIME, LocalDateTime::class.java).toLocalDate(),
+                    birthDay = record.get(MEMBER_FLUPET.CREATE_TIME, LocalDateTime::class.java),
                     endDay = record.get(MEMBER_FLUPET.END_TIME, LocalDateTime::class.java).toLocalDate(),
                     age = "${ChronoUnit.DAYS.between(
                         record.get(MEMBER_FLUPET.CREATE_TIME, LocalDateTime::class.java), 
