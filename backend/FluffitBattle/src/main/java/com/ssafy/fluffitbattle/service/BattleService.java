@@ -240,7 +240,7 @@ public class BattleService {
             /* TODO
                 원래 타임아웃 80초!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              */
-            userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 12, TimeUnit.SECONDS);
+            userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
             objectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
 
         } catch (Exception e) {
@@ -415,8 +415,9 @@ public class BattleService {
 //            e.printStackTrace();
 //        }
 
-        battleRepository.deleteById(battle.getId());
+//        battleRepository.deleteById(battle.getId());
         battleRepository.saveAndFlush(battle);
+        log.info("battle save " + battleRepository.findById(battle.getId()));
 
 //        Battle theBattle = battleRepository.findById(battle.getId()).get();
 //        theBattle.setBattleDate(battle.getBattleDate());
@@ -509,7 +510,6 @@ public class BattleService {
                 .build();
     }
 
-    @Transactional
     public List<BattleStatisticItemDto> getBattleStats(String userId) {
         List<BattleStatisticItemDto> stats = battleRepository.findBattleStatsByUserId(userId);
         stats.forEach(BattleStatisticItemDto::calculateWinRate);
