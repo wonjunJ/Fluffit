@@ -10,6 +10,7 @@ import com.ssafy.fluffitbattle.exception.UserAlreadyInMatchingException;
 import com.ssafy.fluffitbattle.kafka.KafkaProducer;
 import com.ssafy.fluffitbattle.repository.BattleRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.FlushModeType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -372,6 +373,7 @@ public class BattleService {
 
         try {
             battleRepository.save(battle);
+            entityManager.setFlushMode(FlushModeType.AUTO);
             entityManager.flush();
         } catch (Exception e) {
             e.printStackTrace();
