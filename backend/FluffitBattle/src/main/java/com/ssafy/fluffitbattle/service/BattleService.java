@@ -240,7 +240,7 @@ public class BattleService {
             /* TODO
                 원래 타임아웃 80초!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              */
-            userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 40, TimeUnit.SECONDS);
+            userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 32, TimeUnit.SECONDS);
             objectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
 
         } catch (Exception e) {
@@ -379,7 +379,7 @@ public class BattleService {
         return battle;
     }
 
-//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
+    @Transactional//(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
     public void updateAndSaveBattle(Battle battle) {
         battle.setBattleDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         log.info("배틀 날짜 " + battle.getBattleDate());

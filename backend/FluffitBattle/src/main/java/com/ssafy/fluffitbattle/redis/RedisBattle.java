@@ -1,6 +1,7 @@
-package com.ssafy.fluffitbattle.entity;
+package com.ssafy.fluffitbattle.redis;
 
 //import org.springframework.data.annotation.Id;
+import com.ssafy.fluffitbattle.entity.BattleType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
@@ -12,8 +13,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//@RedisHash("Battle")
-public class Battle {
+@RedisHash("RedisBattle")
+public class RedisBattle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "battle_id")
@@ -31,10 +32,11 @@ public class Battle {
     private Integer participantScore;
 
     @Builder
-    public Battle(String organizerId, String participantId, BattleType battleType) {
+    public RedisBattle(String organizerId, String participantId, BattleType battleType) {
         this.organizerId = organizerId;
         this.participantId = participantId;
         this.battleType = battleType;
         this.battleDate = LocalDateTime.now(); // 배틀 생성 시 현재 시간으로 설정
     }
 }
+
