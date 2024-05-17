@@ -1,9 +1,6 @@
 package com.ssafy.fluffitbattle.controller;
 
-import com.ssafy.fluffitbattle.entity.dto.BattleRecordItemDto;
-import com.ssafy.fluffitbattle.entity.dto.BattleResultRequestDto;
-import com.ssafy.fluffitbattle.entity.dto.BattleStatisticItemDto;
-import com.ssafy.fluffitbattle.entity.dto.BattleStatisticResponseDto;
+import com.ssafy.fluffitbattle.entity.dto.*;
 import com.ssafy.fluffitbattle.service.BattleService;
 import com.ssafy.fluffitbattle.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +56,7 @@ public class BattleController {
     }
 
     @GetMapping("/history")
-    public Slice<BattleRecordItemDto> getBattleRecords(@RequestHeader("memberId") String memberId, Pageable pageable) {
+    public SimpleBattleRecordResponse getBattleRecords(@RequestHeader("memberId") String memberId, Pageable pageable) {
         return battleService.getBattleRecords(memberId, pageable);
     }
 

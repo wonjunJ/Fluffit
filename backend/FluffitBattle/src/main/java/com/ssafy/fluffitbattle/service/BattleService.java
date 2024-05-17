@@ -31,6 +31,7 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -89,11 +90,11 @@ public class BattleService {
         //
 
         if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
-            throw new PetNotFoundException(404, "Pet does not exist for user: " + userId);
+            throw new PetNotFoundException(404, userId + "님, 펫이 없어요!");
         }
 
         if (getUserBattle(userId) != null) {
-            throw new UserAlreadyInMatchingException(409, "User is already in a matching battle: " + userId);
+            throw new UserAlreadyInMatchingException(409, userId + "님, 이미 배틀에 참가 중!");
         }
 
         boolean success = false;
@@ -432,10 +433,20 @@ public class BattleService {
         objectRedisTemplate.opsForHash().delete(USER_BATTLE_KEY, userId);
     }
 
-    public Slice<BattleRecordItemDto> getBattleRecords(String userId, Pageable pageable) {
-        return battleRepository.findByOrganizerIdOrParticipantIdOrderByBattleDateDesc(userId, userId, pageable)
-                .map(battle -> convertToDto(battle, userId));
+    public SimpleBattleRecordResponse getBattleRecords(String userId, Pageable pageable) {
+        Slice<Battle> slice = battleRepository.findByOrganizerIdOrParticipantIdOrderByBattleDateDesc(userId, userId, pageable);
+
+        List<BattleRecordItemDto> simpleContent = slice.getContent().stream()
+                .map(battle -> convertToDto(battle, userId))
+                .collect(Collectors.toList());
+
+        return new SimpleBattleRecordResponse(simpleContent, slice.hasNext());
     }
+
+//    public Slice<BattleRecordItemDto> getBattleRecords(String userId, Pageable pageable) {
+//        return battleRepository.findByOrganizerIdOrParticipantIdOrderByBattleDateDesc(userId, userId, pageable)
+//                .map(battle -> convertToDto(battle, userId));
+//    }
 
     private BattleRecordItemDto convertToDto(Battle battle, String userId) {
         boolean isOrganizer = userId.equals(battle.getOrganizerId());
