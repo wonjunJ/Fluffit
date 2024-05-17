@@ -95,9 +95,10 @@ class FeedViewModel @Inject constructor(
             feedFlupetUseCase(foodId).fold(
                 onSuccess = {
                     setState {
-                        FeedViewState.Init(
+                        FeedViewState.Default(
                             foodList = this.foodList,
-                            coin = this.coin,
+                            coin = it.totalCoin,
+                            feedNum = foodId - 1,
                             message = "남은 코인 : " + it.totalCoin.toString()
                         )
                     }
