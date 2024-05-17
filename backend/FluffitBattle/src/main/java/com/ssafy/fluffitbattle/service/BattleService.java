@@ -397,8 +397,8 @@ public class BattleService {
 //        log.info("Merged Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
 
         try {
-            battleRepository.save(battle);
             entityManager.setFlushMode(FlushModeType.AUTO);
+            battleRepository.save(battle);
             entityManager.flush();
         } catch (Exception e) {
             e.printStackTrace();
