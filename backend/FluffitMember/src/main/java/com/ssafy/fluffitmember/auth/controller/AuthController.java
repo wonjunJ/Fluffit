@@ -14,6 +14,7 @@ import com.ssafy.fluffitmember._common.error.ErrorResponse;
 import com.ssafy.fluffitmember._common.error.ErrorType;
 import com.ssafy.fluffitmember._common.exception.EncryptionException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
+@Slf4j
 public class AuthController {
 
     private final AuthService authService;
@@ -33,6 +35,8 @@ public class AuthController {
         LoginResDto loginResDto = null;
         try {
             loginResDto = authService.login(loginReqDto);
+            log.info("getSignature() = " + loginReqDto.getSignature());
+            log.info("getUserCode() = " + loginReqDto.getUserCode());
             return ResponseEntity.ok().body(loginResDto);
         } catch (NoSuchAlgorithmException e){
             return ResponseEntity.badRequest().body(ErrorResponse.from(ErrorType.NO_SUCH_ALGORITHM));
