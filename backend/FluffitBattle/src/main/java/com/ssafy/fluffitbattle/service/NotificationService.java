@@ -48,6 +48,7 @@ public class NotificationService {
             emitters.remove(userId);
             customExceptionHandler.removeEmitter(userId);
         });
+
         return emitter;
     }
 
