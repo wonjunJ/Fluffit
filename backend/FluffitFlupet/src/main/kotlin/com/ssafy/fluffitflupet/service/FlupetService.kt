@@ -103,7 +103,7 @@ class FlupetService(
         }
         if(mflupet.fullness != beforeFull){
             withContext(Dispatchers.Default){
-                mflupet.achaTime = achaCalculator.calAchaTime(mflupet.fullness, mflupet.health)
+                mflupet.achaTime = achaCalculator.calAchaTime(mflupet.fullness, mflupet.health) ?: mflupet.achaTime
             }
         }
         withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingle() }
@@ -133,7 +133,7 @@ class FlupetService(
         }
         if(mflupet.health != beforeHealth){
             withContext(Dispatchers.Default){
-                mflupet.achaTime = achaCalculator.calAchaTime(mflupet.fullness, mflupet.health)
+                mflupet.achaTime = achaCalculator.calAchaTime(mflupet.fullness, mflupet.health) ?: mflupet.achaTime
             }
         }
         withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingle() }
