@@ -120,7 +120,7 @@ public class ExerciseService {
         int coin = member.getCoin();
         member.updateCoin(coin + stepsReword);
         steps.updateStepCount(stepsReqDto.getStepCount());
-        return new StepsResDto(steps.getStepCount(),stepsReword);
+        return new StepsResDto(member.getCoin(),stepsReword);
     }
 
     private int calculateStepsReward(int currentSteps, int newSteps) {
