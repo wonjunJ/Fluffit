@@ -375,19 +375,19 @@ public class BattleService {
 
         battleRedisTemplate.opsForValue().set("Battle:" + battle.getId(), battle);
 
-        try {
-            battleRepository.save(battle);
-//            entityManager.setFlushMode(FlushModeType.AUTO);
-            entityManager.flush();
-        } catch (Exception e) {
-            log.error("Error during save: ", e);
-//            e.printStackTrace();
-        }
+//        try {
+//            battleRepository.save(battle);
+////            entityManager.setFlushMode(FlushModeType.AUTO);
+//            entityManager.flush();
+//        } catch (Exception e) {
+//            log.error("Error during save: ", e);
+////            e.printStackTrace();
+//        }
 
 //        log.info("Saved Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
 //
-//        battle = entityManager.merge(battle);
-//        log.info("Merged Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
+        battle = entityManager.merge(battle);
+        log.info("Merged Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
     }
 
     private void cleanUpRedisEntries(Battle battle, String battleKey) {
