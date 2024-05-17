@@ -10,5 +10,5 @@ import java.time.LocalDateTime;
 public class RunningReqDto {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private double distance;
+    private int calorie;
 }

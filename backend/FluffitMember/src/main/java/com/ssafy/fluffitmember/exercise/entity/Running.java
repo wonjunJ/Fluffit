@@ -28,25 +28,25 @@ public class Running {
     private LocalDateTime endTime;
 
     @Column(nullable = false)
-    private double distance;
+    private int calorie;
 
     @Column(name = "member_id",nullable = false)
     private String memberId;
 
     @Builder
-    public Running(Member member, LocalDateTime startTime, LocalDateTime endTime, double distance, String memberId) {
+    public Running(Member member, LocalDateTime startTime, LocalDateTime endTime, int calorie, String memberId) {
         this.member = member;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.distance = distance;
+        this.calorie = calorie;
         this.memberId = memberId;
     }
-    public static Running of(Member member, LocalDateTime startTime, LocalDateTime endTime, double distance,String memberId) {
+    public static Running of(Member member, LocalDateTime startTime, LocalDateTime endTime, int calorie,String memberId) {
         return builder()
                 .member(member)
                 .startTime(startTime)
                 .endTime(endTime)
-                .distance(distance)
+                .calorie(calorie)
                 .memberId(memberId)
                 .build();
     }

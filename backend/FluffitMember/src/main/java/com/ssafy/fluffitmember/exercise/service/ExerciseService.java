@@ -41,53 +41,58 @@ public class ExerciseService {
             throw new NotFoundUserException();
         }
         Member member = findMember.get();
-        Running running = Running.of(member,runningReqDto.getStartTime(),runningReqDto.getEndTime(),runningReqDto.getDistance(),memberId);
+        Running running = Running.of(member,runningReqDto.getStartTime(),runningReqDto.getEndTime(),runningReqDto.getCalorie(),memberId);
         exerciseRepository.save(running);
 
-        int reword = calculateRunningReward(runningReqDto);
+        int reward = calculateRunningReward(runningReqDto);
 
         int coin = member.getCoin();
-        member.updateCoin(coin + reword);
+        member.updateCoin(coin + reward);
 
-        return new RunningResDto(reword);
+        return new RunningResDto(reward);
     }
 
-    private static final double MINIMUM_ALLOWED_SPEED_KMH = 5.0; // 최소 허용 속도
-    private static final double MAXIMUM_ALLOWED_SPEED_KMH = 20.0; // 최소 허용 속도
-
-    private int calculateRunningReward(RunningReqDto runningReq) {
-        // 달린 시간 계산
-        long durationInSeconds = Duration.between(runningReq.getStartTime(), runningReq.getEndTime()).getSeconds();
-        if(durationInSeconds<=0){
-            throw new InvalidStartEndTime();
-        }
-        double durationInHours = durationInSeconds / 3600.0; //달린 시간 계산 -> 시간 단위
-
-        // 평균 속도 계산 (km/h)
-        double averageSpeedKmh = runningReq.getDistance() / durationInHours;
-        if (runningReq.getDistance() <= 0 || averageSpeedKmh < 0) {
-            throw new InvalidDistanceSpeed();
-        }
-        // 기본 보상: 달린 거리에 따라 포인트를 계산
-        int baseReward = (int) (runningReq.getDistance() * 10); // 1km당 10 포인트
-
-        int speedBonus = 0;
-
-        // 속도가 너무 낮으면 보상 없음
-        if (averageSpeedKmh < MINIMUM_ALLOWED_SPEED_KMH) {
-            return baseReward;
-        }
-
-        // 속도에 따른 추가 보상
-        if (averageSpeedKmh >= 10.0 && durationInHours > 0.25) {
-            speedBonus = 50; // 시속 10km 이상 시 50 포인트 추가
-        }
-        if(averageSpeedKmh >= MAXIMUM_ALLOWED_SPEED_KMH){
-            return 0;
-        }
-
-        return baseReward + speedBonus;
+    private int calculateRunningReward(RunningReqDto runningReqDto) {
+        int pointsPer100Calories = 10;
+        return (runningReqDto.getCalorie() / 100) * pointsPer100Calories;
     }
+
+//    private static final double MINIMUM_ALLOWED_SPEED_KMH = 5.0; // 최소 허용 속도
+//    private static final double MAXIMUM_ALLOWED_SPEED_KMH = 20.0; // 최소 허용 속도
+      //거리에 따른 리워드
+//    private int calculateRunningReward(RunningReqDto runningReq) {
+//        // 달린 시간 계산
+//        long durationInSeconds = Duration.between(runningReq.getStartTime(), runningReq.getEndTime()).getSeconds();
+//        if(durationInSeconds<=0){
+//            throw new InvalidStartEndTime();
+//        }
+//        double durationInHours = durationInSeconds / 3600.0; //달린 시간 계산 -> 시간 단위
+//
+//        // 평균 속도 계산 (km/h)
+//        double averageSpeedKmh = runningReq.getDistance() / durationInHours;
+//        if (runningReq.getDistance() <= 0 || averageSpeedKmh < 0) {
+//            throw new InvalidDistanceSpeed();
+//        }
+//        // 기본 보상: 달린 거리에 따라 포인트를 계산
+//        int baseReward = (int) (runningReq.getDistance() * 10); // 1km당 10 포인트
+//
+//        int speedBonus = 0;
+//
+//        // 속도가 너무 낮으면 보상 없음
+//        if (averageSpeedKmh < MINIMUM_ALLOWED_SPEED_KMH) {
+//            return baseReward;
+//        }
+//
+//        // 속도에 따른 추가 보상
+//        if (averageSpeedKmh >= 10.0 && durationInHours > 0.25) {
+//            speedBonus = 50; // 시속 10km 이상 시 50 포인트 추가
+//        }
+//        if(averageSpeedKmh >= MAXIMUM_ALLOWED_SPEED_KMH){
+//            return 0;
+//        }
+//
+//        return baseReward + speedBonus;
+//    }
 
     @Transactional
     public StepsResDto getStepsReword(String memberId, StepsReqDto stepsReqDto) {
@@ -115,7 +120,7 @@ public class ExerciseService {
         int coin = member.getCoin();
         member.updateCoin(coin + stepsReword);
         steps.updateStepCount(stepsReqDto.getStepCount());
-        return new StepsResDto(stepsReword);
+        return new StepsResDto(steps.getStepCount(),stepsReword);
     }
 
     private int calculateStepsReward(int currentSteps, int newSteps) {
