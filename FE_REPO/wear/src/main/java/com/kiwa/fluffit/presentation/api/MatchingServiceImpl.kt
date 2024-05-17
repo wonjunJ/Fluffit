@@ -36,10 +36,10 @@ class MatchingServiceImpl @Inject constructor(
                         data: String,
                     ) {
                         super.onEvent(eventSource, id, type, data)
-                        Log.d("확인", eventSource.toString())
-                        Log.d("확인", id.toString())
-                        Log.d("확인", type.toString())
-                        Log.d("확인", data)
+                        Log.d("확인-1", eventSource.toString())
+                        Log.d("확인-1", id.toString())
+                        Log.d("확인-1", type.toString())
+                        Log.d("확인-1", data)
                         val matchingResponse = Gson().fromJson(data, MatchingResponse::class.java)
                         continuation.resumeWith(Result.success(Result.success(matchingResponse)))
                     }
@@ -50,7 +50,10 @@ class MatchingServiceImpl @Inject constructor(
                         response: Response?,
                     ) {
                         super.onFailure(eventSource, t, response)
-                        continuation.resumeWith(Result.failure(Exception()))
+                        Log.d("확인", eventSource.toString())
+                        Log.d("확인", t.toString())
+                        Log.d("확인", response.toString())
+                        continuation.resumeWith(Result.failure(Exception(response?.message)))
                     }
 
                     override fun onOpen(eventSource: EventSource, response: Response) {

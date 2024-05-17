@@ -1,9 +1,13 @@
 package com.kiwa.fluffit.presentation.api
 
+import com.kiwa.fluffit.model.battle.BattleStatisticsResponse
+import retrofit2.Response
+import retrofit2.http.GET
+
 interface BattleService {
-    suspend fun getBattleLogs()
 
-    suspend fun getBattleStatistics()
+    @GET("battle-service/statistics")
+    suspend fun getBattleStatistics(): Response<BattleStatisticsResponse>
 
-    suspend fun cancelBattle()
+    suspend fun cancelBattle(): Response<Unit>
 }

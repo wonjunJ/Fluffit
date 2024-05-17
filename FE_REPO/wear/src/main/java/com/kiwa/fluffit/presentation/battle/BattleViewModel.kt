@@ -2,18 +2,20 @@ package com.kiwa.fluffit.presentation.battle
 
 import androidx.lifecycle.viewModelScope
 import com.kiwa.fluffit.base.BaseViewModel
-import com.kiwa.fluffit.model.battle.BattleLogModel
+import com.kiwa.fluffit.model.battle.BattleStatisticsUIModel
 import com.kiwa.fluffit.model.battle.GameUIModel
+import com.kiwa.fluffit.presentation.battle.usecase.CancelFindMatchingUseCase
 import com.kiwa.fluffit.presentation.battle.usecase.FindMatchingUseCase
+import com.kiwa.fluffit.presentation.battle.usecase.GetBattleStatisticsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class BattleViewModel @Inject constructor(
-//    private val getBattleLogUseCase: GetBattleLogsUseCase,
-//    private val getBattleStatisticsUseCase: GetBattleStatisticsUseCase,
+    private val getBattleStatisticsUseCase: GetBattleStatisticsUseCase,
     private val findMatchingUseCase: FindMatchingUseCase,
+    private val cancelFindMatchingUseCase: CancelFindMatchingUseCase
 ) : BaseViewModel<BattleViewState, BattleViewEvent>() {
     override fun createInitialState(): BattleViewState = BattleViewState.Default()
 
@@ -23,20 +25,30 @@ class BattleViewModel @Inject constructor(
 
     init {
         handleUIEvent()
-//        getBattleLog()
     }
 
     private fun handleUIEvent() {
         viewModelScope.launch {
             uiEvent.collect { event ->
                 when (event) {
-                    BattleViewEvent.OnClickCancelBattleButton -> setState { cancelFindMatching() }
+                    BattleViewEvent.OnClickCancelBattleButton -> cancelFindMatching()
                     BattleViewEvent.OnClickBattleButton -> findMatching()
                     BattleViewEvent.OnDismissToast -> setState { onDismissToast() }
+                    BattleViewEvent.Init -> getBattleStatistics()
                 }
             }
         }
     }
+
+    private suspend fun cancelFindMatching() = cancelFindMatchingUseCase().fold(
+        onSuccess = { setState { findMatchingCanceled() } },
+        onFailure = { setState { onFailure(it.message.toString()) } }
+    )
+
+    private fun BattleViewState.onFailure(message: String): BattleViewState =
+        when (this) {
+            is BattleViewState.Default -> this.copy(message = message)
+        }
 
     private fun BattleViewState.onDismissToast(): BattleViewState =
         when (this) {
@@ -47,7 +59,7 @@ class BattleViewModel @Inject constructor(
         setState { setLoading() }
         findMatchingUseCase().fold(
             onSuccess = { setState { findMatchingCompleted(it) } },
-            onFailure = { setState { cancelFindMatching("매칭에 실패했습니다.") } }
+            onFailure = { setState { findMatchingCanceled(it.message.toString()) } }
         )
     }
 
@@ -61,7 +73,7 @@ class BattleViewModel @Inject constructor(
         }
 
 
-    private fun BattleViewState.cancelFindMatching(message: String = ""): BattleViewState {
+    private fun BattleViewState.findMatchingCanceled(message: String = ""): BattleViewState {
         return when (this) {
             is BattleViewState.Default -> this.copy(
                 loading = false,
@@ -77,16 +89,13 @@ class BattleViewModel @Inject constructor(
         }
 
 
-//    private fun getBattleLog() {
-//        viewModelScope.launch {
-//            getBattleStatisticsUseCase().fold(
-//                onSuccess = { setState { updateBattleStatistics(battleUIModel = it) } },
-//                onFailure = { }
-//            )
-//        }
-//    }
+    private suspend fun getBattleStatistics() {
+        getBattleStatisticsUseCase().fold(
+            onSuccess = { setState { updateBattleStatistics(it) } },
+            onFailure = { }
+        )
+    }
 
-    private fun BattleViewState.updateBattleStatistics(battleLogModel: BattleLogModel) =
-        BattleViewState.Default(battleLogModel = battleLogModel)
-
+    private fun BattleViewState.updateBattleStatistics(battleStatisticsUIModel: BattleStatisticsUIModel) =
+        BattleViewState.Default(battleStatistics = battleStatisticsUIModel)
 }

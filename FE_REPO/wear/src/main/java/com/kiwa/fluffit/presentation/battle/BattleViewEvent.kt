@@ -8,4 +8,6 @@ sealed class BattleViewEvent: ViewEvent {
     data object OnClickCancelBattleButton: BattleViewEvent()
 
     data object OnDismissToast: BattleViewEvent()
+
+    data object Init: BattleViewEvent()
 }
