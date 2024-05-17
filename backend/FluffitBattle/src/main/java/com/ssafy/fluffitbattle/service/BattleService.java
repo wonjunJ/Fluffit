@@ -97,12 +97,14 @@ public class BattleService {
             ErrorResponse errorResponse = new ErrorResponse(404, userId + "님, 펫이 없어요!");
             notificationService.notifyUser(userId, "error", errorResponse);
 //            throw new PetNotFoundException(404, userId + "님, 펫이 없어요!");
+            return;
         }
 
         if (getUserBattle(userId) != null) {
             ErrorResponse errorResponse = new ErrorResponse(409, userId + "님, 이미 배틀에 참가 중!");
             notificationService.notifyUser(userId, "error", errorResponse);
 //            throw new UserAlreadyInMatchingException(409, userId + "님, 이미 배틀에 참가 중!");
+            return;
         }
 
         boolean success = false;
