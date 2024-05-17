@@ -79,6 +79,7 @@ public class NotificationService {
         if (emitter != null) {
             try {
                 emitter.send(SseEmitter.event().name(eventName).data(message));
+                emitter.complete();
             } catch (IOException e) {
                 emitters.remove(userId); // 오류 발생 시 연결 제거
             }

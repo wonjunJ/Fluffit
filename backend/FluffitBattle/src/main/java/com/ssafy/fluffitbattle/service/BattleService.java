@@ -55,7 +55,7 @@ public class BattleService {
 
     @Qualifier("stringRedisTemplate")
     private final RedisTemplate<String, String> stringRedisTemplate;
-//    private final RedisTemplate<String, Object> redisTemplate;
+    //    private final RedisTemplate<String, Object> redisTemplate;
     @Qualifier("battleRedisTemplate")
     private final RedisTemplate<String, Battle> battleRedisTemplate;
 
@@ -87,7 +87,7 @@ public class BattleService {
 
     // 매칭 요청 처리
     public void requestBattle(String userId) {
-        log.info("리퀘스트배틀 진입 "+ userId);
+        log.info("리퀘스트배틀 진입 " + userId);
 
 //        // /* 강제 매칭용 임시 코드
 //        if (stringRedisTemplate.opsForList().size(BATTLE_QUEUE_KEY) == 0) {
@@ -240,7 +240,7 @@ public class BattleService {
             /* TODO
                 원래 타임아웃 80초!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              */
-            userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
+            userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 20, TimeUnit.SECONDS);
             objectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
 
         } catch (Exception e) {
