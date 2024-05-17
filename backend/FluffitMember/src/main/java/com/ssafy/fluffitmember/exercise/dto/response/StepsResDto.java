@@ -8,5 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class StepsResDto {
-    private int reward;
+    private int totalCoin;
+    private int gainedCoin;
 }
