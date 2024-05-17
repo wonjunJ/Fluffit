@@ -398,17 +398,16 @@ public class BattleService {
 
         try {
             entityManager.setFlushMode(FlushModeType.AUTO);
-            battleRepository.save(battle);
-            entityManager.flush();
+            battleRepository.saveAndFlush(battle);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
 //        log.info(battleRepository.save(battle).toString());
-        log.info("save " + battleRepository.findById(battle.getId()).toString());
+        log.info("save " + battleRepository.findById(battle.getId()).orElse(null));
         battle = entityManager.merge(battle);
-        log.info("merge " + battleRepository.findById(battle.getId()).toString());
+        log.info("merge " + battleRepository.findById(battle.getId()).orElse(null));
     }
 
     private void cleanUpRedisEntries(Battle battle, String battleKey) {
