@@ -89,11 +89,11 @@ public class BattleService {
     public void requestBattle(String userId) {
         log.info("리퀘스트배틀 진입 "+ userId);
 
-        // /* 강제 매칭용 임시 코드
-        if (stringRedisTemplate.opsForList().size(BATTLE_QUEUE_KEY) == 0) {
-            stringRedisTemplate.opsForList().rightPush(BATTLE_QUEUE_KEY, "20a88ab0-ee97-4cac-ab6f-c7f94ac9b5cf");
-        }
-        //
+//        // /* 강제 매칭용 임시 코드
+//        if (stringRedisTemplate.opsForList().size(BATTLE_QUEUE_KEY) == 0) {
+//            stringRedisTemplate.opsForList().rightPush(BATTLE_QUEUE_KEY, "20a88ab0-ee97-4cac-ab6f-c7f94ac9b5cf");
+//        }
+//        //
 
         if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
             ErrorResponse errorResponse = new ErrorResponse(404, "펫이 없어요!");
