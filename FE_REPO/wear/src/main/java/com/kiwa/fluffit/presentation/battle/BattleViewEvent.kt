@@ -5,8 +5,6 @@ import com.kiwa.fluffit.base.ViewEvent
 sealed class BattleViewEvent: ViewEvent {
     data object OnClickBattleButton: BattleViewEvent()
 
-    data object OnClickCancelBattleButton: BattleViewEvent()
-
     data object OnDismissToast: BattleViewEvent()
 
     data object Init: BattleViewEvent()

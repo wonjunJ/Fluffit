@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.kiwa.fluffit.base.BaseViewModel
 import com.kiwa.fluffit.model.battle.BattleStatisticsUIModel
 import com.kiwa.fluffit.model.battle.GameUIModel
-import com.kiwa.fluffit.presentation.battle.usecase.CancelFindMatchingUseCase
 import com.kiwa.fluffit.presentation.battle.usecase.FindMatchingUseCase
 import com.kiwa.fluffit.presentation.battle.usecase.GetBattleStatisticsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +14,6 @@ import javax.inject.Inject
 class BattleViewModel @Inject constructor(
     private val getBattleStatisticsUseCase: GetBattleStatisticsUseCase,
     private val findMatchingUseCase: FindMatchingUseCase,
-    private val cancelFindMatchingUseCase: CancelFindMatchingUseCase
 ) : BaseViewModel<BattleViewState, BattleViewEvent>() {
     override fun createInitialState(): BattleViewState = BattleViewState.Default()
 
@@ -31,7 +29,6 @@ class BattleViewModel @Inject constructor(
         viewModelScope.launch {
             uiEvent.collect { event ->
                 when (event) {
-                    BattleViewEvent.OnClickCancelBattleButton -> cancelFindMatching()
                     BattleViewEvent.OnClickBattleButton -> findMatching()
                     BattleViewEvent.OnDismissToast -> setState { onDismissToast() }
                     BattleViewEvent.Init -> getBattleStatistics()
@@ -39,11 +36,6 @@ class BattleViewModel @Inject constructor(
             }
         }
     }
-
-    private suspend fun cancelFindMatching() = cancelFindMatchingUseCase().fold(
-        onSuccess = { setState { findMatchingCanceled() } },
-        onFailure = { setState { onFailure(it.message.toString()) } }
-    )
 
     private fun BattleViewState.onFailure(message: String): BattleViewState =
         when (this) {

@@ -36,14 +36,10 @@ fun BattleScreen(
             viewModel.uiState.collectAsState().value as BattleViewState.Default
 
         DefaultUI(
-            Modifier.align(Alignment.Center),
-            if (uiState.findMatching) "취소" else "배틀하기",
+            Modifier.align(Alignment.Center), "배틀하기",
             uiState.battleStatistics
         ) {
-            if (uiState.findMatching)
-                viewModel.onTriggerEvent(BattleViewEvent.OnClickCancelBattleButton)
-            else
-                viewModel.onTriggerEvent(BattleViewEvent.OnClickBattleButton)
+            viewModel.onTriggerEvent(BattleViewEvent.OnClickBattleButton)
         }
 
         if (uiState.gameUIModel.battleId.isNotEmpty()) {
@@ -55,12 +51,14 @@ fun BattleScreen(
                 LoadingUI(
                     Modifier
                         .wrapContentSize()
-                        .align(Alignment.Center)) {
+                        .align(Alignment.Center)
+                ) {
                     if (uiState.findMatching) Text(
-                        text = "상대를 찾는 중입니다.",
+                        text = "상대를 찾는 중입니다.\n(최대 30초 대기)",
                         style = MaterialTheme.typography.caption3
                     )
                 }
+
             false -> {
             }
         }
