@@ -418,9 +418,9 @@ public class BattleService {
 
 ////        log.info(battleRepository.save(battle).toString());
 //        log.info("save " + battleRepository.findById(battle.getId()).orElse(null));
-//        battle = entityManager.merge(battle);
-//        entityManager.flush();
-//        log.info("merge " + battleRepository.findById(battle.getId()).orElse(null));
+        battle = entityManager.merge(theBattle);
+        entityManager.flush();
+        log.info("merge " + battleRepository.findById(battle.getId()).orElse(null));
     }
 
     private void cleanUpRedisEntries(Battle battle, String battleKey) {
