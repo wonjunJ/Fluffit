@@ -1,6 +1,7 @@
 package com.kiwa.data.di
 
 import com.kiwa.data.api.AuthService
+import com.kiwa.data.api.BattleRecordService
 import com.kiwa.data.api.CollectionService
 import com.kiwa.data.api.FlupetService
 import com.kiwa.data.api.NaverAuthService
@@ -119,6 +120,13 @@ object ApiModule {
         @FluffitRetrofit
         retrofit: Retrofit
     ): FlupetService = retrofit.create(FlupetService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideBattleRecordApi(
+        @FluffitRetrofit
+        retrofit: Retrofit
+    ): BattleRecordService = retrofit.create(BattleRecordService::class.java)
 
     @Singleton
     @Provides

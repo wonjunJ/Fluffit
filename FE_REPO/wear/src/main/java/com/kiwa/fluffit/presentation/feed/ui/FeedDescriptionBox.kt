@@ -87,7 +87,7 @@ fun FeedDescriptionBox(
                         text = "건강 " + preset + feedViewState.foodList[feedViewState.feedNum].health,
                         style = TextStyle(
                             fontFamily = fluffitWearFontFamily,
-                            color = colorResource(id = R.color.watchGreen),
+                            color = colorResource(id = R.color.watchBlue),
                             fontSize = 12.sp
                         ),
                         textAlign = TextAlign.Center
@@ -97,7 +97,7 @@ fun FeedDescriptionBox(
                         text = "포만감 +" + feedViewState.foodList[feedViewState.feedNum].fullness,
                         style = TextStyle(
                             fontFamily = fluffitWearFontFamily,
-                            color = colorResource(id = R.color.watchBlue),
+                            color = colorResource(id = R.color.watchGreen),
                             fontSize = 12.sp
                         ),
                         textAlign = TextAlign.Center
@@ -107,7 +107,6 @@ fun FeedDescriptionBox(
                         Modifier.padding(top = 5.dp)
                     ) {
                         CoinDisplay(coin = feedViewState.foodList[feedViewState.feedNum].price, textColor = Color.Black)
-//                        CoinDisplay(coin = feedViewState.foodList[feedViewModel.selectedButtonIndex.value!!].price.toLong(), textColor = Color.Black)
                     }
                 }
             }
