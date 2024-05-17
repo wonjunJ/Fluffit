@@ -18,9 +18,9 @@ class KafkaProducerConfig(private val env: Environment) {
     @Bean
     fun producerFactory(): ProducerFactory<String, String> {
         var properties = HashMap<String, Any>()
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, env.getProperty("kafka.addr", ""))
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java)
+        properties[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = env.getProperty("kafka.addr", "")
+        properties[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
+        properties[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         return DefaultKafkaProducerFactory(properties)
     }
 
