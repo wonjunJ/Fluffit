@@ -27,6 +27,7 @@ import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.kiwa.fluffit.home.components.CoinDisplay
+import com.kiwa.fluffit.home.components.EvolutionDialog
 import com.kiwa.fluffit.home.components.FlupetImageButton
 import com.kiwa.fluffit.home.ui.FlupetUI
 import com.kiwa.fluffit.home.ui.NoFlupetUI
@@ -60,7 +61,10 @@ internal fun HomeRoute(
         onClickTombStone = { viewModel.onTriggerEvent(HomeViewEvent.OnClickTombStone) },
         onClickEmptyEgg = { viewModel.onTriggerEvent(HomeViewEvent.OnClickNewEggButton) },
         onDismissSnackBar = { viewModel.onTriggerEvent(HomeViewEvent.OnDismissSnackBar) },
-        onClickEvolutionButton = { viewModel.onTriggerEvent(HomeViewEvent.OnClickEvolutionButton) }
+        onClickEvolutionButton = { viewModel.onTriggerEvent(HomeViewEvent.OnClickEvolutionButton) },
+        onEndEvolutionAnimation = {
+            viewModel.onTriggerEvent(HomeViewEvent.OnEndEvolutionAnimation)
+        }
     )
 }
 
@@ -77,17 +81,17 @@ internal fun HomeScreen(
     onClickEmptyEgg: () -> Unit,
     onClickMyPage: () -> Unit,
     onDismissSnackBar: () -> Unit,
-    onClickEvolutionButton: () -> Unit
+    onClickEvolutionButton: () -> Unit,
+    onEndEvolutionAnimation: () -> Unit
 ) {
     val context = LocalContext.current
-    val imageLoader = ImageLoader.Builder(context)
-        .components {
-            if (SDK_INT >= 28) {
-                add(ImageDecoderDecoder.Factory())
-            } else {
-                add(GifDecoder.Factory())
-            }
-        }.build()
+    val imageLoader = ImageLoader.Builder(context).components {
+        if (SDK_INT >= 28) {
+            add(ImageDecoderDecoder.Factory())
+        } else {
+            add(GifDecoder.Factory())
+        }
+    }.build()
 
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -106,8 +110,7 @@ internal fun HomeScreen(
         when (uiState.flupetStatus) {
             FlupetStatus.Alive -> FlupetUI(
                 uiState,
-                Modifier
-                    .align(Alignment.Center),
+                Modifier.align(Alignment.Center),
                 onUpdateFullness,
                 onUpdateHealth,
                 imageLoader,
@@ -127,6 +130,15 @@ internal fun HomeScreen(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .clickable { onClickEmptyEgg() }
+            )
+        }
+
+        if (uiState is HomeViewState.Default && uiState.evolution) {
+            EvolutionDialog(
+                uiState = uiState,
+                modifier = Modifier.align(Alignment.Center),
+                imageLoader = imageLoader,
+                onEndEvolution = onEndEvolutionAnimation
             )
         }
 

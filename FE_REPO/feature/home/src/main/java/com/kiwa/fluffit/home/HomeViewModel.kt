@@ -99,10 +99,17 @@ class HomeViewModel @Inject constructor(
                     HomeViewEvent.OnClickTombStone -> setState { showEmptyEgg() }
                     HomeViewEvent.OnDismissSnackBar -> setState { resetMessage() }
                     HomeViewEvent.OnClickEvolutionButton -> evolveFlupet()
+                    HomeViewEvent.OnEndEvolutionAnimation -> setState { onEndEvolutionAnimation() }
                 }
             }
         }
     }
+
+    private fun HomeViewState.onEndEvolutionAnimation(): HomeViewState =
+        when (this) {
+            is HomeViewState.Default -> this.copy(evolution = false, beforeImage = "")
+            is HomeViewState.FlupetNameEdit -> this
+        }
 
     private suspend fun evolveFlupet() {
         evolveFlupetUseCase().fold(
@@ -121,7 +128,9 @@ class HomeViewModel @Inject constructor(
             ),
             nextFullnessUpdateTime = mainUIModel.nextFullnessUpdateTime,
             nextHealthUpdateTime = mainUIModel.nextHealthUpdateTime,
-            flupetStatus = mainUIModel.flupetStatus
+            flupetStatus = mainUIModel.flupetStatus,
+            evolution = true,
+            beforeImage = flupet.imageUrls.nodding.ifEmpty { this.flupet.imageUrls.standard }
         )
 
         is HomeViewState.FlupetNameEdit -> this
