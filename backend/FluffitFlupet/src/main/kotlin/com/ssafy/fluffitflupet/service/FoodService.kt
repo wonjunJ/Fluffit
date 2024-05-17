@@ -99,6 +99,7 @@ class FoodService(
                                                         else mflupetRst.fullness + food.fullnessEffect
                 mflupetRst.health = if(mflupetRst.health + food.healthEffect >= 100) 100
                                                         else mflupetRst.health + food.healthEffect
+                mflupetRst.exp += food.price
                 withContext(Dispatchers.IO) {
                     memberFlupetRepository.save(mflupetRst).awaitSingle()
                     food.stock--

@@ -36,7 +36,7 @@ class PetTaskScheduler(
     //var cron: String = env.getProperty("schedule.cron", "0 1 0 * * ?")
 
     //2시간마다 스케쥴링을 돈다(초기 딜레이를 얼마로 할지)
-    @Scheduled(fixedDelay = 1000 * 60, initialDelay = 1000 * 60 * 2L)
+    @Scheduled(fixedDelay = 1000 * 60 * 3L, initialDelay = 1000 * 60 * 2L)
     fun run() {
         log.info("스케쥴링")
         memberFlupetRepository.findAllByIsDeadIsFalse()
@@ -78,7 +78,9 @@ class PetTaskScheduler(
                 data.endTime = LocalDateTime.now()
             }
 
-            data.achaTime = achaCalculator.calAchaTime(data.fullness, data.health) ?: data.achaTime
+            withContext(Dispatchers.Default) {
+                data.achaTime = achaCalculator.calAchaTime(data.fullness, data.health) ?: data.achaTime
+            }
             log.info("스케쥴링에서의 현재 포만감은 ${data.fullness}")
             withContext(Dispatchers.IO){
                 //코루틴을 사용할때 Mono로 리턴이 되는거에는 뒤에 .awaitSingle()을 붙혀줘야 작동이 된다.

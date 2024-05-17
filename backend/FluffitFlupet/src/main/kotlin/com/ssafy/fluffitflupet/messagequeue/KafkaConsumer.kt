@@ -43,6 +43,7 @@ class KafkaConsumer(
         val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         if(mflupet != null){
             mflupet.steps += steps.toLong()
+            mflupet.exp += (steps/100)
             withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingleOrNull() }
         }
     }

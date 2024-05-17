@@ -9,6 +9,7 @@ import com.ssafy.fluffitflupet.exception.CustomBadRequestException
 import com.ssafy.fluffitflupet.repository.FlupetRepository
 import com.ssafy.fluffitflupet.repository.MemberFlupetRepository
 import com.ssafy.fluffitflupet.scheduler.AchaCalculator
+import com.ssafy.fluffitflupet.scheduler.PetTaskScheduler
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactor.awaitSingle
@@ -31,7 +32,8 @@ class FlupetService(
     private val flupetRepository: FlupetRepository,
     private val env: Environment,
     private val reactiveRedisTemplate: ReactiveRedisTemplate<String, String>,
-    private val achaCalculator: AchaCalculator
+    private val achaCalculator: AchaCalculator,
+    private val petTaskScheduler: PetTaskScheduler
 ) {
     //lombok slf4j를 쓰기 위해
     private val log = LoggerFactory.getLogger(FlupetService::class.java)
@@ -93,8 +95,20 @@ class FlupetService(
         if(mflupet == null){
             throw CustomBadRequestException(ErrorType.INVALID_USERID)
         }
+        val beforeFull = mflupet.fullness
+        withContext(Dispatchers.Default) { petTaskScheduler.updateFullness(mflupet) }
+        if(mflupet.fullness <= 0){
+            mflupet.isDead = true
+            mflupet.endTime = LocalDateTime.now()
+        }
+        if(mflupet.fullness != beforeFull){
+            withContext(Dispatchers.Default){
+                mflupet.achaTime = achaCalculator.calAchaTime(mflupet.fullness, mflupet.health)
+            }
+        }
+        withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingle() }
         return FullResponse(
-            fullness = mflupet.fullness,
+            fullness = if(mflupet.fullness <= 0) 0 else mflupet.fullness,
             nextUpdateTime = (mflupet.fullnessUpdateTime!!.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
             isEvolutionAvailable = if(mflupet.exp == 100) true else false
         )
@@ -111,6 +125,18 @@ class FlupetService(
         if(mflupet == null){
             throw CustomBadRequestException(ErrorType.INVALID_USERID)
         }
+        val beforeHealth = mflupet.health
+        withContext(Dispatchers.Default) { petTaskScheduler.updateHealth(mflupet) }
+        if(mflupet.health <= 0){
+            mflupet.isDead = true
+            mflupet.endTime = LocalDateTime.now()
+        }
+        if(mflupet.health != beforeHealth){
+            withContext(Dispatchers.Default){
+                mflupet.achaTime = achaCalculator.calAchaTime(mflupet.fullness, mflupet.health)
+            }
+        }
+        withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingle() }
         return HealthResponse(
             health = mflupet.health,
             nextUpdateTime = (mflupet.healthUpdateTime!!.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
@@ -130,7 +156,7 @@ class FlupetService(
         if(mflupet != null){
             throw CustomBadRequestException(ErrorType.NOT_AVAILABLE_GEN_PET)
         }
-        val achaTime = achaCalculator.calAchaTime(100, 100)
+        val achaTime = withContext(Dispatchers.Default) { achaCalculator.calAchaTime(100, 100) }
         log.info("계산된 achaTime은 $achaTime")
         launch(Dispatchers.IO) {
             memberFlupetRepository.save(
