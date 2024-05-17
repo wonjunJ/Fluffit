@@ -22,6 +22,7 @@ class KafkaConsumerConfig(private val env: Environment) {
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "consumerGroupId")
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java)
+        properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true)
         return DefaultKafkaConsumerFactory(properties)
     }
 
