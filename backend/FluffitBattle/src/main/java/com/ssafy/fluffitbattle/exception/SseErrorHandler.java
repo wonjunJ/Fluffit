@@ -12,8 +12,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SseErrorHandler {
 
-    private final NotificationService notificationService;
-
     public void handleError(Throwable throwable, SseEmitter emitter) {
         try {
             if (throwable instanceof PetNotFoundException) {
