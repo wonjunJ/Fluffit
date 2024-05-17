@@ -240,7 +240,7 @@ public class BattleService {
             /* TODO
                 원래 타임아웃 80초!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              */
-            userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 32, TimeUnit.SECONDS);
+            userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 12, TimeUnit.SECONDS);
             objectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
 
         } catch (Exception e) {
@@ -346,8 +346,13 @@ public class BattleService {
         // Redis와 관련된 클린업 작업
         cleanUpRedisEntries(battle, battleKey);
 
+        try {
+            notifyResults(battle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // 결과 통지
-        notifyResults(battle);
+
     }
 
     private Battle determineWinnerAndUpdatePoints(Battle battle) {
@@ -504,6 +509,7 @@ public class BattleService {
                 .build();
     }
 
+    @Transactional
     public List<BattleStatisticItemDto> getBattleStats(String userId) {
         List<BattleStatisticItemDto> stats = battleRepository.findBattleStatsByUserId(userId);
         stats.forEach(BattleStatisticItemDto::calculateWinRate);
