@@ -58,7 +58,14 @@ public class KafkaConsumer {
 
         if(findMember.isPresent()){
             Member member = findMember.get();
-            member.updatePoint(member.getBattlePoint() + (Integer)map.get("battlePointChanges"));
+            int currentPoint = member.getBattlePoint();
+            int battlePointChanges = (Integer)map.get("battlePointChanges");
+            int updatePoint  = currentPoint + battlePointChanges;
+            if(updatePoint < 0){
+                member.updatePoint(0);
+            }else{
+                member.updatePoint(member.getBattlePoint() + (Integer)map.get("battlePointChanges"));
+            }
             memberRepository.save(member);
         }
     }
