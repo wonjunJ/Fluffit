@@ -3,7 +3,9 @@ package com.kiwa.fluffit.flupet.history
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,6 +46,7 @@ fun FlupetLog(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.3f)
+            .border(BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(8.dp))
             .clip(shape = RoundedCornerShape(8.dp))
             .background(Color.White)
     ) {
