@@ -5,7 +5,7 @@ data class User(
 )
 
 data class UserFlupetStatus(
-    val totalCoin : Int,
-    val fullnessEffect : Int,
-    val healthEffect : Int
+    val totalCoin: Int,
+    val fullnessEffect: Int,
+    val healthEffect: Int
 )

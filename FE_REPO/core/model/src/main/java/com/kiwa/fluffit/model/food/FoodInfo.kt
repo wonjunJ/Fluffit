@@ -14,6 +14,5 @@ data class Feed(
     @SerializedName("healthEffect") val health: Int,
     @SerializedName("price") val price: Int,
     @SerializedName("imageUrl") val imgUrl: String,
-    @SerializedName("description") val info: String,
+    @SerializedName("description") val info: String
 )
-
