@@ -384,10 +384,10 @@ public class BattleService {
 //            e.printStackTrace();
         }
 
-        log.info("Saved Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
-
-        battle = entityManager.merge(battle);
-        log.info("Merged Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
+//        log.info("Saved Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
+//
+//        battle = entityManager.merge(battle);
+//        log.info("Merged Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
     }
 
     private void cleanUpRedisEntries(Battle battle, String battleKey) {
