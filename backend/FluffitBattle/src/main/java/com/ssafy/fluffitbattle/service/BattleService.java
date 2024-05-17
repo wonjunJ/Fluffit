@@ -410,19 +410,22 @@ public class BattleService {
 //            e.printStackTrace();
 //        }
 
-        Battle theBattle = battleRepository.findById(battle.getId()).get();
-        theBattle.setBattleDate(battle.getBattleDate());
-        theBattle.setOrganizerScore(battle.getOrganizerScore());
-        theBattle.setParticipantScore(battle.getParticipantScore());
-        theBattle.setWinnerId(battle.getWinnerId());
-        battleRepository.saveAndFlush(theBattle);
+        battleRepository.deleteById(battle.getId());
+        battleRepository.saveAndFlush(battle);
 
-
-////        log.info(battleRepository.save(battle).toString());
-//        log.info("save " + battleRepository.findById(battle.getId()).orElse(null));
-        battle = entityManager.merge(theBattle);
-        entityManager.flush();
-        log.info("merge " + battleRepository.findById(battle.getId()).orElse(null));
+//        Battle theBattle = battleRepository.findById(battle.getId()).get();
+//        theBattle.setBattleDate(battle.getBattleDate());
+//        theBattle.setOrganizerScore(battle.getOrganizerScore());
+//        theBattle.setParticipantScore(battle.getParticipantScore());
+//        theBattle.setWinnerId(battle.getWinnerId());
+//        battleRepository.saveAndFlush(theBattle);
+//
+//
+//////        log.info(battleRepository.save(battle).toString());
+////        log.info("save " + battleRepository.findById(battle.getId()).orElse(null));
+//        battle = entityManager.merge(theBattle);
+//        entityManager.flush();
+//        log.info("merge " + battleRepository.findById(battle.getId()).orElse(null));
     }
 
     private void cleanUpRedisEntries(Battle battle, String battleKey) {
