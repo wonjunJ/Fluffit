@@ -235,7 +235,10 @@ public class BattleService {
 
     private void setUser(String userId, Long battleId) {
         try {
-            userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 80, TimeUnit.SECONDS);
+            /* TODO
+                원래 타임아웃 80초!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+             */
+            userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 40, TimeUnit.SECONDS);
             objectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
 
         } catch (Exception e) {
@@ -407,6 +410,7 @@ public class BattleService {
 //        log.info(battleRepository.save(battle).toString());
         log.info("save " + battleRepository.findById(battle.getId()).orElse(null));
         battle = entityManager.merge(battle);
+        entityManager.flush();
         log.info("merge " + battleRepository.findById(battle.getId()).orElse(null));
     }
 
