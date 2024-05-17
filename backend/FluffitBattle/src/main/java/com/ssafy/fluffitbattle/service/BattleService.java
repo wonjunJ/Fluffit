@@ -319,7 +319,7 @@ public class BattleService {
         log.info("calculate winner 메서드 진입 " + battle.getId());
 
         // 승자 결정 및 카프카 메시지 생성
-        determineWinnerAndUpdatePoints(battle);
+        battle = determineWinnerAndUpdatePoints(battle);
 
         // 배틀 정보 업데이트 및 저장
         updateAndSaveBattle(battle);
@@ -331,7 +331,7 @@ public class BattleService {
         notifyResults(battle);
     }
 
-    private void determineWinnerAndUpdatePoints(Battle battle) {
+    private Battle determineWinnerAndUpdatePoints(Battle battle) {
         int organizerScore = battle.getOrganizerScore();
         int participantScore = battle.getParticipantScore();
         String organizerId = battle.getOrganizerId();
@@ -356,12 +356,15 @@ public class BattleService {
 
         kafkaProducer.send("battle-point-update", organizerKafkaDto);
         kafkaProducer.send("battle-point-update", participantKafkaDto);
+
+        return battle;
     }
 
     @Transactional
-    protected void updateAndSaveBattle(Battle battle) {
+    public void updateAndSaveBattle(Battle battle) {
         battle.setBattleDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         log.info("배틀 날짜 " + battle.getBattleDate());
+        log.info("배틀 상태 " + battle.toString());
         battleRepository.save(battle);
     }
 
