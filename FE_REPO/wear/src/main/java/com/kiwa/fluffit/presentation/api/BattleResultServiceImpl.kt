@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.presentation.api
 
-import android.util.Log
 import com.google.gson.Gson
 import com.kiwa.fluffit.BuildConfig
 import com.kiwa.fluffit.model.battle.BattleResultRequest
@@ -33,7 +32,6 @@ class BattleResultServiceImpl @Inject constructor(
                 val listener = object : EventSourceListener() {
                     override fun onClosed(eventSource: EventSource) {
                         super.onClosed(eventSource)
-                        continuation.resumeWith(Result.failure(Exception()))
                     }
 
                     override fun onEvent(
@@ -43,10 +41,6 @@ class BattleResultServiceImpl @Inject constructor(
                         data: String
                     ) {
                         super.onEvent(eventSource, id, type, data)
-                        Log.d("확인", eventSource.toString())
-                        Log.d("확인", id.toString())
-                        Log.d("확인", type.toString())
-                        Log.d("확인", data)
                         val battleResultResponse =
                             Gson().fromJson(data, BattleResultResponse::class.java)
                         continuation.resumeWith(
