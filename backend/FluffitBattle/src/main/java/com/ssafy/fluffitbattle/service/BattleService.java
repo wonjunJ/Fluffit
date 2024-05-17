@@ -353,8 +353,10 @@ public class BattleService {
         kafkaProducer.send("battle-point-update", participantKafkaDto);
     }
 
-    private void updateAndSaveBattle(Battle battle) {
+    @Transactional
+    protected void updateAndSaveBattle(Battle battle) {
         battle.setBattleDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        log.info("배틀 날짜 " + battle.getBattleDate());
         battleRepository.save(battle);
     }
 
