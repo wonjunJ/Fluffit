@@ -58,7 +58,7 @@ class FlupetService(
                 fullness = if(dto.isDead) 0 else dto.fullness,
                 health = if(dto.isDead) 0 else dto.health,
                 flupetName = dto.flupetName,
-                imageUrl = dto.imageUrl.split(","),
+                imageUrl = if(dto.isDead) listOf(env.getProperty("tombstone.img", "")) else dto.imageUrl.split(","),
                 birthDay = dto.birthDay.toLocalDate().toString(),
                 age = "${ChronoUnit.DAYS.between(dto.birthDay, LocalDateTime.now())}일 ${(ChronoUnit.HOURS.between(dto.birthDay, LocalDateTime.now())) % 24}시간",
                 isEvolutionAvailable = if(dto.exp == 100) true else false,
