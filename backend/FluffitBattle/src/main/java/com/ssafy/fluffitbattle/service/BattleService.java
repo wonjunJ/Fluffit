@@ -5,6 +5,7 @@ import com.ssafy.fluffitbattle.client.MemberFeignClient;
 import com.ssafy.fluffitbattle.entity.Battle;
 import com.ssafy.fluffitbattle.entity.BattleType;
 import com.ssafy.fluffitbattle.entity.dto.*;
+import com.ssafy.fluffitbattle.exception.ErrorResponse;
 import com.ssafy.fluffitbattle.exception.PetNotFoundException;
 import com.ssafy.fluffitbattle.exception.UserAlreadyInMatchingException;
 import com.ssafy.fluffitbattle.kafka.KafkaProducer;
@@ -93,11 +94,15 @@ public class BattleService {
         //
 
         if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
-            throw new PetNotFoundException(404, userId + "님, 펫이 없어요!");
+            ErrorResponse errorResponse = new ErrorResponse(404, userId + "님, 펫이 없어요!");
+            notificationService.notifyUser(userId, "error", errorResponse);
+//            throw new PetNotFoundException(404, userId + "님, 펫이 없어요!");
         }
 
         if (getUserBattle(userId) != null) {
-            throw new UserAlreadyInMatchingException(409, userId + "님, 이미 배틀에 참가 중!");
+            ErrorResponse errorResponse = new ErrorResponse(409, userId + "님, 이미 배틀에 참가 중!");
+            notificationService.notifyUser(userId, "error", errorResponse);
+//            throw new UserAlreadyInMatchingException(409, userId + "님, 이미 배틀에 참가 중!");
         }
 
         boolean success = false;

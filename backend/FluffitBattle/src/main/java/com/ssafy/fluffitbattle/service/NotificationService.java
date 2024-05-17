@@ -2,7 +2,7 @@ package com.ssafy.fluffitbattle.service;
 
 import com.ssafy.fluffitbattle.entity.Battle;
 import com.ssafy.fluffitbattle.entity.dto.BattleMatchingResponseDto;
-import com.ssafy.fluffitbattle.exception.SseErrorHandler;
+//import com.ssafy.fluffitbattle.exception.SseErrorHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-    private final SseErrorHandler sseErrorHandler;
+//    private final SseErrorHandler sseErrorHandler;
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     @Qualifier("stringRedisTemplate")
@@ -93,7 +93,7 @@ public class NotificationService {
     }
 
     private void handleEmitterError(String userId, String whichController, Throwable ex) {
-        sseErrorHandler.handleError(ex, emitters.get(userId));
+//        sseErrorHandler.handleError(ex, emitters.get(userId));
         if (whichController.equals("wait")) {
             notifyUser(userId, "fail_matching", BattleMatchingResponseDto.builder().result(false).build());
         }
