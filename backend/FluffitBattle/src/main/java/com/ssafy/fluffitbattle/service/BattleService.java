@@ -391,7 +391,7 @@ public class BattleService {
 ////            e.printStackTrace();
 //        }
 //
-//        log.info("Saved Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
+        log.info("Original Saved Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
 //
 //        battle = entityManager.merge(battle);
 //        log.info("Merged Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
@@ -406,7 +406,7 @@ public class BattleService {
 
 
 //        log.info(battleRepository.save(battle).toString());
-//        log.info("save " + battleRepository.findById(battle.getId()).toString());
+        log.info("save " + battleRepository.findById(battle.getId()).toString());
         battle = entityManager.merge(battle);
         log.info("merge " + battleRepository.findById(battle.getId()).toString());
     }
