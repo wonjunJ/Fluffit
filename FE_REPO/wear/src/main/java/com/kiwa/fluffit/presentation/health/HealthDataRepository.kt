@@ -13,6 +13,7 @@ import androidx.health.services.client.data.DataPointContainer
 import androidx.health.services.client.data.DataType
 import androidx.health.services.client.data.IntervalDataPoint
 import androidx.health.services.client.data.PassiveListenerConfig
+import java.time.Instant
 import java.util.concurrent.Executors
 
 
@@ -48,6 +49,9 @@ class HealthRepository(private val context: Context) {
             .setDataTypes(setOf(DataType.CALORIES_DAILY))
             .build()
 
+        val bootInstant = Instant.ofEpochMilli(System.currentTimeMillis() - android.os.SystemClock.elapsedRealtime())
+
+
         passiveMonitoringClient.setPassiveListenerCallback(
             config,
             Executors.newSingleThreadExecutor(),
@@ -58,9 +62,12 @@ class HealthRepository(private val context: Context) {
                     var totalCalories = 0.0
                     for (dataPoint in caloriesDataPoints) {
                         if (dataPoint is IntervalDataPoint<*>) {
-//                            if (dataPoint.startTime >= startTime) {
-//                                totalCalories += dataPoint.value as Double
-//                            }
+                            val intervalDataPoint = dataPoint as IntervalDataPoint<Double>
+                            val dataPointStartInstant = bootInstant.plus(intervalDataPoint.startDurationFromBoot)
+
+                            if (dataPointStartInstant.toEpochMilli() >= startTime) {
+                                totalCalories += intervalDataPoint.value
+                            }
                         }
                     }
                     onCaloriesUpdated(totalCalories)

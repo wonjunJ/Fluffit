@@ -18,6 +18,9 @@ class HealthViewModel @Inject constructor(
     private val _heartRate = MutableStateFlow<Int?>(0)
     val heartRate: StateFlow<Int?> = _heartRate.asStateFlow()
 
+    private val _calories = MutableStateFlow<Double>(0.0)
+    val calories: StateFlow<Double> = _calories.asStateFlow()
+
     private val _steps = MutableStateFlow<Long?>(0L)
     val steps: StateFlow<Long?> = _steps.asStateFlow()
 
@@ -29,6 +32,21 @@ class HealthViewModel @Inject constructor(
 
     init {
         loadHealthData()
+    }
+
+    fun updateCaloriesSince(startTime: Long) {
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
+                healthRepository.getCaloriesBurned(startTime) { calories ->
+                    _calories.value = calories
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+            } finally {
+                _isLoading.value = false
+            }
+        }
     }
 
     private fun loadHealthData() {
