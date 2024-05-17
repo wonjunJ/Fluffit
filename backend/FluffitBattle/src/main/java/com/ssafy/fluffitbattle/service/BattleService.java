@@ -13,7 +13,9 @@ import com.ssafy.fluffitbattle.repository.BattleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -377,7 +379,7 @@ public class BattleService {
         return battle;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
     public void updateAndSaveBattle(Battle battle) {
         battle.setBattleDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         log.info("배틀 날짜 " + battle.getBattleDate());
