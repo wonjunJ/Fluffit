@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiwa.fluffit.presentation.api.ApiRepository
+import com.kiwa.fluffit.presentation.model.StepCountResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,6 +45,14 @@ class HomeViewModel @Inject constructor(
 
     private val _coin = MutableStateFlow(0)
     val coin: StateFlow<Int> = _coin
+
+    fun setCoin(coin : Int) {
+        _coin.value = coin
+    }
+
+    fun patRequest(){
+        //toDO
+    }
 
     fun loadFlupetStatus() {
         viewModelScope.launch {

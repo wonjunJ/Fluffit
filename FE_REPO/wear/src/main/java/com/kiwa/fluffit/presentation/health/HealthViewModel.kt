@@ -3,6 +3,9 @@ package com.example.wearapp.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kiwa.fluffit.presentation.api.ApiRepository
+import com.kiwa.fluffit.presentation.home.HomeViewModel
+import com.kiwa.fluffit.presentation.model.StepCountResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +16,8 @@ import javax.inject.Inject
 private const val TAG = "HealthViewModel"
 @HiltViewModel
 class HealthViewModel @Inject constructor(
-    private val healthRepository: HealthRepository
+    private val healthRepository: HealthRepository,
+    private val apiRepository: ApiRepository
 ) : ViewModel() {
     private val _heartRate = MutableStateFlow<Int?>(0)
     val heartRate: StateFlow<Int?> = _heartRate.asStateFlow()
@@ -34,7 +38,27 @@ class HealthViewModel @Inject constructor(
         loadHealthData()
     }
 
+    suspend fun sendCoinRequest(): StepCountResponse? {
+        val currentSteps = _steps.value ?: return null
+        return try {
+            val date = java.time.Instant.now().toString()
+            val response: StepCountResponse? = apiRepository.sendStepCount(date, currentSteps.toInt())
+            if (response != null) {
+                Log.d(TAG, "요청 날짜: $date")
+                Log.d(TAG, "코인 요청 Total Coin: ${response.totalCoin}, Gained Coin: ${response.gainedCoin}")
+                response
+            } else {
+                _error.value = "Failed to fetch coin information"
+                null
+            }
+        } catch (e: Exception) {
+            _error.value = e.message
+            null
+        }
+    }
+
     fun updateCaloriesSince(startTime: Long) {
+        Log.d(TAG, "칼로리 계산 시작")
         viewModelScope.launch {
             try {
                 _isLoading.value = true

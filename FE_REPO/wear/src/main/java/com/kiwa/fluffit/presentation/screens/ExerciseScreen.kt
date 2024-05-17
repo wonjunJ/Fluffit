@@ -25,6 +25,7 @@ fun ExerciseScreen() {
 
     val healthViewModel : HealthViewModel = hiltViewModel()
     val heartRate by healthViewModel.heartRate.collectAsState()
+    val calories by healthViewModel.calories.collectAsState()
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -36,7 +37,7 @@ fun ExerciseScreen() {
         )
         CaloriesDisplay(
             modifier = Modifier.align(Alignment.CenterStart),
-            calories =0
+            calories = calories
         )
         ExerciseTimer(
             modifier =
