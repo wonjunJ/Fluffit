@@ -94,14 +94,14 @@ public class BattleService {
         //
 
         if (flupetFeignClient.getFlupetInfo(userId).getFlupetImageUrl() == null) {
-            ErrorResponse errorResponse = new ErrorResponse(404, userId + "님, 펫이 없어요!");
+            ErrorResponse errorResponse = new ErrorResponse(404, "펫이 없어요!");
             notificationService.notifyUser(userId, "error", errorResponse);
 //            throw new PetNotFoundException(404, userId + "님, 펫이 없어요!");
             return;
         }
 
         if (getUserBattle(userId) != null) {
-            ErrorResponse errorResponse = new ErrorResponse(409, userId + "님, 이미 배틀에 참가 중!");
+            ErrorResponse errorResponse = new ErrorResponse(409, "이미 배틀에 참가 중!");
             notificationService.notifyUser(userId, "error", errorResponse);
 //            throw new UserAlreadyInMatchingException(409, userId + "님, 이미 배틀에 참가 중!");
             return;
@@ -407,8 +407,8 @@ public class BattleService {
 
 //        log.info(battleRepository.save(battle).toString());
 //        log.info("save " + battleRepository.findById(battle.getId()).toString());
-//        battle = entityManager.merge(battle);
-//        log.info("merge " + battleRepository.findById(battle.getId()).toString());
+        battle = entityManager.merge(battle);
+        log.info("merge " + battleRepository.findById(battle.getId()).toString());
     }
 
     private void cleanUpRedisEntries(Battle battle, String battleKey) {
