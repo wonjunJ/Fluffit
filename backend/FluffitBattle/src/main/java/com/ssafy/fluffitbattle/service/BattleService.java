@@ -9,6 +9,7 @@ import com.ssafy.fluffitbattle.exception.PetNotFoundException;
 import com.ssafy.fluffitbattle.exception.UserAlreadyInMatchingException;
 import com.ssafy.fluffitbattle.kafka.KafkaProducer;
 import com.ssafy.fluffitbattle.repository.BattleRepository;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,7 @@ public class BattleService {
     private final MemberFeignClient memberFeignClient;
     private final FlupetFeignClient flupetFeignClient;
     private final KafkaProducer kafkaProducer;
+    private final EntityManager entityManager;
 
     @Qualifier("stringRedisTemplate")
     private final RedisTemplate<String, String> stringRedisTemplate;
@@ -365,7 +367,13 @@ public class BattleService {
         battle.setBattleDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         log.info("배틀 날짜 " + battle.getBattleDate());
         log.info("배틀 상태 " + battle.toString());
-        battleRepository.save(battle);
+
+        battleRedisTemplate.opsForValue().set("Battle:" + battle.getId(), battle);
+
+        log.info(battleRepository.save(battle).toString());
+        log.info("save " + battleRepository.findById(battle.getId()).toString());
+        battle = entityManager.merge(battle);
+        log.info("merge " + battleRepository.findById(battle.getId()).toString());
     }
 
     private void cleanUpRedisEntries(Battle battle, String battleKey) {
