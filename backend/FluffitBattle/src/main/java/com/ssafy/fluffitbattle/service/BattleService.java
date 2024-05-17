@@ -379,7 +379,7 @@ public class BattleService {
         return battle;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
+//    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT)
     public void updateAndSaveBattle(Battle battle) {
         battle.setBattleDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         log.info("배틀 날짜 " + battle.getBattleDate());
