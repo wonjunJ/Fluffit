@@ -11,6 +11,7 @@ import androidx.health.services.client.PassiveListenerCallback
 import androidx.health.services.client.PassiveMonitoringClient
 import androidx.health.services.client.data.DataPointContainer
 import androidx.health.services.client.data.DataType
+import androidx.health.services.client.data.IntervalDataPoint
 import androidx.health.services.client.data.PassiveListenerConfig
 import java.util.concurrent.Executors
 
@@ -37,6 +38,33 @@ class HealthRepository(private val context: Context) {
                         onStepsUpdated(steps)
                         Log.d(TAG, "Steps: $steps")
                     }
+                }
+            }
+        )
+    }
+
+    fun getCaloriesBurned(startTime: Long, onCaloriesUpdated: (Double) -> Unit) {
+        val config = PassiveListenerConfig.builder()
+            .setDataTypes(setOf(DataType.CALORIES_DAILY))
+            .build()
+
+        passiveMonitoringClient.setPassiveListenerCallback(
+            config,
+            Executors.newSingleThreadExecutor(),
+            object : PassiveListenerCallback {
+                override fun onNewDataPointsReceived(dataPoints: DataPointContainer) {
+                    val caloriesDataPoints = dataPoints.getData(DataType.CALORIES_DAILY)
+
+                    var totalCalories = 0.0
+                    for (dataPoint in caloriesDataPoints) {
+                        if (dataPoint is IntervalDataPoint<*>) {
+//                            if (dataPoint.startTime >= startTime) {
+//                                totalCalories += dataPoint.value as Double
+//                            }
+                        }
+                    }
+                    onCaloriesUpdated(totalCalories)
+                    Log.d(TAG, "Total Calories: $totalCalories")
                 }
             }
         )

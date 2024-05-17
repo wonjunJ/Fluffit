@@ -17,6 +17,7 @@ private const val TAG = "HomeViewModel"
 class HomeViewModel @Inject constructor(
     private val apiRepository: ApiRepository
 ) : ViewModel() {
+    //체력이나 공복이 0이면 사망, 이름이 없으면 펫 없음
     private val _fullness = MutableStateFlow(0)
     val fullness: StateFlow<Int> = _fullness
 

@@ -1,6 +1,7 @@
 package com.kiwa.fluffit.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,13 +21,15 @@ import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 
 @Composable
-fun HeartRateDisplay(modifier: Modifier) {
-    val healthViewModel : HealthViewModel = hiltViewModel()
-    val heartRate by healthViewModel.heartRate.collectAsState()
-
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier) {
+fun HeartRateDisplay(modifier: Modifier, heartRate : Int) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(end = 1.dp)
+    ) {
         Image(
-            modifier = Modifier.size(20.dp).padding(end = 3.dp),
+            modifier = Modifier
+                .size(20.dp),
+//                .padding(end = 3.dp),
             painter = painterResource(R.drawable.heart_red),
             contentDescription = "heart"
         )
