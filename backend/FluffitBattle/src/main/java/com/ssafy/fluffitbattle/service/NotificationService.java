@@ -2,6 +2,7 @@ package com.ssafy.fluffitbattle.service;
 
 import com.ssafy.fluffitbattle.entity.Battle;
 import com.ssafy.fluffitbattle.entity.dto.BattleMatchingResponseDto;
+import com.ssafy.fluffitbattle.exception.CustomExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,6 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
+
+    private final CustomExceptionHandler customExceptionHandler;
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
 
     @Qualifier("stringRedisTemplate")
@@ -32,20 +35,18 @@ public class NotificationService {
     public SseEmitter createEmitter(String userId, String whichController) {
         SseEmitter emitter = new SseEmitter(6000L * 5); // 5분 정도 연결
         emitters.put(userId, emitter);
+        customExceptionHandler.addEmitter(userId, emitter);
+
         emitter.onCompletion(() -> {
-            if (whichController.equals("wait") && redisTemplate.opsForList().leftPop(BATTLE_QUEUE_KEY).equals(userId)) {
-                notifyUser(userId, "fail_matching", BattleMatchingResponseDto.builder().result(false).build());
-            }
+            handleEmitterCompletion(userId, whichController);
             emitters.remove(userId);
-            ridOfUserFromWaitingQueue(userId);
+            customExceptionHandler.removeEmitter(userId);
         });
+
         emitter.onError(ex -> {
-            if (whichController.equals("wait")) {
-                notifyUser(userId, "fail_matching", BattleMatchingResponseDto.builder().result(false).build());
-            }
+            handleEmitterError(userId, whichController, ex);
             emitters.remove(userId);
-            log.info("emitter error : {}", ex);
-            ridOfUserFromWaitingQueue(userId);
+            customExceptionHandler.removeEmitter(userId);
         });
         return emitter;
     }
@@ -87,6 +88,21 @@ public class NotificationService {
                 emitters.remove(userId); // 오류 발생 시 연결 제거
             }
         }
+    }
+
+    private void handleEmitterCompletion(String userId, String whichController) {
+        if (whichController.equals("wait") && redisTemplate.opsForList().leftPop(BATTLE_QUEUE_KEY).equals(userId)) {
+            notifyUser(userId, "fail_matching", BattleMatchingResponseDto.builder().result(false).build());
+        }
+        ridOfUserFromWaitingQueue(userId);
+    }
+
+    private void handleEmitterError(String userId, String whichController, Throwable ex) {
+        if (whichController.equals("wait")) {
+            notifyUser(userId, "fail_matching", BattleMatchingResponseDto.builder().result(false).build());
+        }
+        log.info("emitter error : {}", ex);
+        ridOfUserFromWaitingQueue(userId);
     }
 
 //    public void notifyUsers(Battle battle) {

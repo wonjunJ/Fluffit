@@ -11,6 +11,7 @@ import com.ssafy.fluffitbattle.kafka.KafkaProducer;
 import com.ssafy.fluffitbattle.repository.BattleRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,8 @@ public class BattleService {
     private final MemberFeignClient memberFeignClient;
     private final FlupetFeignClient flupetFeignClient;
     private final KafkaProducer kafkaProducer;
+
+    @PersistenceContext
     private final EntityManager entityManager;
 
     @Qualifier("stringRedisTemplate")
@@ -371,6 +374,20 @@ public class BattleService {
         log.info("배틀 상태 " + battle.toString());
 
         battleRedisTemplate.opsForValue().set("Battle:" + battle.getId(), battle);
+
+        try {
+            battleRepository.save(battle);
+//            entityManager.setFlushMode(FlushModeType.AUTO);
+            entityManager.flush();
+        } catch (Exception e) {
+            log.error("Error during save: ", e);
+//            e.printStackTrace();
+        }
+
+        log.info("Saved Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
+
+        battle = entityManager.merge(battle);
+        log.info("Merged Battle: {}", battleRepository.findById(battle.getId()).orElse(null));
 
         try {
             battleRepository.save(battle);
