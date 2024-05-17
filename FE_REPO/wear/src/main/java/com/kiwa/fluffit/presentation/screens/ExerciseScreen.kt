@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.wearapp.presentation.HealthViewModel
+import com.kiwa.fluffit.presentation.components.CaloriesDisplay
 import com.kiwa.fluffit.presentation.components.ExerciseButton
 import com.kiwa.fluffit.presentation.components.ExercisePetImageDisplay
 import com.kiwa.fluffit.presentation.components.ExerciseTimer
@@ -32,6 +33,10 @@ fun ExerciseScreen() {
         HeartRateDisplay(
             modifier = Modifier.align(Alignment.CenterEnd),
             heartRate ?: 0
+        )
+        CaloriesDisplay(
+            modifier = Modifier.align(Alignment.CenterStart),
+            calories =0
         )
         ExerciseTimer(
             modifier =
