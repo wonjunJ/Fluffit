@@ -244,6 +244,7 @@ public class BattleService {
         int maxRetries = 5;
         int retries = 0;
         boolean success = false;
+        AtomicBoolean canGotoCalculate = new AtomicBoolean(false);
 
         while (retries < maxRetries && !success) {
             retries++;
@@ -260,13 +261,14 @@ public class BattleService {
 
                     log.info("writeRecord 메서드 진입 " + battle.getId());
 
-                    boolean isOpponentSubmitted = false;
+                    AtomicBoolean isOpponentSubmitted = new AtomicBoolean(false);
+
                     if (userId.equals(battle.getOrganizerId())) {
                         battle.setOrganizerScore(score);
-                        isOpponentSubmitted = battle.getParticipantScore() != null;
+                        isOpponentSubmitted.set(battle.getParticipantScore() != null);
                     } else {
                         battle.setParticipantScore(score);
-                        isOpponentSubmitted = battle.getOrganizerScore() != null;
+                        isOpponentSubmitted.set(battle.getOrganizerScore() != null);
                     }
 
                     operations.multi();
@@ -279,8 +281,9 @@ public class BattleService {
                         return false;
                     } else {
                         // 트랜잭션 성공
-                        if (isOpponentSubmitted) {
-                            calculateWinnerAndNotifyResult(battleKey);
+                        if (isOpponentSubmitted.get()) {
+                            canGotoCalculate.set(true);
+//                            calculateWinnerAndNotifyResult(battleKey);
                         }
                         return true;
                     }
@@ -299,6 +302,8 @@ public class BattleService {
 
         if (!success) {
             log.error("Failed to write record after " + maxRetries + " attempts");
+        } else if (canGotoCalculate.get()) {
+            calculateWinnerAndNotifyResult(battleKey);
         }
     }
 
