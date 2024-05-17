@@ -73,7 +73,6 @@ class LoginViewModel @Inject constructor(
         tryAutoLoginUseCase().fold(
             onSuccess = {
                 checkUserProfile()
-//                setState { LoginViewState.LoginSuccess() }
             },
             onFailure = {
                 setState { LoginViewState.Default() }
@@ -87,7 +86,7 @@ class LoginViewModel @Inject constructor(
                 tryToLogin(it)
             },
             onFailure = {
-                setState { showToast(it.message ?: "네이버 접속 실패") }
+                setState { showToast("네이버 접속 실패") }
                 setState { LoginViewState.Default() }
             }
         )
@@ -99,7 +98,7 @@ class LoginViewModel @Inject constructor(
                 checkUserProfile()
             },
             onFailure = {
-                setState { showToast(it.message ?: "네트워크 에러") }
+                setState { showToast("로그인 시도 실패") }
                 setState { LoginViewState.Default() }
             }
         )
@@ -112,7 +111,7 @@ class LoginViewModel @Inject constructor(
                 setState { LoginViewState.ProfileCheck(userName = it) }
             },
             onFailure = {
-                setState { showToast(it.message ?: "네트워크 에러") }
+                setState { showToast("사용자 프로필 조회 실패") }
             }
         )
     }
@@ -125,7 +124,7 @@ class LoginViewModel @Inject constructor(
                 setState { LoginViewState.LoginSuccess() }
             },
             onFailure = {
-                setState { showToast(it.message ?: "중복이거나\n유효하지 않은 닉네임입니다.") }
+                setState { showToast("중복이거나\n유효하지 않은 닉네임입니다.") }
             }
         )
     }

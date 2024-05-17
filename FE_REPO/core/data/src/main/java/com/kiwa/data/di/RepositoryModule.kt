@@ -1,9 +1,11 @@
 package com.kiwa.data.di
 
+import com.kiwa.data.repository.BattleRecordRepositoryImpl
 import com.kiwa.data.repository.CollectionRepositoryImpl
 import com.kiwa.data.repository.FlupetRepositoryImpl
 import com.kiwa.data.repository.RankingRepositoryImpl
 import com.kiwa.data.repository.UserRepositoryImpl
+import com.kiwa.domain.repository.BattleRecordRepository
 import com.kiwa.domain.repository.CollectionRepository
 import com.kiwa.domain.repository.FlupetRepository
 import com.kiwa.domain.repository.RankingRepository
@@ -37,4 +39,10 @@ abstract class RepositoryModule {
     abstract fun bindMainRepository(
         mainRepositoryImpl: FlupetRepositoryImpl
     ): FlupetRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindBattleRecordRepository(
+        battleRecordRepositoryImpl: BattleRecordRepositoryImpl
+    ): BattleRecordRepository
 }
