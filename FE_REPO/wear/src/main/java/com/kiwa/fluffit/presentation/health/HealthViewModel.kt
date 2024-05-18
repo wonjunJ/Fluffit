@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiwa.fluffit.presentation.api.ApiRepository
-import com.kiwa.fluffit.presentation.home.HomeViewModel
 import com.kiwa.fluffit.presentation.model.StepCountResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val TAG = "HealthViewModel"
+
 @HiltViewModel
 class HealthViewModel @Inject constructor(
     private val healthRepository: HealthRepository,
@@ -22,11 +22,33 @@ class HealthViewModel @Inject constructor(
     private val _heartRate = MutableStateFlow<Int?>(0)
     val heartRate: StateFlow<Int?> = _heartRate.asStateFlow()
 
-    private val _calories = MutableStateFlow<Double>(0.0)
-    val calories: StateFlow<Double> = _calories.asStateFlow()
-
     private val _steps = MutableStateFlow<Long?>(0L)
     val steps: StateFlow<Long?> = _steps.asStateFlow()
+
+    private val _distance = MutableStateFlow<Double?>(0.0)
+    val distance: StateFlow<Double?> = _distance.asStateFlow()
+
+    private val _calories = MutableStateFlow<Double?>(0.0)
+    val calories: StateFlow<Double?> = _calories.asStateFlow()
+
+    private var startRunningDistance: Double? = null
+    private val _runningDistance = MutableStateFlow<Double?>(null)
+    val runningDistance: StateFlow<Double?> = _runningDistance.asStateFlow()
+
+    fun getDistance() : Double{
+        return _runningDistance.value ?: 0.0
+    }
+
+    fun getCalories() : Double {
+        return _runningCalories.value ?: 0.0
+    }
+
+    private var startRunningCalories: Double? = null
+    private val _runningCalories = MutableStateFlow<Double?>(null)
+    val runningCalories: StateFlow<Double?> = _runningCalories.asStateFlow()
+
+    private val _endRunning = MutableStateFlow(false)
+    val endRunning: StateFlow<Boolean> = _endRunning.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -36,6 +58,30 @@ class HealthViewModel @Inject constructor(
 
     init {
         loadHealthData()
+    }
+
+    fun startRunning() {
+        startRunningDistance = _distance.value
+        _runningDistance.value = 0.0
+        startRunningCalories = _calories.value
+        _runningCalories.value = 0.0
+    }
+
+    fun turnOffResult() {
+        _endRunning.value = false
+    }
+
+    fun pauseRunning() {
+        startRunningDistance = null
+        startRunningCalories = null
+        _endRunning.value = true
+    }
+
+    fun stopRunning() {
+        startRunningDistance = null
+        _runningDistance.value = null
+        startRunningCalories = null
+        _runningCalories.value = null
     }
 
     suspend fun sendCoinRequest(): StepCountResponse? {
@@ -57,19 +103,12 @@ class HealthViewModel @Inject constructor(
         }
     }
 
-    fun updateCaloriesSince(startTime: Long) {
-        Log.d(TAG, "칼로리 계산 시작")
-        viewModelScope.launch {
-            try {
-                _isLoading.value = true
-                healthRepository.getCaloriesBurned(startTime) { calories ->
-                    _calories.value = calories
-                }
-            } catch (e: Exception) {
-                _error.value = e.message
-            } finally {
-                _isLoading.value = false
-            }
+    suspend fun sendRunningRequest(calories : Int, startTime : Long, endTime : Long) {
+        val response = apiRepository.sendRunning(startTime, endTime, calories)
+        if (response != null) {
+            println("운동 기록이 성공적으로 전송되었습니다. 보상: ${response.reward}")
+        } else {
+            println("운동 기록 전송에 실패했습니다.")
         }
     }
 
@@ -77,12 +116,26 @@ class HealthViewModel @Inject constructor(
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                healthRepository.getDailySteps { steps ->
-                    _steps.value = steps
-                }
                 healthRepository.startHeartRateMeasurement { heartRate ->
                     _heartRate.value = heartRate
                 }
+                healthRepository.startTracking(
+                    onStepsUpdated = { steps ->
+                        _steps.value = steps
+                    },
+                    onDistanceUpdated = { distance ->
+                        _distance.value = distance
+                        if (startRunningDistance != null) {
+                            _runningDistance.value = distance - (startRunningDistance ?: 0.0)
+                        }
+                    },
+                    onCaloriesUpdated = { calories ->
+                        _calories.value = calories
+                        if (startRunningCalories != null) {
+                            _runningCalories.value = calories - (startRunningCalories ?: 0.0)
+                        }
+                    }
+                )
             } catch (e: Exception) {
                 _error.value = e.message
             } finally {

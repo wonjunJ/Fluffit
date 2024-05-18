@@ -17,19 +17,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.kiwa.fluffit.presentation.home.HomeViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 
 private const val TAG = "HomePetImageDisplay"
@@ -48,20 +44,33 @@ fun HomePetImageDisplay() {
 
     var image by remember { mutableStateOf("") }
 
-    if(imageUrl.isNotEmpty()) {
-        if(imageUrl.size >= 2) {
-            image = imageUrl[1]
-        } else {
-            image = imageUrl[0]
+    val painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(context)
+            .data(image)
+            .apply {
+                // Use ImageDecoderDecoder if API level is 28 or higher, else use GifDecoder
+                decoderFactory(if (Build.VERSION.SDK_INT >= 28) ImageDecoderDecoder.Factory() else GifDecoder.Factory())
+            }
+            .build())
+
+
+    LaunchedEffect(imageUrl) {
+        if (imageUrl.isNotEmpty()) {
+            image = if (imageUrl.size >= 2) {
+                imageUrl[1]
+            } else {
+                imageUrl[0]
+            }
         }
     }
-
-
 
     LaunchedEffect(showGif) {
         if (showGif) {
             Log.d(TAG, "쓰다듬기 사진 바꾸기")
-            image = "https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/tombstone.png"
+            if(imageUrl.size >= 4) {
+                image = imageUrl[3]
+            }
+
             delay(1000)
             showGif = false
 
@@ -91,14 +100,6 @@ fun HomePetImageDisplay() {
         }
     }
 
-    val painter = rememberAsyncImagePainter(
-        ImageRequest.Builder(context)
-        .data(image)
-        .apply {
-            // Use ImageDecoderDecoder if API level is 28 or higher, else use GifDecoder
-            decoderFactory(if (Build.VERSION.SDK_INT >= 28) ImageDecoderDecoder.Factory() else GifDecoder.Factory())
-        }
-        .build())
 
     Image(
         modifier =

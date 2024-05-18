@@ -24,9 +24,33 @@ class HealthRepository(private val context: Context) {
     private val heartRateSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)
     private val passiveMonitoringClient: PassiveMonitoringClient = HealthServices.getClient(context).passiveMonitoringClient
 
-    fun getDailySteps(onStepsUpdated: (Long) -> Unit) {
+//    fun getDailySteps(onStepsUpdated: (Long) -> Unit) {
+//        Log.d(TAG, "걸음수 트래킹 시작")
+//        val config = PassiveListenerConfig.builder()
+//            .setDataTypes(setOf(DataType.STEPS_DAILY))
+//            .build()
+//
+//        passiveMonitoringClient.setPassiveListenerCallback(
+//            config,
+//            Executors.newSingleThreadExecutor(),
+//            object : PassiveListenerCallback {
+//                override fun onNewDataPointsReceived(dataPoints: DataPointContainer) {
+//                    val stepsDataPoints = dataPoints.getData(DataType.STEPS_DAILY)
+//
+//                    stepsDataPoints.forEach { dataPoint ->
+//                        val steps = dataPoint.value
+//                        onStepsUpdated(steps)
+//                        Log.d(TAG, "Steps: $steps")
+//                    }
+//                }
+//            }
+//        )
+//    }
+
+    fun startTracking(onStepsUpdated: (Long) -> Unit, onDistanceUpdated: (Double) -> Unit, onCaloriesUpdated: (Double) -> Unit) {
+        Log.d(TAG, "걸음수, 칼로리 및 이동 거리 트래킹 시작")
         val config = PassiveListenerConfig.builder()
-            .setDataTypes(setOf(DataType.STEPS_DAILY))
+            .setDataTypes(setOf(DataType.STEPS_DAILY, DataType.DISTANCE_DAILY, DataType.CALORIES_DAILY))
             .build()
 
         passiveMonitoringClient.setPassiveListenerCallback(
@@ -35,46 +59,25 @@ class HealthRepository(private val context: Context) {
             object : PassiveListenerCallback {
                 override fun onNewDataPointsReceived(dataPoints: DataPointContainer) {
                     val stepsDataPoints = dataPoints.getData(DataType.STEPS_DAILY)
-
                     stepsDataPoints.forEach { dataPoint ->
                         val steps = dataPoint.value
                         onStepsUpdated(steps)
                         Log.d(TAG, "Steps: $steps")
                     }
-                }
-            }
-        )
-    }
 
-    fun getCaloriesBurned(startTime: Long, onCaloriesUpdated: (Double) -> Unit) {
-        Log.d(TAG, "칼로리 갱신 시작")
-        val config = PassiveListenerConfig.builder()
-            .setDataTypes(setOf(DataType.CALORIES_DAILY))
-            .build()
-
-        val bootInstant = Instant.ofEpochMilli(System.currentTimeMillis() - android.os.SystemClock.elapsedRealtime())
-
-        passiveMonitoringClient.setPassiveListenerCallback(
-            config,
-            Executors.newSingleThreadExecutor(),
-            object : PassiveListenerCallback {
-                override fun onNewDataPointsReceived(dataPoints: DataPointContainer) {
-                    val caloriesDataPoints = dataPoints.getData(DataType.CALORIES_DAILY)
-                    Log.d(TAG, "칼로리 갱신")
-
-                    var totalCalories = 0.0
-                    caloriesDataPoints.forEach { dataPoint ->
-                        if (dataPoint is IntervalDataPoint<*>) {
-                            val intervalDataPoint = dataPoint as IntervalDataPoint<Double>
-                            val dataPointStartInstant = bootInstant.plusMillis(intervalDataPoint.startDurationFromBoot.toMillis())
-
-                            if (dataPointStartInstant.toEpochMilli() >= startTime) {
-                                totalCalories += intervalDataPoint.value
-                            }
-                        }
+                    val distanceDataPoints = dataPoints.getData(DataType.DISTANCE_DAILY)
+                    distanceDataPoints.forEach { dataPoint ->
+                        val distance = dataPoint.value
+                        onDistanceUpdated(distance)
+                        Log.d(TAG, "거리: $distance meters")
                     }
-                    Log.d(TAG, "Total Calories: $totalCalories")
-                    onCaloriesUpdated(totalCalories)
+
+                    val caloriesDataPoints = dataPoints.getData(DataType.CALORIES_DAILY)
+                    caloriesDataPoints.forEach { dataPoint ->
+                        val calories = dataPoint.value
+                        onCaloriesUpdated(calories)
+                        Log.d(TAG, "칼로리: $calories")
+                    }
                 }
             }
         )

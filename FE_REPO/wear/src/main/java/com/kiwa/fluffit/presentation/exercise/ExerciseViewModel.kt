@@ -13,11 +13,13 @@ import javax.inject.Inject
 @HiltViewModel
 class ExerciseViewModel @Inject constructor() : ViewModel() {
     private val _startTime = MutableStateFlow<Long?>(null)
+    private val _endTime = MutableStateFlow<Long?>(null)
     private val _isTimerRunning = MutableStateFlow(false)
     private val _timerValue = MutableStateFlow("00:00.00")
     private val _elapsedTime = MutableStateFlow(0L) // 누적 시간
 
     val startTime: StateFlow<Long?> = _startTime.asStateFlow()
+    val endTime: StateFlow<Long?> = _endTime.asStateFlow()
     val timerValue: StateFlow<String> = _timerValue.asStateFlow()
     val isTimerRunning: StateFlow<Boolean> = _isTimerRunning.asStateFlow()
 
@@ -41,6 +43,7 @@ class ExerciseViewModel @Inject constructor() : ViewModel() {
 
     fun pauseTimer() {
         _isTimerRunning.value = false
+        _endTime.value = currentTimeMillis()
     }
 
     fun resetTimer() {

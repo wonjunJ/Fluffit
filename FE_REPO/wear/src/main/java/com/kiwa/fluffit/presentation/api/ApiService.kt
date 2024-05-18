@@ -1,5 +1,7 @@
 package com.kiwa.fluffit.presentation.api
 
+import com.kiwa.fluffit.presentation.model.ExerciseRequest
+import com.kiwa.fluffit.presentation.model.ExerciseResponse
 import com.kiwa.fluffit.presentation.model.FlupetStatus
 import com.kiwa.fluffit.presentation.model.StepCountRequest
 import com.kiwa.fluffit.presentation.model.StepCountResponse
@@ -19,4 +21,7 @@ interface ApiService {
 
     @PUT("/flupet-service/flupet/pat")
     suspend fun patRequest() : Response<Unit>
+
+    @POST("/member-service/exercise/running")
+    suspend fun sendRunning(@Body request: ExerciseRequest): Response<ExerciseResponse>
 }
