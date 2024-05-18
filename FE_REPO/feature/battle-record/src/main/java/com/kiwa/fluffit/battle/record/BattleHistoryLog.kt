@@ -49,21 +49,25 @@ fun BattleHistoryLog(
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = "VS", style = fluffitTypography.bodyLarge,
+                text = "VS",
+                style = fluffitTypography.bodyLarge,
                 textAlign = TextAlign.Center
             )
             Text(
-                text = dateFormatter(battleLog.date), style = fluffitTypography.bodyMedium,
+                text = dateFormatter(battleLog.date),
+                style = fluffitTypography.bodyMedium,
                 textAlign = TextAlign.Center
             )
             CrownItemView(
-                battleLog.isWin, modifier = Modifier
+                battleLog.isWin,
+                modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.1f)
             )
             Spacer(modifier = Modifier.height(10.dp))
             UserInfoView(
-                battleLog, modifier = Modifier
+                battleLog,
+                modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.3f)
             )
@@ -76,4 +80,3 @@ fun dateFormatter(dateString: String): String =
         8,
         10
     )
-

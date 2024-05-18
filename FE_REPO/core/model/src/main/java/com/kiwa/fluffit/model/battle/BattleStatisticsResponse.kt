@@ -21,10 +21,11 @@ fun BattleStatisticsResponse.toBattleStatisticsUIModel(): BattleStatisticsUIMode
         } ?: Triple(0, 0, 0)
 
     val totalWinRate = if (totalGameCount > 0) {
-        Math.round((totalWin.toDouble() / totalGameCount) * 1000) / 10.0
+        totalWin.toDouble() / totalGameCount
     } else {
         0.0
     }
+
     return BattleStatisticsUIModel(
         totalWin = totalWin,
         totalGameCount = totalGameCount,

@@ -21,10 +21,9 @@ fun BattleRecordScreen(
     val viewState = viewModel.uiState.collectAsState().value
     val snackBarHostState = remember { SnackbarHostState() }
 
-    if(viewState.isLoadingBattleStats){
+    if (viewState.isLoadingBattleStats) {
         viewModel.onTriggerEvent(BattleRecordViewEvent.InitLoadingBattleStatistics)
-    }
-    else if (viewState.isLoadingBattleHistory) {
+    } else if (viewState.isLoadingBattleHistory) {
         viewModel.onTriggerEvent(BattleRecordViewEvent.InitLoadingBattleRecord)
     }
 
@@ -40,7 +39,7 @@ fun BattleRecordScreen(
         when (viewState) {
             is BattleRecordViewState.BattleStatsLoading -> BattleRecordLoadingView()
             is BattleRecordViewState.BattleHistoryLoading -> BattleRecordLoadingView()
-            is BattleRecordViewState.Default -> BattleRecordView(viewState.stats,viewState.history)
+            is BattleRecordViewState.Default -> BattleRecordView(viewState.stats, viewState.history)
         }
 
         BattleRecordSnackbarHost(

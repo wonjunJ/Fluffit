@@ -7,8 +7,8 @@ import retrofit2.http.GET
 interface BattleRecordService {
 
     @GET("battle-service/history")
-    suspend fun loadUserBattleRecord() : UserBattleHistory
+    suspend fun loadUserBattleRecord(): UserBattleHistory
 
     @GET("battle-service/statistics")
-    suspend fun loadUserBattleStatistics() : UserBattleStatistics
+    suspend fun loadUserBattleStatistics(): UserBattleStatistics
 }

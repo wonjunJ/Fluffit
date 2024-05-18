@@ -50,8 +50,8 @@ internal fun BattleRecordView(
     val historyListState = rememberLazyListState()
     val game = stats.battleStatisticItemDtoList
 
-    Log.d(TAG, "BattleRecordView: ${stats}")
-    Log.d(TAG, "BattleRecordView: ${history}")
+    Log.d(TAG, "BattleRecordView: $stats")
+    Log.d(TAG, "BattleRecordView: $history")
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -194,8 +194,6 @@ internal fun BattleRecordView(
                 }
             }
         }
-
-
     }
 }
 

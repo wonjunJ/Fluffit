@@ -22,7 +22,7 @@ sealed class BattleRecordViewState : ViewState {
             content = emptyList(),
             hasNext = false
         ),
-        override val toastMessage: String = "",
+        override val toastMessage: String = ""
     ) : BattleRecordViewState()
 
     data class BattleHistoryLoading(
@@ -36,7 +36,7 @@ sealed class BattleRecordViewState : ViewState {
             content = emptyList(),
             hasNext = false
         ),
-        override val toastMessage: String = "",
+        override val toastMessage: String = ""
     ) : BattleRecordViewState()
 
     data class Default(
@@ -50,6 +50,6 @@ sealed class BattleRecordViewState : ViewState {
             content = emptyList(),
             hasNext = false
         ),
-        override val toastMessage: String = "",
+        override val toastMessage: String = ""
     ) : BattleRecordViewState()
 }

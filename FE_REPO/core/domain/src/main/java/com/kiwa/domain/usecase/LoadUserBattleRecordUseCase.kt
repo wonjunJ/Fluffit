@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class LoadUserBattleRecordUseCase @Inject constructor(
     private val repository: BattleRecordRepository
-){
+) {
     suspend operator fun invoke() = repository.loadUserBattleRecord()
 }
