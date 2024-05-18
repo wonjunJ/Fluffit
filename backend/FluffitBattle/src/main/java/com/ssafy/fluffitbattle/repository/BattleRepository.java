@@ -19,7 +19,7 @@ public interface BattleRepository extends JpaRepository<Battle, Long> {
 
     @Query("SELECT new com.ssafy.fluffitbattle.entity.dto.BattleStatisticItemDto(b.battleType, COUNT(b), " +
             "SUM(CASE WHEN b.winnerId = :userId THEN 1 ELSE 0 END), " +
-            "SUM(CASE WHEN b.winnerId != :userId THEN 1 ELSE 0 END)) " +
+            "SUM(CASE WHEN b.winnerId IS NULL OR b.winnerId != :userId THEN 1 ELSE 0 END)) " +
             "FROM Battle b WHERE b.organizerId = :userId OR b.participantId = :userId " +
             "GROUP BY b.battleType " +
             "HAVING COUNT(b) > 0")
