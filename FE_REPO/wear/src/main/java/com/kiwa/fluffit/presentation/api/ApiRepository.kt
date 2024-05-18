@@ -1,6 +1,8 @@
 package com.kiwa.fluffit.presentation.api
 
 import android.util.Log
+import com.kiwa.fluffit.presentation.model.ExerciseRequest
+import com.kiwa.fluffit.presentation.model.ExerciseResponse
 import com.kiwa.fluffit.presentation.model.FlupetStatus
 import com.kiwa.fluffit.presentation.model.StepCountRequest
 import com.kiwa.fluffit.presentation.model.StepCountResponse
@@ -22,6 +24,20 @@ class ApiRepository @Inject constructor(private val apiService: ApiService) {
         return if (response.isSuccessful) {
             response.body()
         } else {
+            null
+        }
+    }
+
+    suspend fun sendRunning(startTimeInMillis: Long, endTimeInMillis: Long, calorie: Int): ExerciseResponse? {
+        val request = ExerciseRequest.fromMillis(startTimeInMillis, endTimeInMillis, calorie)
+        val response = apiService.sendRunning(request)
+
+        Log.d("TAG", "운동요청 : startTime: $startTimeInMillis, endTime: $endTimeInMillis, cal: $calorie")
+        return if (response.isSuccessful) {
+            response.body()
+        } else {
+            val errorMsg = response.errorBody()?.string() ?: "Unknown error"
+            Log.d("TAG", "운동 요청 실패: $errorMsg")
             null
         }
     }

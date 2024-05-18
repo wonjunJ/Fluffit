@@ -14,10 +14,7 @@ import com.kiwa.fluffit.presentation.exercise.ExerciseViewModel
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 
 @Composable
-fun ExerciseTimer(modifier: Modifier) {
-    val exerciseViewModel : ExerciseViewModel = hiltViewModel()
-    val timer by exerciseViewModel.timerValue.collectAsState()
-
+fun ExerciseTimer(modifier: Modifier, timer : String) {
     Text(
         modifier = modifier,
         textAlign = TextAlign.Center,
