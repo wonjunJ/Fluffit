@@ -6,10 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiwa.fluffit.presentation.api.ApiRepository
+import com.kiwa.fluffit.presentation.model.StepCountResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 private const val TAG = "HomeViewModel"
@@ -17,6 +20,7 @@ private const val TAG = "HomeViewModel"
 class HomeViewModel @Inject constructor(
     private val apiRepository: ApiRepository
 ) : ViewModel() {
+    //체력이나 공복이 0이면 사망, 이름이 없으면 펫 없음
     private val _fullness = MutableStateFlow(0)
     val fullness: StateFlow<Int> = _fullness
 
@@ -43,6 +47,19 @@ class HomeViewModel @Inject constructor(
 
     private val _coin = MutableStateFlow(0)
     val coin: StateFlow<Int> = _coin
+
+    fun setCoin(coin : Int) {
+        _coin.value = coin
+    }
+
+    fun patRequest(callback: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                apiRepository.patRequest()
+            }
+            callback(result)
+        }
+    }
 
     fun loadFlupetStatus() {
         viewModelScope.launch {

@@ -11,7 +11,11 @@ import androidx.health.services.client.PassiveListenerCallback
 import androidx.health.services.client.PassiveMonitoringClient
 import androidx.health.services.client.data.DataPointContainer
 import androidx.health.services.client.data.DataType
+import androidx.health.services.client.data.IntervalDataPoint
 import androidx.health.services.client.data.PassiveListenerConfig
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.concurrent.Executors
 
 
@@ -37,6 +41,40 @@ class HealthRepository(private val context: Context) {
                         onStepsUpdated(steps)
                         Log.d(TAG, "Steps: $steps")
                     }
+                }
+            }
+        )
+    }
+
+    fun getCaloriesBurned(startTime: Long, onCaloriesUpdated: (Double) -> Unit) {
+        Log.d(TAG, "칼로리 갱신 시작")
+        val config = PassiveListenerConfig.builder()
+            .setDataTypes(setOf(DataType.CALORIES_DAILY))
+            .build()
+
+        val bootInstant = Instant.ofEpochMilli(System.currentTimeMillis() - android.os.SystemClock.elapsedRealtime())
+
+        passiveMonitoringClient.setPassiveListenerCallback(
+            config,
+            Executors.newSingleThreadExecutor(),
+            object : PassiveListenerCallback {
+                override fun onNewDataPointsReceived(dataPoints: DataPointContainer) {
+                    val caloriesDataPoints = dataPoints.getData(DataType.CALORIES_DAILY)
+                    Log.d(TAG, "칼로리 갱신")
+
+                    var totalCalories = 0.0
+                    caloriesDataPoints.forEach { dataPoint ->
+                        if (dataPoint is IntervalDataPoint<*>) {
+                            val intervalDataPoint = dataPoint as IntervalDataPoint<Double>
+                            val dataPointStartInstant = bootInstant.plusMillis(intervalDataPoint.startDurationFromBoot.toMillis())
+
+                            if (dataPointStartInstant.toEpochMilli() >= startTime) {
+                                totalCalories += intervalDataPoint.value
+                            }
+                        }
+                    }
+                    Log.d(TAG, "Total Calories: $totalCalories")
+                    onCaloriesUpdated(totalCalories)
                 }
             }
         )

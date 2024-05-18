@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -21,15 +22,23 @@ import com.kiwa.fluffit.presentation.components.CoinDisplay
 import com.kiwa.fluffit.presentation.components.HomePetImageDisplay
 import com.kiwa.fluffit.presentation.components.StepsDisplay
 import com.kiwa.fluffit.presentation.home.HomeViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun MainScreen() {
     val homeViewModel:HomeViewModel = hiltViewModel()
-    homeViewModel.loadFlupetStatus()
+    // 주기적으로 loadFlupetStatus 호출
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            homeViewModel.loadFlupetStatus()
+            delay(10000)
+        }
+    }
+
 
     val fullness by homeViewModel.fullness.collectAsState()
     val health by homeViewModel.health.collectAsState()
-    val imageUrl by homeViewModel.imageUrl.collectAsState()
     val coin by homeViewModel.coin.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -63,9 +72,8 @@ fun MainScreen() {
             StepsDisplay()
         }
         Box(modifier = Modifier.align(Alignment.Center)){
-            val image = painterResource(R.drawable.dog_white)
 //        Spacer(modifier = Modifier.height(16.dp))
-            HomePetImageDisplay(imageUrl.getOrNull(0) ?: "")
+            HomePetImageDisplay()
         }
         Column (
             horizontalAlignment = Alignment.CenterHorizontally,
