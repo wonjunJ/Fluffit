@@ -1,5 +1,6 @@
 package com.kiwa.fluffit.presentation.api
 
+import android.util.Log
 import com.kiwa.fluffit.presentation.model.FlupetStatus
 import com.kiwa.fluffit.presentation.model.StepCountRequest
 import com.kiwa.fluffit.presentation.model.StepCountResponse
@@ -30,6 +31,7 @@ class ApiRepository @Inject constructor(private val apiService: ApiService) {
         return if (response.isSuccessful) {
             true
         } else {
+            Log.d("API", "쓰다듬기 실패${response.body()}")
             false
         }
     }

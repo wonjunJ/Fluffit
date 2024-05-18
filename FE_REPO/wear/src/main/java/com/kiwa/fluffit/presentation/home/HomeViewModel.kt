@@ -8,9 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.kiwa.fluffit.presentation.api.ApiRepository
 import com.kiwa.fluffit.presentation.model.StepCountResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 private const val TAG = "HomeViewModel"
@@ -50,8 +52,13 @@ class HomeViewModel @Inject constructor(
         _coin.value = coin
     }
 
-    fun patRequest(){
-        //toDO
+    fun patRequest(callback: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                apiRepository.patRequest()
+            }
+            callback(result)
+        }
     }
 
     fun loadFlupetStatus() {
