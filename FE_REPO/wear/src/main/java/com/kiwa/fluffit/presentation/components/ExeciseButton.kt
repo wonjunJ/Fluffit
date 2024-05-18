@@ -1,5 +1,6 @@
 package com.kiwa.fluffit.presentation.components
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,12 +16,19 @@ import com.example.wearapp.presentation.HealthViewModel
 import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.exercise.ExerciseViewModel
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
+import kotlinx.coroutines.launch
 
 @Composable
 fun ExerciseButton() {
     val exerciseViewModel: ExerciseViewModel = hiltViewModel()
     val healthViewModel: HealthViewModel = hiltViewModel()
     val isRunning by exerciseViewModel.isTimerRunning.collectAsState()
+    val calories by healthViewModel.runningCalories.collectAsState()
+
+    val startTime by exerciseViewModel.startTime.collectAsState()
+    val endTime by exerciseViewModel.endTime.collectAsState()
+
+    val coroutineScope = rememberCoroutineScope()
 
     val buttonText = if (isRunning)
         stringResource(R.string.exercise_stop_button) else stringResource(R.string.exercise_button)
@@ -40,9 +48,20 @@ fun ExerciseButton() {
             onClick = {
                 if (isRunning) {
                     exerciseViewModel.pauseTimer()
+                    healthViewModel.pauseRunning()
+
+                    Log.d("TAG", "운동 요청 ")
+                    coroutineScope.launch {
+                        healthViewModel.sendRunningRequest(
+                            calories = calories!!.toInt(),
+                            startTime = startTime!!,
+                            endTime = endTime!!
+                        )
+                    }
+
 //                    Toast.makeText(context, "Exercise Paused", Toast.LENGTH_SHORT).show()
                 } else {
-                    healthViewModel.updateCaloriesSince(System.currentTimeMillis())
+                    healthViewModel.startRunning()
                     exerciseViewModel.startTimer()
 //                    Toast.makeText(context, "Exercise Started", Toast.LENGTH_SHORT).show()
                 }
