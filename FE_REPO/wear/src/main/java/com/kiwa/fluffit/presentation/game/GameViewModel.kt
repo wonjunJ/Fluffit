@@ -24,7 +24,6 @@ class GameViewModel @Inject constructor(
             uiEvent.collect {
                 when (it) {
                     GameViewEvent.OnReadyForGame -> setState { showGame() }
-                    GameViewEvent.OnFinishBattle -> TODO()
                     is GameViewEvent.OnFinishGame -> getBattleResult(it.battleId, it.score)
                     is GameViewEvent.Init -> setState { initUI(it.gameUIModel) }
                 }

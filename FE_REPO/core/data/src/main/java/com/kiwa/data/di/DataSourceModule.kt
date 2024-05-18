@@ -1,5 +1,7 @@
 package com.kiwa.data.di
 
+import com.kiwa.data.datasource.BattleRecordDataSource
+import com.kiwa.data.datasource.BattleRecordDataSourceImpl
 import com.kiwa.data.datasource.CollectionDataSource
 import com.kiwa.data.datasource.CollectionDataSourceImpl
 import com.kiwa.data.datasource.FlupetDataSource
@@ -35,4 +37,9 @@ abstract class DataSourceModule {
     @Singleton
     abstract fun bindMainDataSource(mainDataSourceImpl: FlupetDataSourceImpl):
         FlupetDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindBattleRecordDataSource(battleRecordDataSourceImpl: BattleRecordDataSourceImpl):
+        BattleRecordDataSource
 }

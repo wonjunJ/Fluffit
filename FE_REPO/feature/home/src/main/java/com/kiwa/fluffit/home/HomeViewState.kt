@@ -27,7 +27,9 @@ sealed class HomeViewState : ViewState {
         override val nextFullnessUpdateTime: Long = 0L,
         override val nextHealthUpdateTime: Long = 0L,
         override val message: String = "",
-        override val flupetStatus: FlupetStatus = FlupetStatus.None
+        override val flupetStatus: FlupetStatus = FlupetStatus.None,
+        val evolution: Boolean = false,
+        val beforeImage: String = ""
     ) : HomeViewState()
 
     data class FlupetNameEdit(

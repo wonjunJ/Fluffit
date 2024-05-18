@@ -74,16 +74,16 @@ internal fun MyPageView(
                     )
                 )
             )
-//            MyPageOutLinedText(
-//                onClickText = { clickBattleRecord() },
-//                text = "배틀 전적",
-//                textStyle = fluffitTypography.bodyLarge.merge(
-//                    TextStyle(
-//                        fontSize = 24.sp,
-//                        color = Color.White
-//                    )
-//                )
-//            )
+            MyPageOutLinedText(
+                onClickText = { clickBattleRecord() },
+                text = "배틀 전적",
+                textStyle = fluffitTypography.bodyLarge.merge(
+                    TextStyle(
+                        fontSize = 24.sp,
+                        color = Color.White
+                    )
+                )
+            )
             MyPageOutLinedText(
                 onClickText = { },
                 text = "개인정보 처리 방침 및\n서비스 이용약관",

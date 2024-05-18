@@ -1,8 +1,7 @@
 package com.kiwa.fluffit.presentation.battle
 
 import com.kiwa.fluffit.base.ViewState
-import com.kiwa.fluffit.model.battle.BattleLogModel
-import com.kiwa.fluffit.model.battle.BattleType
+import com.kiwa.fluffit.model.battle.BattleStatisticsUIModel
 import com.kiwa.fluffit.model.battle.GameUIModel
 import com.kiwa.fluffit.model.battle.OpponentInfo
 
@@ -12,7 +11,7 @@ sealed class BattleViewState : ViewState {
     abstract val message: String
 
     data class Default(
-        val battleLogModel: BattleLogModel = BattleLogModel(2, 1, 0),
+        val battleStatistics: BattleStatisticsUIModel = BattleStatisticsUIModel(0, 0, 0, 0.0, 0),
         val gameUIModel: GameUIModel = GameUIModel(
             battleId = "", opponentInfo = OpponentInfo(
                 "", "", "", 0

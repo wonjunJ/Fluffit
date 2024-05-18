@@ -47,7 +47,8 @@ internal fun FlupetUI(
         Image(
             painter = rememberAsyncImagePainter(
                 imageLoader = imageLoader,
-                model = uiState.flupet.imageUrls.standard
+                model =
+                uiState.flupet.imageUrls.nodding.ifEmpty { uiState.flupet.imageUrls.standard }
             ),
             contentDescription = null,
             modifier = Modifier
@@ -59,7 +60,9 @@ internal fun FlupetUI(
         if (uiState.flupet.evolutionAvailable) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.wrapContentSize().clickable { onClickEvolutionButton() }
+                modifier = Modifier
+                    .wrapContentSize()
+                    .clickable { onClickEvolutionButton() }
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.evolution_button),

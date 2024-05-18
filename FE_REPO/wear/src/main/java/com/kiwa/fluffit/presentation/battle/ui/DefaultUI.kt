@@ -14,20 +14,19 @@ import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.kiwa.fluffit.R
-import com.kiwa.fluffit.model.battle.BattleLogModel
+import com.kiwa.fluffit.model.battle.BattleStatisticsUIModel
 import com.kiwa.fluffit.presentation.components.BasicButton
 
 @Composable
 internal fun DefaultUI(
     modifier: Modifier,
     mainButtonText: String,
-    battleLogModel: BattleLogModel,
+    battleStatistics: BattleStatisticsUIModel,
     onClickMainButton: () -> Unit
 ) {
-    val winRate =
-        battleLogModel.winCount / (battleLogModel.winCount + battleLogModel.loseCount).toFloat()
-    val battleLog = "${battleLogModel.winCount}승 ${battleLogModel.loseCount}패"
-    val battlePoint = "${battleLogModel.battlePoint}"
+    val winRate = battleStatistics.totalWinRate.toFloat()
+    val battleLog = "${battleStatistics.totalWin}승 ${battleStatistics.totalLose}패"
+    val battlePoint = "${battleStatistics.battlePoint}"
 
     CircularProgressIndicator(
         modifier = Modifier

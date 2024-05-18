@@ -20,7 +20,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private val loggingInterceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        setLevel(HttpLoggingInterceptor.Level.HEADERS)
+        setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
     @Qualifier

@@ -1,9 +1,9 @@
 package com.kiwa.fluffit.presentation.battle
 
-import com.kiwa.fluffit.model.battle.BattleLog
-import com.kiwa.fluffit.model.battle.BattleLogModel
 import com.kiwa.fluffit.model.battle.BattleResultUIModel
+import com.kiwa.fluffit.model.battle.BattleStatisticsUIModel
 import com.kiwa.fluffit.model.battle.GameUIModel
+import com.kiwa.fluffit.model.battle.toBattleStatisticsUIModel
 import com.kiwa.fluffit.model.battle.toGameUIModel
 import com.kiwa.fluffit.presentation.datasource.BattleDataSource
 import javax.inject.Inject
@@ -11,13 +11,13 @@ import javax.inject.Inject
 class BattleRepositoryImpl @Inject constructor(
     private val battleDataSource: BattleDataSource
 ) : BattleRepository {
-    override suspend fun getBattleLogs(): Result<List<BattleLog>> {
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun getBattleStatistics(): Result<BattleLogModel> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun getBattleStatistics(): Result<BattleStatisticsUIModel> =
+        battleDataSource.getBattleStatistics().fold(
+            onSuccess = { Result.success(it.toBattleStatisticsUIModel()) },
+            onFailure = { Result.failure(it) }
+        )
+
 
     override suspend fun findMatching(): Result<GameUIModel> =
         battleDataSource.findMatch().fold(
@@ -43,4 +43,9 @@ class BattleRepositoryImpl @Inject constructor(
             },
             onFailure = { Result.failure(it) }
         )
+
+    override suspend fun cancelBattle(): Result<Unit> = battleDataSource.cancelBattle().fold(
+        onSuccess = { Result.success(it) },
+        onFailure = { Result.failure(it) }
+    )
 }

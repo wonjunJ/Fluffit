@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.presentation.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,19 +27,19 @@ fun BattleScreen(
 ) {
     val context = LocalContext.current
 
+    LaunchedEffect(Unit) {
+        viewModel.onTriggerEvent(BattleViewEvent.Init)
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         val uiState: BattleViewState.Default =
             viewModel.uiState.collectAsState().value as BattleViewState.Default
 
         DefaultUI(
-            Modifier.align(Alignment.Center),
-            if (uiState.findMatching) "취소" else "배틀하기",
-            uiState.battleLogModel
+            Modifier.align(Alignment.Center), "배틀하기",
+            uiState.battleStatistics
         ) {
-            if (uiState.findMatching)
-                viewModel.onTriggerEvent(BattleViewEvent.OnClickCancelBattleButton)
-            else
-                viewModel.onTriggerEvent(BattleViewEvent.OnClickBattleButton)
+            viewModel.onTriggerEvent(BattleViewEvent.OnClickBattleButton)
         }
 
         if (uiState.gameUIModel.battleId.isNotEmpty()) {
@@ -49,12 +48,17 @@ fun BattleScreen(
 
         when (uiState.loading) {
             true ->
-                LoadingUI(Modifier.wrapContentSize().align(Alignment.Center)) {
+                LoadingUI(
+                    Modifier
+                        .wrapContentSize()
+                        .align(Alignment.Center)
+                ) {
                     if (uiState.findMatching) Text(
-                        text = "상대를 찾는 중입니다.",
+                        text = "상대를 찾는 중입니다.\n(최대 30초 대기)",
                         style = MaterialTheme.typography.caption3
                     )
                 }
+
             false -> {
             }
         }

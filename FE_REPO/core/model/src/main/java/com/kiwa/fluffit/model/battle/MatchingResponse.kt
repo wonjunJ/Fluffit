@@ -7,7 +7,7 @@ data class MatchingResponse(
     val opponentFlupetImageUrl: String,
     val opponentBattlePoint: Int,
     val battleId: String,
-    val battleTypeResponse: BattleTypeResponse
+    val battleType: BattleTypeResponse
 )
 
 data class BattleTypeResponse(
@@ -26,8 +26,8 @@ fun MatchingResponse.toGameUIModel() =
             opponentFlupetImage = this.opponentFlupetImageUrl,
             opponentBattlePoint = this.opponentBattlePoint
         ),
-        key = this.battleTypeResponse.key,
-        title = this.battleTypeResponse.title,
-        description = this.battleTypeResponse.description,
-        time = this.battleTypeResponse.time
+        key = this.battleType.key,
+        title = this.battleType.title,
+        description = this.battleType.description,
+        time = this.battleType.time
     )
