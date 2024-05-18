@@ -41,6 +41,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.InputDeviceCompat
 import androidx.core.view.MotionEventCompat
 import androidx.core.view.ViewConfigurationCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -51,6 +52,7 @@ import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Text
 import com.kiwa.fluffit.model.battle.GameUIModel
 import com.kiwa.fluffit.presentation.feed.ui.FeedButton
+import com.kiwa.fluffit.presentation.home.HomeViewModel
 import com.kiwa.fluffit.presentation.screens.BattleScreen
 import com.kiwa.fluffit.presentation.screens.CheckPhoneScreen
 import com.kiwa.fluffit.presentation.screens.ExerciseScreen
@@ -180,6 +182,7 @@ fun WearApp(onNavigateToGame: (GameUIModel) -> Unit) {
     val currentPage by MainActivityViewModel.currentPage.collectAsState()
     val pagerState = rememberPagerState(pageCount = { MainActivity.PAGE_COUNT }, initialPage = currentPage)
     var showIndicator by remember { mutableStateOf(false) }
+    val homeViewModel:HomeViewModel = hiltViewModel()
 
     val pageIndicatorState: PageIndicatorState = remember {
         object : PageIndicatorState {
@@ -200,6 +203,10 @@ fun WearApp(onNavigateToGame: (GameUIModel) -> Unit) {
         )
         delay(1000)
         showIndicator = false
+
+        if (currentPage == 0) {
+            homeViewModel.loadFlupetStatus()
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {

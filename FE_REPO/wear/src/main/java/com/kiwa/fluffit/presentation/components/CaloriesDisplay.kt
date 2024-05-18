@@ -21,7 +21,7 @@ import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 
 @Composable
-fun HeartRateDisplay(modifier: Modifier, heartRate : Int) {
+fun CaloriesDisplay(modifier: Modifier, calories : Double) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.padding(end = 1.dp)
@@ -34,7 +34,7 @@ fun HeartRateDisplay(modifier: Modifier, heartRate : Int) {
         )
         Text(
             fontSize = 15.sp,
-            text = "$heartRate",
+            text = "$calories",
             color = Color.White
         )
     }
