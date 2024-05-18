@@ -14,7 +14,7 @@ spring:
           default-label: master #기본이 main 브랜치이므로 master 브랜치에서 가져오기 위해 설정
         bootstrap: true
   rabbitmq:
-    host: fluffit.shop
+    host: rabbitmq
     port: 5672
     username: ENC(7CDqSrW1frk32qx8yIyHqA==)
     password: ENC(h8qqcxuF8aPm5dhKVFfLmMbYg2paxNem)
