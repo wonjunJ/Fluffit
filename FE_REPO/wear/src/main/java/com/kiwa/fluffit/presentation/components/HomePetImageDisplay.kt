@@ -104,7 +104,17 @@ fun HomePetImageDisplay() {
     Image(
         modifier =
         Modifier
-            .size(100.dp)
+            .size(
+                if(
+                    image.contains("/rabbit_white_happy.gif") ||
+                    image.contains("/cat_gray_happy.gif") ||
+                    image.contains("/dog_corgi_happy.gif")
+                    ) {
+                    200.dp
+                } else {
+                    100.dp
+                }
+            )
             .pointerInput(Unit) {
                 awaitEachGesture {
                     do {

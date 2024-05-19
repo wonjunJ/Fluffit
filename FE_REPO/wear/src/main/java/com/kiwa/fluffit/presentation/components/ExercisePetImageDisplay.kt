@@ -26,7 +26,17 @@ fun ExercisePetImageDisplay(imageUrl: String, modifier: Modifier) {
             .build())
 
     Image(
-        modifier = modifier.size(100.dp),
+        modifier = modifier.size(
+            if(
+                imageUrl.contains("/white_rabbit_run.gif") ||
+                imageUrl.contains("/nero_run.gif") ||
+                imageUrl.contains("/corgi_run.gif")
+            ) {
+                190.dp
+            } else {
+                100.dp
+            }
+        ),
         painter = painter,
         contentDescription = "exercise page pet image"
     )
