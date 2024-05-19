@@ -177,7 +177,63 @@ internal fun BattleRecordView(
                         .clip(shape = RoundedCornerShape(8.dp))
                         .background(Color(0xCCFFFFFF))
                 ) {
-                    Text(text = "c")
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(10.dp)
+                    ) {
+                        Text(
+                            text = game[1].title,
+                            style = fluffitTypography.bodyMedium,
+                            textAlign = TextAlign.Center
+                        )
+                        Image(
+                            painter = painterResource(R.drawable.heart_red),
+                            contentDescription = "심박수",
+                            modifier = Modifier
+                                .fillMaxWidth(0.25f)
+                                .aspectRatio(1f),
+                            contentScale = ContentScale.FillBounds
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row() {
+                            Text(
+                                text = game[1].totalCount.toString() + "전 ",
+                                style = fluffitTypography.bodyMedium,
+                                textAlign = TextAlign.Center
+                            )
+                            Text(
+                                text = game[1].winCount.toString(),
+                                style = fluffitTypography.bodyMedium.merge(
+                                    color = Color(0xFF70F150)
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+                            Text(
+                                text = "승 ",
+                                style = fluffitTypography.bodyMedium,
+                                textAlign = TextAlign.Center
+                            )
+                            Text(
+                                text = game[1].loseCount.toString(),
+                                style = fluffitTypography.bodyMedium.merge(
+                                    color = Color(0xFFEE5757)
+                                ),
+                                textAlign = TextAlign.Center
+                            )
+                            Text(
+                                text = "패",
+                                style = fluffitTypography.bodyMedium,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                        Text(
+                            text = "승률 " + game[1].winRate.toString() + "%",
+                            style = fluffitTypography.bodyMedium,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
 

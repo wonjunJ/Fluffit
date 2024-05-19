@@ -59,7 +59,7 @@ fun BattleHistoryLog(
                 textAlign = TextAlign.Center
             )
             CrownItemView(
-                battleLog.isWin,
+                battleLog.win,
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.1f)

@@ -16,7 +16,7 @@ data class UserBattleHistory(
 )
 
 data class BattleContents(
-    val isWin: Boolean,
+    val win: Boolean,
     val title: String,
     val opponentName: String,
     val opponentScore: Int,

@@ -23,39 +23,41 @@ import com.kiwa.fluffit.presentation.feed.FeedViewState
 @Composable
 fun FeedView(
     viewState: FeedViewState,
-    viewModel: FeedViewModel
+    viewModel: FeedViewModel,
 ) {
     val image = painterResource(R.drawable.feed_bag)
-    CurvedLayout(
-        anchorType = AnchorType.Center,
-        modifier = Modifier.fillMaxSize(),
-        anchor = 270f,
-    ) {
-        curvedRow() {
-            curvedComposable {
-                FeedToggleButton(feedImage = image, buttonId = 0, viewModel)
-            }
-            curvedComposable {
-                FeedToggleButton(feedImage = image, buttonId = 1, viewModel)
-            }
-            curvedComposable {
-                FeedToggleButton(feedImage = image, buttonId = 2, viewModel)
-            }
-        }
-    }
-    Box(contentAlignment = Alignment.Center) {
-        FeedDisplay(viewState, viewModel)
-        Column(
+    if (viewState.foodList.isNotEmpty()) {
+        CurvedLayout(
+            anchorType = AnchorType.Center,
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceAround,
-            horizontalAlignment = Alignment.CenterHorizontally
+            anchor = 270f,
         ) {
-            Box(modifier = Modifier.height(0.dp))
-            Box(modifier = Modifier.padding(top = 5.dp)) {
-                CoinDisplay(coin = viewState.coin)
+            curvedRow() {
+                curvedComposable {
+                    FeedToggleButton(feedImage = image, buttonId = 0, viewModel)
+                }
+                curvedComposable {
+                    FeedToggleButton(feedImage = image, buttonId = 1, viewModel)
+                }
+                curvedComposable {
+                    FeedToggleButton(feedImage = image, buttonId = 2, viewModel)
+                }
             }
         }
+        Box(contentAlignment = Alignment.Center) {
+            FeedDisplay(viewState, viewModel)
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceAround,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(modifier = Modifier.height(0.dp))
+                Box(modifier = Modifier.padding(top = 5.dp)) {
+                    CoinDisplay(coin = viewState.coin)
+                }
+            }
+        }
+        FeedButton(viewState, viewModel)
+        FeedDescriptionBox(viewState, viewModel)
     }
-    FeedButton(viewState, viewModel)
-    FeedDescriptionBox(viewState, viewModel)
 }

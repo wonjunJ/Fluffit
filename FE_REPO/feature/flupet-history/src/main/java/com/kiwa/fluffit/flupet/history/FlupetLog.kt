@@ -71,13 +71,22 @@ fun FlupetLog(
                         }
                     },
                     update = { imageView ->
-                        val imageUrl = myFlupet.imageUrl[0]
-                        glide
-                            .asGif()
-                            .load(imageUrl)
-                            .apply(RequestOptions().fitCenter())
-                            .into(imageView)
-                            .clearOnDetach()
+                        var imageUrl = myFlupet.imageUrl[0]
+                        if (myFlupet.imageUrl.size > 1) {
+                            imageUrl = myFlupet.imageUrl[1]
+                            glide
+                                .load(imageUrl)
+                                .apply(RequestOptions().fitCenter())
+                                .into(imageView)
+                                .clearOnDetach()
+                        } else {
+                            glide
+                                .asGif()
+                                .load(imageUrl)
+                                .apply(RequestOptions().fitCenter())
+                                .into(imageView)
+                                .clearOnDetach()
+                        }
                     }
                 )
             }

@@ -43,7 +43,7 @@ fun UserInfoView(
                 Text(text = battleLog.opponentName, style = fluffitTypography.bodyMedium)
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    text = battleLog.myScore.toString() + "점",
+                    text = battleLog.opponentScore.toString() + "점",
                     style = fluffitTypography.bodyMedium
                 )
             }
