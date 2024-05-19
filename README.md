@@ -32,7 +32,7 @@
 ## 주요 기술
 
 **Backend**
-<div style="background-color: #F0F0F0;">
+```
 - java17
 - springboot 3.2.5
 - spring jpa
@@ -45,25 +45,33 @@
 - QueryDSL
 - rabitMQ
 - kafka
-</div>
+```
 
 **Frontend**
+```
 
+```
 
 **DataBase**
+```
 - mariaDB
 - Redis
+```
 
 **Infra**
+```
 - aws ec2
 - docker & docker compose
 - jenkins
+```
 
 ## 협업 툴
+```
 - git
 - notion
 - jira
 - mattermost
+```
 
 # git 컨벤션
 
