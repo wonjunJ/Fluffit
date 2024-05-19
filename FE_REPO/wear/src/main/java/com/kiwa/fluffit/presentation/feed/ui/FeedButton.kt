@@ -18,6 +18,7 @@ import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.feed.FeedViewEvent
 import com.kiwa.fluffit.presentation.feed.FeedViewModel
 import com.kiwa.fluffit.presentation.feed.FeedViewState
+import com.kiwa.fluffit.presentation.home.HomeViewModel
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 import com.kiwa.fluffit.presentation.util.sendMessageToPhone
 
@@ -25,6 +26,7 @@ import com.kiwa.fluffit.presentation.util.sendMessageToPhone
 fun FeedButton(
     feedViewState: FeedViewState,
     feedViewModel: FeedViewModel,
+    homeViewModel: HomeViewModel
 ) {
     val context = LocalContext.current
 
@@ -43,6 +45,7 @@ fun FeedButton(
                 .padding(bottom = 4.dp),
             onClick = {
                 feedViewModel.onTriggerEvent(FeedViewEvent.FeedSelectedFood(feedViewState.feedNum + 1))
+                homeViewModel.loadFlupetStatus()
                 onCoinUpdate()
             }
         ) {
