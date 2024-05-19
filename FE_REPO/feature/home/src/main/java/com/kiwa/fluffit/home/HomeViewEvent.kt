@@ -20,4 +20,6 @@ sealed class HomeViewEvent : ViewEvent {
     data object OnClickEvolutionButton : HomeViewEvent()
 
     data object OnEndEvolutionAnimation : HomeViewEvent()
+
+    data object OnUpdateCoin: HomeViewEvent()
 }

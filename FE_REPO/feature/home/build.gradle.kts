@@ -17,4 +17,5 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:base"))
     implementation(project(":core:designsystem"))
+    implementation(libs.play.services.wearable)
 }

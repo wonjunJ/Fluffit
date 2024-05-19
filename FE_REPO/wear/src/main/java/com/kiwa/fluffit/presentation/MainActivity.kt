@@ -33,8 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -44,13 +42,9 @@ import androidx.core.view.ViewConfigurationCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.HorizontalPageIndicator
-import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PageIndicatorState
-import androidx.wear.compose.material.Text
 import com.kiwa.fluffit.model.battle.GameUIModel
-import com.kiwa.fluffit.presentation.feed.ui.FeedButton
 import com.kiwa.fluffit.presentation.screens.BattleScreen
 import com.kiwa.fluffit.presentation.screens.CheckPhoneScreen
 import com.kiwa.fluffit.presentation.screens.ExerciseScreen
@@ -65,24 +59,26 @@ import kotlinx.coroutines.delay
 class MainActivity : ComponentActivity() {
     private val tokenViewModel: TokenViewModel by viewModels()
 
-    private val requestMultiplePermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-        if (permissions.all { it.value }) {
-            // 모든 권한이 승인되었을 때 UI 설정
-            setContent {
-                FluffitTheme {
-                    WearNavHost()
+    private val requestMultiplePermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            if (permissions.all { it.value }) {
+                // 모든 권한이 승인되었을 때 UI 설정
+                setContent {
+                    FluffitTheme {
+                        WearNavHost()
+                    }
                 }
+            } else {
+                // 권한이 거부되었을 때 다시 요청
+                checkPermissionsAndSetContent()
             }
-        } else {
-            // 권한이 거부되었을 때 다시 요청
-            checkPermissionsAndSetContent()
         }
-    }
 
     override fun onGenericMotionEvent(event: MotionEvent?): Boolean {
         if (event != null) {
             if (event.action == MotionEvent.ACTION_SCROLL &&
-                event.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)) {
+                event.isFromSource(InputDeviceCompat.SOURCE_ROTARY_ENCODER)
+            ) {
 
                 val delta = -event.getAxisValue(MotionEventCompat.AXIS_SCROLL) *
                     ViewConfigurationCompat.getScaledVerticalScrollFactor(
@@ -116,9 +112,7 @@ class MainActivity : ComponentActivity() {
                     CheckPhoneScreen()
                 }
             } else {
-                // 연결된 노드가 있을 때
                 tokenViewModel.requestAccessToken()
-
             }
         }
     }
@@ -164,7 +158,7 @@ fun WearNavHost(
                 WindowInsets.systemBars.only(WindowInsetsSides.Vertical)
             )
     ) {
-        wearMain { it ->
+        wearMain() { it ->
             navController.game(it)
         }
 
@@ -178,7 +172,8 @@ fun WearNavHost(
 @Composable
 fun WearApp(onNavigateToGame: (GameUIModel) -> Unit) {
     val currentPage by MainActivityViewModel.currentPage.collectAsState()
-    val pagerState = rememberPagerState(pageCount = { MainActivity.PAGE_COUNT }, initialPage = currentPage)
+    val pagerState =
+        rememberPagerState(pageCount = { MainActivity.PAGE_COUNT }, initialPage = currentPage)
     var showIndicator by remember { mutableStateOf(false) }
 
     val pageIndicatorState: PageIndicatorState = remember {
@@ -220,7 +215,7 @@ fun WearApp(onNavigateToGame: (GameUIModel) -> Unit) {
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            when(page){
+            when (page) {
                 0 -> MainScreen()
                 1 -> FeedScreen()
                 2 -> ExerciseScreen()
