@@ -13,8 +13,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-private const val TAG = "AccessTokenResponseServ"
-
 @AndroidEntryPoint
 class AccessTokenResponseService() : WearableListenerService(), CoroutineScope {
     @Inject lateinit var tokenManager: TokenManager

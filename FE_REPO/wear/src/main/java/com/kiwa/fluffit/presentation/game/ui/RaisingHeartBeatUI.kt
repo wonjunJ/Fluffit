@@ -28,7 +28,7 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
-import com.example.wearapp.presentation.HealthViewModel
+import com.kiwa.fluffit.presentation.health.HealthViewModel
 import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.util.formatTime
 import kotlinx.coroutines.delay

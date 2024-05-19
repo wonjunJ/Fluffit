@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.presentation.game
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -8,7 +7,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import coil.decode.ImageDecoderDecoder
-import com.kiwa.fluffit.model.battle.BattleType
 import com.kiwa.fluffit.model.battle.GameUIModel
 import com.kiwa.fluffit.presentation.game.ui.BattleResultUI
 import com.kiwa.fluffit.presentation.game.ui.BreakStoneGameUI

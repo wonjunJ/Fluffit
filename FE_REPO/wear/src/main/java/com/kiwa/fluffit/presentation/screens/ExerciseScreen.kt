@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.wearapp.presentation.HealthViewModel
+import com.kiwa.fluffit.presentation.health.HealthViewModel
 import com.kiwa.fluffit.presentation.components.DistanceDisplay
 import com.kiwa.fluffit.presentation.components.ExerciseButton
 import com.kiwa.fluffit.presentation.components.ExercisePetImageDisplay

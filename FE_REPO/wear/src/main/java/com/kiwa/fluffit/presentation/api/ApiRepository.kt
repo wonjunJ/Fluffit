@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.presentation.api
 
-import android.util.Log
 import com.kiwa.fluffit.presentation.model.ExerciseRequest
 import com.kiwa.fluffit.presentation.model.ExerciseResponse
 import com.kiwa.fluffit.presentation.model.FlupetStatus

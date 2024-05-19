@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.presentation.model
 
-import android.util.Log
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter

@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.Text
-import com.example.wearapp.presentation.HealthViewModel
+import com.kiwa.fluffit.presentation.health.HealthViewModel
 import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.home.HomeViewModel
 import com.kiwa.fluffit.presentation.util.sendMessageToPhone
@@ -62,7 +62,7 @@ fun StepsDisplay() {
         )
         Text(
             fontSize = 15.sp,
-            text = "$formattedSteps",
+            text = formattedSteps,
             color = Color.White
         )
     }

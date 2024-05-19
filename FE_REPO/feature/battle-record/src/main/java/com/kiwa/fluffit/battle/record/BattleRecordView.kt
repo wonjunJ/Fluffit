@@ -39,8 +39,6 @@ import com.kiwa.fluffit.designsystem.theme.fluffitTypography
 import com.kiwa.fluffit.model.UserBattleHistory
 import com.kiwa.fluffit.model.UserBattleStatistics
 
-private const val TAG = "BattleRecordView_싸피"
-
 @Composable
 internal fun BattleRecordView(
     stats: UserBattleStatistics,
@@ -267,7 +265,6 @@ internal fun BattleRecordOutLinedText(
     strokeColor: Color = Color.Black,
     strokeWidth: Float = 1.5f
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     Box(
         modifier = modifier
     ) {

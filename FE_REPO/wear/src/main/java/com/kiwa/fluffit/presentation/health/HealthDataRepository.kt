@@ -14,7 +14,7 @@ import androidx.health.services.client.data.PassiveListenerConfig
 import java.util.concurrent.Executors
 
 
-class HealthRepository(private val context: Context) {
+class HealthRepository(context: Context) {
     private val sensorManager: SensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val heartRateSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)
     private val passiveMonitoringClient: PassiveMonitoringClient = HealthServices.getClient(context).passiveMonitoringClient
@@ -68,9 +68,5 @@ class HealthRepository(private val context: Context) {
 
     fun stopHeartRateMeasurement() {
 //        sensorManager.unregisterListener(sensorEventListener)
-    }
-
-    companion object {
-        private const val TAG = "HealthRepository"
     }
 }

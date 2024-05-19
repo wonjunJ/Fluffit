@@ -1,7 +1,5 @@
 package com.kiwa.fluffit.presentation.token
 
-import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +9,6 @@ import com.google.android.gms.wearable.NodeClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-private const val TAG = "TokenViewModel"
 @HiltViewModel
 class TokenViewModel @Inject constructor(
     private val messageClient: MessageClient,

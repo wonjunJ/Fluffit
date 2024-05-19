@@ -1,7 +1,6 @@
 package com.kiwa.fluffit.presentation.util
 
 import android.content.Context
-import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wearable.Wearable
 

@@ -1,7 +1,6 @@
 package com.kiwa.fluffit.presentation.feed.ui
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,7 +26,6 @@ import com.kiwa.fluffit.presentation.feed.FeedViewModel
 import com.kiwa.fluffit.presentation.feed.FeedViewState
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
 
-private const val TAG = "FeedDisplay 싸피"
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun FeedDisplay(

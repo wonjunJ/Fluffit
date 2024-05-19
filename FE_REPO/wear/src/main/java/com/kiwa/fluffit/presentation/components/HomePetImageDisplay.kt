@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -28,11 +27,8 @@ import coil.request.ImageRequest
 import com.kiwa.fluffit.presentation.home.HomeViewModel
 import kotlinx.coroutines.delay
 
-private const val TAG = "HomePetImageDisplay"
-
 @Composable
 fun HomePetImageDisplay() {
-//    val image = painterResource(R.drawable.dog_white)
     val context = LocalContext.current
     var lastVibrationTime = 0L
     val vibrationInterval = 150 // 진동 간격 500ms 설정

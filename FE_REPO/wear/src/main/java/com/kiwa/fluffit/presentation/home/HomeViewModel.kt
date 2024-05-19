@@ -1,12 +1,8 @@
 package com.kiwa.fluffit.presentation.home
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiwa.fluffit.presentation.api.ApiRepository
-import com.kiwa.fluffit.presentation.model.StepCountResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,12 +11,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-private const val TAG = "HomeViewModel"
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val apiRepository: ApiRepository
 ) : ViewModel() {
-    //체력이나 공복이 0이면 사망, 이름이 없으면 펫 없음
     private val _fullness = MutableStateFlow(0)
     val fullness: StateFlow<Int> = _fullness
 

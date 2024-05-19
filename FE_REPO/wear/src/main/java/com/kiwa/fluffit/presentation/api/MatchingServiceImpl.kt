@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.presentation.api
 
-import android.util.Log
 import com.google.gson.Gson
 import com.kiwa.fluffit.BuildConfig
 import com.kiwa.fluffit.model.battle.MatchingResponse
@@ -20,7 +19,7 @@ class MatchingServiceImpl @Inject constructor(
 ) : MatchingService {
     override suspend fun getMatching(): Result<MatchingResponse> {
         val url = "${BuildConfig.BASE_URL}battle-service/wait"
-        var result: Result<MatchingResponse>? = null
+        var result: Result<MatchingResponse>?
         try {
             result = suspendCancellableCoroutine<Result<MatchingResponse>> { continuation ->
                 val listener = object : EventSourceListener() {

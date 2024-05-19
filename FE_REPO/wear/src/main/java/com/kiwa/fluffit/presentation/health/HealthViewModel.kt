@@ -1,4 +1,4 @@
-package com.example.wearapp.presentation
+package com.kiwa.fluffit.presentation.health
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-private const val TAG = "HealthViewModel"
 
 @HiltViewModel
 class HealthViewModel @Inject constructor(

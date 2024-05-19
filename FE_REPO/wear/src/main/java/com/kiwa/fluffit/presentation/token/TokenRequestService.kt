@@ -1,14 +1,12 @@
 package com.kiwa.fluffit.presentation.token
 
 import android.content.Context
-import android.util.Log
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
 import com.google.gson.Gson
 
-private const val TAG = "TokenRequestService 이창곤"
 class TokenRequestService : WearableListenerService() {
     private lateinit var messageClient: MessageClient
     private lateinit var tokenRepository: TokenRepository
