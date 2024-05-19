@@ -51,22 +51,6 @@ fun ExerciseScreen() {
 //
     }
 
-//    LaunchedEffect(isRunning) {
-//        if (imageUrl.isNotEmpty()) {
-//            if (isRunning) {
-//                if (imageUrl.size >= 5) {
-//                    image = imageUrl[4]
-//                }
-//            } else {
-//                image = if (imageUrl.size >= 2) {
-//                    imageUrl[1]
-//                } else {
-//                    imageUrl[0]
-//                }
-//            }
-//        }
-//    }
-
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(5.dp)){
