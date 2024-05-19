@@ -1,7 +1,6 @@
 package com.kiwa.fluffit.home
 
 import android.os.Build.VERSION.SDK_INT
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -100,7 +99,6 @@ internal fun HomeScreen(
     Wearable.getMessageClient(context)
         .addListener {
             if (it.path == "coin") {
-                Log.d("확인", String(it.data))
                 onUpdateCoin()
             }
         }

@@ -26,7 +26,6 @@ import com.kiwa.fluffit.model.BattleContents
 fun BattleHistoryLog(
     battleLog: BattleContents
 ) {
-    val battleDate = battleLog.date
     Box(
         modifier = Modifier
             .fillMaxWidth()

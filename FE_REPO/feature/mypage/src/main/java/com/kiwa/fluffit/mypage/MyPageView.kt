@@ -34,7 +34,7 @@ internal fun MyPageView(
     viewState: MyPageViewState,
     viewModel: MyPageViewModel,
     clickFlupetHistory: () -> Unit,
-    clickBattleRecord: () -> Unit,
+    clickBattleRecord: () -> Unit
 ) {
     Box(
         modifier = Modifier.fillMaxSize()
@@ -72,7 +72,8 @@ internal fun MyPageView(
                 textStyle = fluffitTypography.bodyLarge.merge(
                     TextStyle(
                         fontSize = 24.sp,
-                        color = Color.Black, fontWeight = FontWeight.Bold
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
                     )
                 )
             )
@@ -82,7 +83,8 @@ internal fun MyPageView(
                 textStyle = fluffitTypography.bodyLarge.merge(
                     TextStyle(
                         fontSize = 24.sp,
-                        color = Color.Black, fontWeight = FontWeight.Bold
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
                     )
                 )
             )
@@ -93,7 +95,8 @@ internal fun MyPageView(
                     TextStyle(
                         textAlign = TextAlign.Start,
                         fontSize = 24.sp,
-                        color = Color.Black, fontWeight = FontWeight.Bold
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
                     )
                 )
             )
@@ -103,7 +106,8 @@ internal fun MyPageView(
                 textStyle = fluffitTypography.bodyLarge.merge(
                     TextStyle(
                         fontSize = 24.sp,
-                        color = Color.Black, fontWeight = FontWeight.Bold
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
                     )
                 )
             )
@@ -117,7 +121,8 @@ internal fun MyPageView(
                 textStyle = fluffitTypography.bodySmall.merge(
                     TextStyle(
                         fontSize = 16.sp,
-                        color = Color.Black, fontWeight = FontWeight.Bold
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
                     )
                 )
             )
@@ -132,7 +137,7 @@ internal fun MyPageOutLinedText(
     text: String,
     textStyle: TextStyle,
     strokeColor: Color = Color.White,
-    strokeWidth: Float = 1.5f,
+    strokeWidth: Float = 1.5f
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     Box(

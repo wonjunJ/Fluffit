@@ -1,6 +1,5 @@
 package com.kiwa.fluffit
 
-import android.util.Log
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
@@ -30,9 +29,6 @@ class AccessTokenResponseService() : WearableListenerService(), CoroutineScope {
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
         if (messageEvent.path == "/request_token") {
-            Log.d(TAG, "onMessageReceived: 받았습니다.")
-
-            Log.d(TAG, "답신: id- ${messageEvent.sourceNodeId}")
             launch {
                 sendAccessToken()
             }
@@ -51,11 +47,8 @@ class AccessTokenResponseService() : WearableListenerService(), CoroutineScope {
         val nodeClient = Wearable.getNodeClient(this)
         nodeClient.connectedNodes.addOnSuccessListener { nodes ->
             for (node in nodes) {
-                Log.d(TAG, "보내기: ${node.displayName}, ${node.id}")
                 messageClient.sendMessage(node.id, path, data).addOnSuccessListener {
-                    Log.d("MobileService", "토큰 : $tokens")
                 }.addOnFailureListener {
-                    Log.e("MobileService", "Failed to send AccessToken", it)
                 }
             }
         }

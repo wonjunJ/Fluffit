@@ -31,24 +31,16 @@ class ApiRepository @Inject constructor(private val apiService: ApiService) {
     suspend fun sendRunning(startTimeInMillis: Long, endTimeInMillis: Long, calorie: Int): ExerciseResponse? {
         val request = ExerciseRequest.fromMillis(startTimeInMillis, endTimeInMillis, calorie)
         val response = apiService.sendRunning(request)
-
-        Log.d("TAG", "운동요청 : startTime: $startTimeInMillis, endTime: $endTimeInMillis, cal: $calorie")
         return if (response.isSuccessful) {
             response.body()
         } else {
             val errorMsg = response.errorBody()?.string() ?: "Unknown error"
-            Log.d("TAG", "운동 요청 실패: $errorMsg")
             null
         }
     }
 
     suspend fun patRequest() : Boolean {
         val response = apiService.patRequest()
-        return if (response.isSuccessful) {
-            true
-        } else {
-            Log.d("API", "쓰다듬기 실패${response.body()}")
-            false
-        }
+        return response.isSuccessful
     }
 }

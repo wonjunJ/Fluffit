@@ -29,6 +29,7 @@ import com.kiwa.fluffit.presentation.home.HomeViewModel
 import kotlinx.coroutines.delay
 
 private const val TAG = "HomePetImageDisplay"
+
 @Composable
 fun HomePetImageDisplay() {
 //    val image = painterResource(R.drawable.dog_white)
@@ -66,8 +67,7 @@ fun HomePetImageDisplay() {
 
     LaunchedEffect(showGif) {
         if (showGif) {
-            Log.d(TAG, "쓰다듬기 사진 바꾸기")
-            if(imageUrl.size >= 4) {
+            if (imageUrl.size >= 4) {
                 image = imageUrl[3]
             }
 
@@ -81,7 +81,6 @@ fun HomePetImageDisplay() {
                     imageUrl[0]
                 }
             }
-            Log.d(TAG, "쓰다듬기 사진 복구")
         }
     }
 
@@ -89,12 +88,12 @@ fun HomePetImageDisplay() {
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastVibrationTime >= vibrationInterval) {
             val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createOneShot(30, VibrationEffect.DEFAULT_AMPLITUDE))
-            } else {
-                @Suppress("DEPRECATION")
-                vibrator.vibrate(50)
-            }
+            vibrator.vibrate(
+                VibrationEffect.createOneShot(
+                    30,
+                    VibrationEffect.DEFAULT_AMPLITUDE
+                )
+            )
             vibrationCount++
             lastVibrationTime = currentTime  // 마지막 진동 시간 갱신
         }
@@ -105,11 +104,11 @@ fun HomePetImageDisplay() {
         modifier =
         Modifier
             .size(
-                if(
+                if (
                     image.contains("/rabbit_white_happy.gif") ||
                     image.contains("/cat_gray_happy.gif") ||
                     image.contains("/dog_corgi_happy.gif")
-                    ) {
+                ) {
                     200.dp
                 } else {
                     100.dp
@@ -125,7 +124,6 @@ fun HomePetImageDisplay() {
 
 
                             if (vibrationCount == 15) {
-                                Log.d("TAG", "15 진동 감지")
                                 showGif = true
                                 homeViewModel.patRequest {
                                     if (it) {
@@ -133,22 +131,16 @@ fun HomePetImageDisplay() {
                                         Toast
                                             .makeText(context, "♥", Toast.LENGTH_SHORT)
                                             .show()
-                                        Log.d(TAG, "쓰다듬기 성공")
-                                    } else {
-                                        Log.d(TAG, "쓰다듬기 실패")
                                     }
                                 }
                                 vibrationCount = 0
                             }
                         }
                     } while (event.changes.any { it.pressed })
-                    println("드래그 완료")
                     vibrationCount = 0
                 }
-            }
-        ,
+            },
         painter = painter,
         contentDescription = "home page pet image"
     )
 }
-

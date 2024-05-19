@@ -1,6 +1,5 @@
 package com.kiwa.data.util
 
-import android.util.Log
 import com.kiwa.domain.TokenManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -16,7 +15,6 @@ class AuthInterceptor @Inject constructor(
         val accessToken = runBlocking { tokenManager.getAccessToken() }
 
         if (accessToken != "") {
-            Log.d("확인", accessToken)
             request = chain.request().newBuilder()
                 .addHeader("Authorization", "Bearer $accessToken")
                 .build()

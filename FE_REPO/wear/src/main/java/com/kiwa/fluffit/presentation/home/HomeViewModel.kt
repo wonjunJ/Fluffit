@@ -71,13 +71,10 @@ class HomeViewModel @Inject constructor(
                 _imageUrl.value = status.imageUrl
                 _birthDay.value = status.birthDay
                 _age.value = status.age
-//                _isEvolutionAvailable.value = status.isEvolutionAvailable
                 _nextFullnessUpdateTime.value = status.nextFullnessUpdateTime
                 _nextHealthUpdateTime.value = status.nextHealthUpdateTime
                 _coin.value = status.coin
             }
-
-            Log.d(TAG, "플러펫 정보: $status")
         }
     }
 }

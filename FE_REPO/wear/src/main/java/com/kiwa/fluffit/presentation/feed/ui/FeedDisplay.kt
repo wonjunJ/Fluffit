@@ -56,7 +56,6 @@ fun FeedDisplay(
             )
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Log.d(TAG, "FeedDisplay: ${feedViewState.feedNum}")
             Text(
                 modifier = Modifier.padding(bottom = 8.dp),
                 text = feedViewState.foodList[feedViewState.feedNum].name,
@@ -64,26 +63,28 @@ fun FeedDisplay(
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center
             )
-            if(feedViewState.feedNum == 0){
-                Image(
-                    modifier = Modifier.size(50.dp),
-                    painter = painterResource(id = R.drawable.normal_food),
-                    contentDescription = "큰 사료 이미지"
-                )
-            }
-            else if(feedViewState.feedNum==1){
-                Image(
-                    modifier = Modifier.size(50.dp),
-                    painter = painterResource(id = R.drawable.instant_food),
-                    contentDescription = "큰 사료 이미지"
-                )
-            }
-            else{
-                Image(
-                    modifier = Modifier.size(50.dp),
-                    painter = painterResource(id = R.drawable.healthy_food),
-                    contentDescription = "큰 사료 이미지"
-                )
+            when (feedViewState.feedNum) {
+                0 -> {
+                    Image(
+                        modifier = Modifier.size(50.dp),
+                        painter = painterResource(id = R.drawable.normal_food),
+                        contentDescription = "큰 사료 이미지"
+                    )
+                }
+                1 -> {
+                    Image(
+                        modifier = Modifier.size(50.dp),
+                        painter = painterResource(id = R.drawable.instant_food),
+                        contentDescription = "큰 사료 이미지"
+                    )
+                }
+                else -> {
+                    Image(
+                        modifier = Modifier.size(50.dp),
+                        painter = painterResource(id = R.drawable.healthy_food),
+                        contentDescription = "큰 사료 이미지"
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(15.dp))
         }
@@ -91,4 +92,3 @@ fun FeedDisplay(
     }
 
 }
-

@@ -22,7 +22,6 @@ data class ExerciseRequest(
                 .format(formatter)
             val endTime = LocalDateTime.ofEpochSecond(endTimeInMillis / 1000, 0, ZoneOffset.UTC)
                 .format(formatter)
-            Log.d("TAG", "운동요청 : startTime: $startTime, endTime: $endTime, cal: $calorie")
             return ExerciseRequest(startTime, endTime, calorie)
         }
     }

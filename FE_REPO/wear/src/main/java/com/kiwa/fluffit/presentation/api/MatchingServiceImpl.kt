@@ -35,14 +35,8 @@ class MatchingServiceImpl @Inject constructor(
                         data: String,
                     ) {
                         super.onEvent(eventSource, id, type, data)
-                        Log.d("확인-1", eventSource.toString())
-                        Log.d("확인-1", id.toString())
-                        Log.d("확인-1", type.toString())
-                        Log.d("확인-1", data)
-
                         if (type == "error") {
                             val errorResponse = Gson().fromJson(data, ErrorResponse::class.java)
-                            Log.d("확인-1", errorResponse.toString())
                             continuation.resumeWith(Result.failure(Exception(errorResponse.errorMessage)))
                         } else {
                             val matchingResponse = Gson().fromJson(data, MatchingResponse::class.java)
@@ -56,9 +50,6 @@ class MatchingServiceImpl @Inject constructor(
                         response: Response?,
                     ) {
                         super.onFailure(eventSource, t, response)
-                        Log.d("확인", eventSource.request().toString())
-                        Log.d("확인", t.toString())
-                        Log.d("확인", response.toString())
                         continuation.resumeWith(Result.failure(Exception(response?.message)))
                     }
 

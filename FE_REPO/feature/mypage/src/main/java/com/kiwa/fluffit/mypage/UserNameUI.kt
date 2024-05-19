@@ -57,7 +57,8 @@ fun DisplayModeUI(name: String, onClickPencilButton: () -> Unit) {
         textStyle = fluffitTypography.bodySmall.merge(
             TextStyle(
                 fontSize = 24.sp,
-                color = Color.Black, fontWeight = FontWeight.Bold
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
             )
         ),
         modifier = Modifier.wrapContentWidth(),

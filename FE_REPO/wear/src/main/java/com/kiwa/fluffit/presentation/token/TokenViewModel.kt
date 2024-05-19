@@ -30,12 +30,8 @@ class TokenViewModel @Inject constructor(
         nodeClient.connectedNodes.addOnSuccessListener { nodes ->
             if (nodes.isNotEmpty()) {
                 _nodes.postValue(nodes)
-                Log.d(TAG, "연결된 기기: ${nodes[0].displayName}")
-            } else {
-                Log.d(TAG, "연결된 기기가 없습니다.")
             }
         }.addOnFailureListener {
-            Log.e("Node Info", "Failed to get connected nodes", it)
         }
     }
 
@@ -44,12 +40,8 @@ class TokenViewModel @Inject constructor(
         val emptyPayload = ByteArray(0)
 
         nodes.value!!.forEach {
-            Log.d(TAG, "토큰 요청 : ${it.id}, ${it.displayName}")
-
             messageClient.sendMessage(it.id, path, emptyPayload).addOnSuccessListener {
-                Log.d("TokenViewModel", "Request for AccessToken sent successfully")
             }.addOnFailureListener {
-                Log.e("TokenViewModel", "Failed to send request for AccessToken", it)
             }
         }
 

@@ -31,9 +31,6 @@ internal fun GameScreen(
     }
 
     val uiState = viewModel.uiState.collectAsState().value
-
-    Log.d("확인", uiState.toString())
-
     when (uiState) {
         is GameViewState.Battle -> when (uiState.gameUIModel.key) {
             "BATTLE_ROCK" -> BreakStoneGameUI(

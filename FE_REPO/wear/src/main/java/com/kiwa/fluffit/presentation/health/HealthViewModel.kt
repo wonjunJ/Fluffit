@@ -1,9 +1,9 @@
 package com.example.wearapp.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kiwa.fluffit.presentation.api.ApiRepository
+import com.kiwa.fluffit.presentation.health.HealthRepository
 import com.kiwa.fluffit.presentation.model.StepCountResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -90,8 +90,6 @@ class HealthViewModel @Inject constructor(
             val date = java.time.Instant.now().toString()
             val response: StepCountResponse? = apiRepository.sendStepCount(date, currentSteps.toInt())
             if (response != null) {
-                Log.d(TAG, "요청 날짜: $date")
-                Log.d(TAG, "코인 요청 Total Coin: ${response.totalCoin}, Gained Coin: ${response.gainedCoin}")
                 response
             } else {
                 _error.value = "Failed to fetch coin information"
@@ -105,13 +103,7 @@ class HealthViewModel @Inject constructor(
 
     suspend fun sendRunningRequest(calories : Int, startTime : Long, endTime : Long): Int{
         val response = apiRepository.sendRunning(startTime, endTime, calories)
-        if (response != null) {
-            return response.reward
-            println("운동 기록이 성공적으로 전송되었습니다. 보상: ${response.reward}")
-        } else {
-            return 0
-            println("운동 기록 전송에 실패했습니다.")
-        }
+        return response?.reward ?: 0
     }
 
     private fun loadHealthData() {

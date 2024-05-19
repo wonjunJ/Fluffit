@@ -22,17 +22,9 @@ class TokenRequestService : WearableListenerService() {
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
         if (messageEvent.path == "/token") {
-            Log.d(TAG, "워치에서 받았습니다.")
-
             val jsonData = String(messageEvent.data, Charsets.UTF_8)
             val tokens = Gson().fromJson(jsonData, TokenData::class.java)
-
-            Log.d(TAG, "$tokens")
-
-            //here
             tokenRepository.updateTokens(tokens.accessToken, tokens.refreshToken)
-
-            Log.d(TAG, "onMessageReceived: accessToken:${tokens.accessToken},\nrefreshtoken:${tokens.refreshToken}")
         }
     }
 }

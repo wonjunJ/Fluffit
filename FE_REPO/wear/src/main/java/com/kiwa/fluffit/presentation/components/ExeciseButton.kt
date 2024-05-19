@@ -52,8 +52,6 @@ fun ExerciseButton() {
                 if (isRunning) {
                     exerciseViewModel.pauseTimer()
                     healthViewModel.pauseRunning()
-
-                    Log.d("TAG", "운동 요청 ")
                     coroutineScope.launch {
                         val coin = healthViewModel.sendRunningRequest(
                             calories = calories!!.toInt(),

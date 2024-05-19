@@ -1,6 +1,5 @@
 package com.kiwa.fluffit.battle.record
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,9 +48,6 @@ internal fun BattleRecordView(
 ) {
     val historyListState = rememberLazyListState()
     val game = stats.battleStatisticItemDtoList
-
-    Log.d(TAG, "BattleRecordView: $stats")
-    Log.d(TAG, "BattleRecordView: $history")
 
     Box(
         modifier = Modifier.fillMaxSize()

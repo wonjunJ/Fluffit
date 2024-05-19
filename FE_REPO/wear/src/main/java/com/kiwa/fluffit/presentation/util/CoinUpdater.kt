@@ -13,9 +13,7 @@ internal fun sendMessageToPhone(context: Context) {
             val task: Task<Int> =
                 messageClient.sendMessage(node.id, "coin", "".toByteArray())
             task.addOnSuccessListener {
-                Log.d("확인", "전송 성공")
             }.addOnFailureListener {
-                Log.d("확인", "전송 실패")
             }
         }
     }

@@ -47,8 +47,6 @@ fun StepsDisplay() {
                 coroutineScope.launch {
                     val totalCoin = healthViewModel.sendCoinRequest()
                     totalCoin?.let {
-                        // totalCoin 값을 사용하여 필요한 작업 수행
-                        println("Total Coin: ${it.totalCoin}")
                         Toast.makeText(context, "+${it.gainedCoin}코인", Toast.LENGTH_SHORT).show()
                         homeViewModel.setCoin(it.totalCoin)
                     }
