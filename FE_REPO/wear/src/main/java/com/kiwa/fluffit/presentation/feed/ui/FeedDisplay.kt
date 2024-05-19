@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -63,11 +64,27 @@ fun FeedDisplay(
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center
             )
-            Image(
-                modifier = Modifier.size(50.dp),
-                painter = painterResource(id = R.drawable.feed_bag),
-                contentDescription = "큰 사료 이미지"
-            )
+            if(feedViewState.feedNum == 0){
+                Image(
+                    modifier = Modifier.size(50.dp),
+                    painter = painterResource(id = R.drawable.normal_food),
+                    contentDescription = "큰 사료 이미지"
+                )
+            }
+            else if(feedViewState.feedNum==1){
+                Image(
+                    modifier = Modifier.size(50.dp),
+                    painter = painterResource(id = R.drawable.instant_food),
+                    contentDescription = "큰 사료 이미지"
+                )
+            }
+            else{
+                Image(
+                    modifier = Modifier.size(50.dp),
+                    painter = painterResource(id = R.drawable.healthy_food),
+                    contentDescription = "큰 사료 이미지"
+                )
+            }
             Spacer(modifier = Modifier.height(15.dp))
         }
         Spacer(modifier = Modifier.size(38.dp))
