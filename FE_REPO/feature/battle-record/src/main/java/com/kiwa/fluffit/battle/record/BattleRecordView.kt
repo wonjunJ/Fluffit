@@ -62,192 +62,203 @@ internal fun BattleRecordView(
             contentDescription = "배경화면",
             contentScale = ContentScale.FillBounds
         )
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.align(Alignment.TopCenter)
-        ) {
-            Box(
-                modifier = Modifier
-                    .padding(top = 60.dp)
-                    .fillMaxWidth(0.6f)
-                    .fillMaxHeight(0.05f)
-                    .border(BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(8.dp))
-                    .clip(shape = RoundedCornerShape(8.dp))
-                    .background(Color(0xCCFFFFFF))
+        if (stats.battleStatisticItemDtoList.isNotEmpty()) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.align(Alignment.TopCenter)
             ) {
-                Text(
-                    text = "현재 점수",
+                Box(
                     modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(start = 20.dp),
-                    style = fluffitTypography.headlineMedium
-                )
-                BattleRecordOutLinedText(
-                    text = "${stats.battlePoint}",
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(end = 20.dp),
-                    textStyle = fluffitTypography.headlineMedium.merge(
-                        TextStyle(
-                            fontSize = 28.sp,
-                            color = Color(0xFF70F150)
+                        .padding(top = 60.dp)
+                        .fillMaxWidth(0.6f)
+                        .fillMaxHeight(0.05f)
+                        .border(BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(8.dp))
+                        .clip(shape = RoundedCornerShape(8.dp))
+                        .background(Color(0xCCFFFFFF))
+                ) {
+                    Text(
+                        text = "현재 점수",
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 20.dp),
+                        style = fluffitTypography.headlineMedium
+                    )
+                    BattleRecordOutLinedText(
+                        text = "${stats.battlePoint}",
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 20.dp),
+                        textStyle = fluffitTypography.headlineMedium.merge(
+                            TextStyle(
+                                fontSize = 28.sp,
+                                color = Color(0xFF70F150)
+                            )
                         )
                     )
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .padding(top = 30.dp)
-                    .fillMaxWidth(0.9f)
-                    .fillMaxHeight(0.25f)
-            ) {
-                Box(
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .border(BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(8.dp))
-                        .clip(shape = RoundedCornerShape(8.dp))
-                        .background(Color(0xCCFFFFFF))
+                        .padding(top = 30.dp)
+                        .fillMaxWidth(0.9f)
+                        .fillMaxHeight(0.25f)
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                    Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(10.dp)
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .border(
+                                BorderStroke(1.dp, Color.Black),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .clip(shape = RoundedCornerShape(8.dp))
+                            .background(Color(0xCCFFFFFF))
                     ) {
-                        Text(
-                            text = game[0].title,
-                            style = fluffitTypography.bodyMedium,
-                            textAlign = TextAlign.Center
-                        )
-                        Image(
-                            painter = painterResource(R.drawable.stone),
-                            contentDescription = "돌깨기",
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
-                                .fillMaxWidth(0.25f)
-                                .aspectRatio(1f),
-                            contentScale = ContentScale.FillBounds
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Row() {
+                                .fillMaxSize()
+                                .padding(10.dp)
+                        ) {
                             Text(
-                                text = game[0].totalCount.toString() + "전 ",
+                                text = game[0].title,
                                 style = fluffitTypography.bodyMedium,
                                 textAlign = TextAlign.Center
                             )
-                            Text(
-                                text = game[0].winCount.toString(),
-                                style = fluffitTypography.bodyMedium.merge(
-                                    color = Color(0xFF70F150)
-                                ),
-                                textAlign = TextAlign.Center
+                            Image(
+                                painter = painterResource(R.drawable.stone),
+                                contentDescription = "돌깨기",
+                                modifier = Modifier
+                                    .fillMaxWidth(0.25f)
+                                    .aspectRatio(1f),
+                                contentScale = ContentScale.FillBounds
                             )
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Row() {
+                                Text(
+                                    text = game[0].totalCount.toString() + "전 ",
+                                    style = fluffitTypography.bodyMedium,
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    text = game[0].winCount.toString(),
+                                    style = fluffitTypography.bodyMedium.merge(
+                                        color = Color(0xFF70F150)
+                                    ),
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    text = "승 ",
+                                    style = fluffitTypography.bodyMedium,
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    text = game[0].loseCount.toString(),
+                                    style = fluffitTypography.bodyMedium.merge(
+                                        color = Color(0xFFEE5757)
+                                    ),
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    text = "패",
+                                    style = fluffitTypography.bodyMedium,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                             Text(
-                                text = "승 ",
-                                style = fluffitTypography.bodyMedium,
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                text = game[0].loseCount.toString(),
-                                style = fluffitTypography.bodyMedium.merge(
-                                    color = Color(0xFFEE5757)
-                                ),
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                text = "패",
+                                text = "승률 " + game[0].winRate.toString() + "%",
                                 style = fluffitTypography.bodyMedium,
                                 textAlign = TextAlign.Center
                             )
                         }
-                        Text(
-                            text = "승률 " + game[0].winRate.toString() + "%",
-                            style = fluffitTypography.bodyMedium,
-                            textAlign = TextAlign.Center
-                        )
                     }
-                }
-                Box(modifier = Modifier.weight(0.1f))
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .border(BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(8.dp))
-                        .clip(shape = RoundedCornerShape(8.dp))
-                        .background(Color(0xCCFFFFFF))
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                    Box(modifier = Modifier.weight(0.1f))
+                    Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(10.dp)
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .border(
+                                BorderStroke(1.dp, Color.Black),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .clip(shape = RoundedCornerShape(8.dp))
+                            .background(Color(0xCCFFFFFF))
                     ) {
-                        Text(
-                            text = game[1].title,
-                            style = fluffitTypography.bodyMedium,
-                            textAlign = TextAlign.Center
-                        )
-                        Image(
-                            painter = painterResource(R.drawable.heart_red),
-                            contentDescription = "심박수",
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
-                                .fillMaxWidth(0.25f)
-                                .aspectRatio(1f),
-                            contentScale = ContentScale.FillBounds
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Row() {
+                                .fillMaxSize()
+                                .padding(10.dp)
+                        ) {
                             Text(
-                                text = game[1].totalCount.toString() + "전 ",
+                                text = game[1].title,
                                 style = fluffitTypography.bodyMedium,
                                 textAlign = TextAlign.Center
                             )
-                            Text(
-                                text = game[1].winCount.toString(),
-                                style = fluffitTypography.bodyMedium.merge(
-                                    color = Color(0xFF70F150)
-                                ),
-                                textAlign = TextAlign.Center
+                            Image(
+                                painter = painterResource(R.drawable.heart_red),
+                                contentDescription = "심박수",
+                                modifier = Modifier
+                                    .fillMaxWidth(0.25f)
+                                    .aspectRatio(1f),
+                                contentScale = ContentScale.FillBounds
                             )
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Row() {
+                                Text(
+                                    text = game[1].totalCount.toString() + "전 ",
+                                    style = fluffitTypography.bodyMedium,
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    text = game[1].winCount.toString(),
+                                    style = fluffitTypography.bodyMedium.merge(
+                                        color = Color(0xFF70F150)
+                                    ),
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    text = "승 ",
+                                    style = fluffitTypography.bodyMedium,
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    text = game[1].loseCount.toString(),
+                                    style = fluffitTypography.bodyMedium.merge(
+                                        color = Color(0xFFEE5757)
+                                    ),
+                                    textAlign = TextAlign.Center
+                                )
+                                Text(
+                                    text = "패",
+                                    style = fluffitTypography.bodyMedium,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                             Text(
-                                text = "승 ",
-                                style = fluffitTypography.bodyMedium,
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                text = game[1].loseCount.toString(),
-                                style = fluffitTypography.bodyMedium.merge(
-                                    color = Color(0xFFEE5757)
-                                ),
-                                textAlign = TextAlign.Center
-                            )
-                            Text(
-                                text = "패",
+                                text = "승률 " + game[1].winRate.toString() + "%",
                                 style = fluffitTypography.bodyMedium,
                                 textAlign = TextAlign.Center
                             )
                         }
-                        Text(
-                            text = "승률 " + game[1].winRate.toString() + "%",
-                            style = fluffitTypography.bodyMedium,
-                            textAlign = TextAlign.Center
-                        )
                     }
                 }
-            }
 
-            LazyColumn(
-                modifier = Modifier
-                    .padding(top = 30.dp)
-                    .fillMaxWidth(0.9f)
-                    .fillMaxHeight(0.7f),
-                state = historyListState,
-                contentPadding = PaddingValues(vertical = 12.dp)
-            ) {
-                items(history.content.size) { index ->
-                    BattleHistoryLog(history.content[index])
+                if (history.content.size > 0) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(top = 30.dp)
+                            .fillMaxWidth(0.9f)
+                            .fillMaxHeight(0.7f),
+                        state = historyListState,
+                        contentPadding = PaddingValues(vertical = 12.dp)
+                    ) {
+                        items(history.content.size) { index ->
+                            BattleHistoryLog(history.content[index])
+                        }
+                    }
                 }
+
             }
         }
     }

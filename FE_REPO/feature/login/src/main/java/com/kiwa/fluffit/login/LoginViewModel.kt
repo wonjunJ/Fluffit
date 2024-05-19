@@ -112,6 +112,7 @@ class LoginViewModel @Inject constructor(
             },
             onFailure = {
                 setState { showToast("사용자 프로필 조회 실패") }
+                setState { LoginViewState.Default() }
             }
         )
     }
