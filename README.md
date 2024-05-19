@@ -88,7 +88,7 @@
 - 어떻게보다는 무엇을, 왜 변경했는지를 설명합니다.
 
 ## architecture
-
+![architenture](./assets/architecture.png)
 
 ## ERD
 ![ERD](./assets/ERD.jpg)
