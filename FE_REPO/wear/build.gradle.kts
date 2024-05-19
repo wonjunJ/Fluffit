@@ -84,7 +84,6 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
-    implementation(libs.retrofitGson)
     implementation(project(":core:base"))
     implementation(project(":core:domain"))
     implementation(project(":core:model"))
@@ -97,8 +96,6 @@ dependencies {
     implementation(libs.okhttp.sse)
     implementation(libs.okhttpLogging)
 
-//    implementation(libs.hilt.android)
-//    kapt(libs.hilt.compiler)
 
     implementation("androidx.health:health-services-client:1.1.0-alpha02")
     implementation("com.google.android.horologist:horologist-compose-layout:0.5.26")
