@@ -72,7 +72,7 @@ public class AuthService {
 
     @Transactional
     public void register(LoginReqDto loginReqDto, String memberId) {
-        Member member = Member.of(memberId,loginReqDto.getSignature(), loginReqDto.getUserCode(),0,0,0);
+        Member member = Member.of(memberId,loginReqDto.getSignature(), loginReqDto.getUserCode(),0,0,0,null);
         Member savedMember = memberRepository.save(member);
         String prefix = "kiwa";
         int number = savedMember.getId();

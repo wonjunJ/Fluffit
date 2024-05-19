@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.fluffitmember.member.entity.Member;
 import com.ssafy.fluffitmember.member.repository.MemberRepository;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -66,6 +67,8 @@ public class KafkaConsumer {
             }else{
                 member.updatePoint(member.getBattlePoint() + (Integer)map.get("battlePointChanges"));
             }
+            LocalDateTime now = LocalDateTime.now();
+            member.updateBattleDate(now);
             memberRepository.save(member);
         }
     }

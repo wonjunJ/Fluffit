@@ -48,6 +48,8 @@ public class Member {
     @Column(nullable = false)
     private int mflupet_id;
 
+    private LocalDateTime battlePointUpdateDate;
+
     @OneToMany(mappedBy = "member") // Running 엔티티 내 member 필드에 매핑됨
     private List<Running> runnings = new ArrayList<>();
 
@@ -55,15 +57,16 @@ public class Member {
     private List<Steps> steps = new ArrayList<>();
 
     @Builder
-    public Member(String memberId,String socialId, String nickname, int coin, int battlePoint, int mflupetId) {
+    public Member(String memberId,String socialId, String nickname, int coin, int battlePoint, int mflupetId, LocalDateTime battlePointUpdateDate) {
         this.memberId = memberId;
         this.socialId = socialId;
         this.nickname = nickname;
         this.coin = coin;
         this.battlePoint = battlePoint;
         this.mflupet_id = mflupetId;
+        this.battlePointUpdateDate = battlePointUpdateDate;
     }
-    public static Member of(String memberId,String socialId, String nickname, int coin, int battlePoint, int mflupetId) {
+    public static Member of(String memberId,String socialId, String nickname, int coin, int battlePoint, int mflupetId, LocalDateTime battlePointUpdateDate) {
         return builder()
                 .memberId(memberId)
                 .socialId(socialId)
@@ -71,6 +74,7 @@ public class Member {
                 .coin(coin)
                 .battlePoint(battlePoint)
                 .mflupetId(mflupetId)
+                .battlePointUpdateDate(battlePointUpdateDate)
                 .build();
     }
     public void updateNickname(String nickname) {
@@ -83,5 +87,9 @@ public class Member {
 
     public void updatePoint(int point) {
         this.battlePoint = point;
+    }
+
+    public void updateBattleDate(LocalDateTime battleDate) {
+        this.battlePointUpdateDate = battleDate;
     }
 }
