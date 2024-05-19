@@ -19,7 +19,7 @@ public interface MemberRepository extends JpaRepository<Member,Integer> {
             "FROM ( " +
             "    SELECT " +
             "        m.member_id, " +
-            "        RANK() OVER (ORDER BY m.battle_point DESC, battle_point_update_date DESC) AS rank " +
+            "        RANK() OVER (ORDER BY m.battle_point DESC, battle_point_update_date ASC) AS rank " +
             "    FROM " +
             "        member m " +
             ") AS ranked " +
@@ -27,10 +27,10 @@ public interface MemberRepository extends JpaRepository<Member,Integer> {
             nativeQuery = true)
     Optional<Integer> findRankByMemberId(@Param("memberId") String memberId);
 
-    @Query(value = "SELECT * FROM member ORDER BY battle_point DESC, battle_point_update_date DESC LIMIT 3", nativeQuery = true)
+    @Query(value = "SELECT * FROM member ORDER BY battle_point DESC, battle_point_update_date ASC LIMIT 3", nativeQuery = true)
     List<Member> findTop3ByBattlePoint();
 
-    @Query(value = "SELECT RANK() OVER (ORDER BY m.battle_point DESC, battle_point_update_date DESC) AS ranking FROM member m LIMIT 3", nativeQuery = true)
+    @Query(value = "SELECT RANK() OVER (ORDER BY m.battle_point DESC, battle_point_update_date ASC) AS ranking FROM member m LIMIT 3", nativeQuery = true)
     List<Integer> findTop3RankingsByBattlePoint();
 }
 
