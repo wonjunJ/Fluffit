@@ -16,12 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,7 +34,7 @@ internal fun MyPageView(
     viewState: MyPageViewState,
     viewModel: MyPageViewModel,
     clickFlupetHistory: () -> Unit,
-    clickBattleRecord: () -> Unit
+    clickBattleRecord: () -> Unit,
 ) {
     Box(
         modifier = Modifier.fillMaxSize()
@@ -40,7 +42,7 @@ internal fun MyPageView(
         Image(
             modifier = Modifier
                 .fillMaxHeight()
-                .fillMaxWidth(),
+                .fillMaxWidth().alpha(0.6f),
             painter = painterResource(id = R.drawable.mypagebackground),
             contentDescription = "배경화면",
             contentScale = ContentScale.Crop
@@ -70,7 +72,7 @@ internal fun MyPageView(
                 textStyle = fluffitTypography.bodyLarge.merge(
                     TextStyle(
                         fontSize = 24.sp,
-                        color = Color.White
+                        color = Color.Black, fontWeight = FontWeight.Bold
                     )
                 )
             )
@@ -80,7 +82,7 @@ internal fun MyPageView(
                 textStyle = fluffitTypography.bodyLarge.merge(
                     TextStyle(
                         fontSize = 24.sp,
-                        color = Color.White
+                        color = Color.Black, fontWeight = FontWeight.Bold
                     )
                 )
             )
@@ -91,7 +93,7 @@ internal fun MyPageView(
                     TextStyle(
                         textAlign = TextAlign.Start,
                         fontSize = 24.sp,
-                        color = Color.White
+                        color = Color.Black, fontWeight = FontWeight.Bold
                     )
                 )
             )
@@ -101,7 +103,7 @@ internal fun MyPageView(
                 textStyle = fluffitTypography.bodyLarge.merge(
                     TextStyle(
                         fontSize = 24.sp,
-                        color = Color.White
+                        color = Color.Black, fontWeight = FontWeight.Bold
                     )
                 )
             )
@@ -115,7 +117,7 @@ internal fun MyPageView(
                 textStyle = fluffitTypography.bodySmall.merge(
                     TextStyle(
                         fontSize = 16.sp,
-                        color = Color.White
+                        color = Color.Black, fontWeight = FontWeight.Bold
                     )
                 )
             )
@@ -129,8 +131,8 @@ internal fun MyPageOutLinedText(
     onClickText: () -> Unit,
     text: String,
     textStyle: TextStyle,
-    strokeColor: Color = Color.Black,
-    strokeWidth: Float = 1.5f
+    strokeColor: Color = Color.White,
+    strokeWidth: Float = 1.5f,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     Box(

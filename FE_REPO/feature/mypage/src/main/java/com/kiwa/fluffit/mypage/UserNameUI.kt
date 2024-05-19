@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +19,7 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kiwa.fluffit.designsystem.theme.fluffitTypography
@@ -57,7 +57,7 @@ fun DisplayModeUI(name: String, onClickPencilButton: () -> Unit) {
         textStyle = fluffitTypography.bodySmall.merge(
             TextStyle(
                 fontSize = 24.sp,
-                color = Color.White
+                color = Color.Black, fontWeight = FontWeight.Bold
             )
         ),
         modifier = Modifier.wrapContentWidth(),
@@ -103,7 +103,7 @@ private fun UserNameOutlinedText(
     onClickText: () -> Unit,
     text: String,
     textStyle: TextStyle,
-    strokeColor: Color = Color.Black,
+    strokeColor: Color = Color.White,
     strokeWidth: Float = 1.5f,
     maxLines: Int = 1
 ) {
