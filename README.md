@@ -31,7 +31,7 @@
 
 ## 주요 기술
 
-⚒️**Backend**
+**Backend**
 - java17
 - springboot 3.2.5
 - spring jpa
@@ -45,14 +45,14 @@
 - rabitMQ
 - kafka
 
-⚒️**Frontend**
+**Frontend**
 
 
-⚒️**DataBase**
+**DataBase**
 - mariaDB
 - Redis
 
-⚒️**Infra**
+**Infra**
 - aws ec2
 - docker & docker compose
 - jenkins
