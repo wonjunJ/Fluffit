@@ -18,7 +18,7 @@ class RankingRepositoryImpl @Inject constructor(
                         info.userNickname,
                         "${info.battlePoint}점",
                         info.flupetNickname,
-                        info.flupetImageUrl.first()
+                        if (info.flupetImageUrl.size > 1) info.flupetImageUrl[1] else info.flupetImageUrl[0]
                     )
                 }
                 val myRank = RankingInfo(
@@ -26,7 +26,7 @@ class RankingRepositoryImpl @Inject constructor(
                     it.myRank.userNickname,
                     "${it.myRank.battlePoint}점",
                     it.myRank.flupetNickname,
-                    it.myRank.flupetImageUrl.first()
+                    if (it.myRank.flupetImageUrl.size > 1) it.myRank.flupetImageUrl[1] else it.myRank.flupetImageUrl[0]
                 )
                 Result.success(RankingUIModel(rankingList, myRank))
             },
@@ -42,7 +42,8 @@ class RankingRepositoryImpl @Inject constructor(
                         info.userNickname,
                         "${info.lifetime}시간",
                         info.flupetNickname,
-                        info.imageUrl.first()
+                        if (info.imageUrl.size > 1) info.imageUrl[1] else info.imageUrl[0]
+
                     )
                 }
                 val myRank = RankingInfo(
@@ -50,7 +51,8 @@ class RankingRepositoryImpl @Inject constructor(
                     it.myRank.userNickname,
                     "${it.myRank.lifetime}시간",
                     it.myRank.flupetNickname,
-                    it.myRank.imageUrl.first()
+                    if (it.myRank.imageUrl.size > 1) it.myRank.imageUrl[1] else it.myRank.imageUrl[0]
+
                 )
                 Result.success(RankingUIModel(rankingList, myRank))
             },
