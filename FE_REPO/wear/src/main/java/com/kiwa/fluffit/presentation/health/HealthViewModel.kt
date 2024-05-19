@@ -103,11 +103,13 @@ class HealthViewModel @Inject constructor(
         }
     }
 
-    suspend fun sendRunningRequest(calories : Int, startTime : Long, endTime : Long) {
+    suspend fun sendRunningRequest(calories : Int, startTime : Long, endTime : Long): Int{
         val response = apiRepository.sendRunning(startTime, endTime, calories)
         if (response != null) {
+            return response.reward
             println("운동 기록이 성공적으로 전송되었습니다. 보상: ${response.reward}")
         } else {
+            return 0
             println("운동 기록 전송에 실패했습니다.")
         }
     }

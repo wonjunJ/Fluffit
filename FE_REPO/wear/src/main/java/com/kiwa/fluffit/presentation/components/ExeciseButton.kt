@@ -52,11 +52,12 @@ fun ExerciseButton() {
 
                     Log.d("TAG", "운동 요청 ")
                     coroutineScope.launch {
-                        healthViewModel.sendRunningRequest(
+                        val coin = healthViewModel.sendRunningRequest(
                             calories = calories!!.toInt(),
                             startTime = startTime!!,
                             endTime = endTime!!
                         )
+                        Toast.makeText(context, "+${coin}코인", Toast.LENGTH_SHORT).show()
                     }
 
 //                    Toast.makeText(context, "Exercise Paused", Toast.LENGTH_SHORT).show()
