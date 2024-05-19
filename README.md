@@ -32,7 +32,7 @@
 ## 주요 기술
 
 **Backend**
-```
+```style="background-color: #F0F0F0;"
 - java17
 - springboot 3.2.5
 - spring jpa
