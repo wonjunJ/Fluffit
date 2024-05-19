@@ -32,6 +32,7 @@
 ## 주요 기술
 
 **Backend**
+```
 - java17
 - springboot 3.2.5
 - spring jpa
@@ -44,7 +45,7 @@
 - QueryDSL
 - rabitMQ
 - kafka
-
+```
 **Frontend**
 
 
