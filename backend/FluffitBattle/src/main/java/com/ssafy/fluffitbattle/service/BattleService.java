@@ -176,7 +176,10 @@ public class BattleService {
 
     private boolean createAndNotifyBattle(String userId, String opponentId) {
         log.info("배틀 매칭 : {} vs {}", userId, opponentId);
-        BattleType battleType = BattleType.values()[random.nextInt(BattleType.values().length)];
+//        BattleType battleType = BattleType.values()[random.nextInt(BattleType.values().length)];
+//        BattleType battleType = BattleType.values()[1];
+        BattleType battleType = BattleType.HEARTRATE;
+
         Battle battle = Battle.builder()
                 .organizerId(opponentId)
                 .participantId(userId)
