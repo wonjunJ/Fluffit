@@ -41,7 +41,7 @@ internal fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
     onNavigateToCollection: () -> Unit,
     onNavigateToRankingDialog: () -> Unit,
-    onNavigateToMyPage: () -> Unit,
+    onNavigateToMyPage: () -> Unit
 ) {
     val uiState: HomeViewState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -86,7 +86,7 @@ internal fun HomeScreen(
     onDismissSnackBar: () -> Unit,
     onClickEvolutionButton: () -> Unit,
     onEndEvolutionAnimation: () -> Unit,
-    onUpdateCoin: () -> Unit,
+    onUpdateCoin: () -> Unit
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context).components {
@@ -168,7 +168,7 @@ private fun MainButtons(
     coin: Int,
     onClickCollectionButton: () -> Unit,
     onClickRankingButton: () -> Unit,
-    onClickMyPage: () -> Unit,
+    onClickMyPage: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -211,7 +211,7 @@ private fun RankingButton(onClickRankingButton: () -> Unit) {
 private fun ObserveToastMessage(
     uiState: HomeViewState,
     snackBarHostState: SnackbarHostState,
-    onDismissSnackBar: () -> Unit,
+    onDismissSnackBar: () -> Unit
 ) {
     LaunchedEffect(key1 = uiState.message) {
         if (uiState.message.isNotEmpty()) {
