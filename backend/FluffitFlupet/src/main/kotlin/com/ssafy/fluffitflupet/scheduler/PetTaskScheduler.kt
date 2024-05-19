@@ -36,7 +36,7 @@ class PetTaskScheduler(
     //var cron: String = env.getProperty("schedule.cron", "0 1 0 * * ?")
 
     //2시간마다 스케쥴링을 돈다(초기 딜레이를 얼마로 할지)
-    @Scheduled(fixedDelay = 1000 * 30L, initialDelay = 1000 * 60 * 2L)
+    @Scheduled(fixedDelay = 1000 * 60L, initialDelay = 1000 * 60 * 2L)
     fun run() {
         log.info("스케쥴링")
         memberFlupetRepository.findAllByIsDeadIsFalse()
@@ -155,7 +155,7 @@ class PetTaskScheduler(
             }else if(value.id == 2L){ //인스턴스
                 value.stock = 100
             }else{ //고급
-                value.stock = 10
+                value.stock = 30
             }
             withContext(Dispatchers.IO) { foodRepository.save(value) }
         }
