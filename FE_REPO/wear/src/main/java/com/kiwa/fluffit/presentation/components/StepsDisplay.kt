@@ -19,12 +19,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.example.wearapp.presentation.HealthViewModel
 import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.home.HomeViewModel
-import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
+import com.kiwa.fluffit.presentation.util.sendMessageToPhone
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,6 +38,8 @@ fun StepsDisplay() {
 
     val formattedSteps = DecimalFormat("#,###").format(steps ?: 0)
 
+    val onCoinUpdate: () -> Unit = { sendMessageToPhone(context) }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -51,6 +52,7 @@ fun StepsDisplay() {
                         Toast.makeText(context, "+${it.gainedCoin}코인", Toast.LENGTH_SHORT).show()
                         homeViewModel.setCoin(it.totalCoin)
                     }
+                    onCoinUpdate()
                 }
             }
             .padding(10.dp)

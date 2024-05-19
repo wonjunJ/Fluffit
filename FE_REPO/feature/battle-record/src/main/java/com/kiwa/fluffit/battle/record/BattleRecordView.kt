@@ -258,7 +258,6 @@ internal fun BattleRecordView(
                         }
                     }
                 }
-
             }
         }
     }

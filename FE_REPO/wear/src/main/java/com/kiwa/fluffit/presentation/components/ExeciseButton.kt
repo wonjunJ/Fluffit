@@ -16,6 +16,7 @@ import com.example.wearapp.presentation.HealthViewModel
 import com.kiwa.fluffit.R
 import com.kiwa.fluffit.presentation.exercise.ExerciseViewModel
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
+import com.kiwa.fluffit.presentation.util.sendMessageToPhone
 import kotlinx.coroutines.launch
 
 @Composable
@@ -34,6 +35,8 @@ fun ExerciseButton() {
         stringResource(R.string.exercise_stop_button) else stringResource(R.string.exercise_button)
 
     val context = LocalContext.current
+
+    val onCoinUpdate: () -> Unit = { sendMessageToPhone(context) }
 
     Box(modifier = Modifier
         .padding(5.dp)
@@ -59,7 +62,7 @@ fun ExerciseButton() {
                         )
                         Toast.makeText(context, "+${coin}코인", Toast.LENGTH_SHORT).show()
                     }
-
+                    onCoinUpdate()
 //                    Toast.makeText(context, "Exercise Paused", Toast.LENGTH_SHORT).show()
                 } else {
                     healthViewModel.startRunning()
