@@ -100,6 +100,7 @@ class HomeViewModel @Inject constructor(
                     HomeViewEvent.OnDismissSnackBar -> setState { resetMessage() }
                     HomeViewEvent.OnClickEvolutionButton -> evolveFlupet()
                     HomeViewEvent.OnEndEvolutionAnimation -> setState { onEndEvolutionAnimation() }
+                    HomeViewEvent.OnUpdateCoin -> getMainUIInfo()
                 }
             }
         }

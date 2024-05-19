@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.Button
@@ -18,15 +19,21 @@ import com.kiwa.fluffit.presentation.feed.FeedViewEvent
 import com.kiwa.fluffit.presentation.feed.FeedViewModel
 import com.kiwa.fluffit.presentation.feed.FeedViewState
 import com.kiwa.fluffit.presentation.theme.fluffitWearFontFamily
+import com.kiwa.fluffit.presentation.util.sendMessageToPhone
 
 @Composable
 fun FeedButton(
     feedViewState: FeedViewState,
-    feedViewModel: FeedViewModel
+    feedViewModel: FeedViewModel,
 ) {
-    Box(modifier = Modifier
-        .padding(5.dp)
-        .fillMaxSize()) {
+    val context = LocalContext.current
+
+    val onCoinUpdate: () -> Unit = { sendMessageToPhone(context) }
+    Box(
+        modifier = Modifier
+            .padding(5.dp)
+            .fillMaxSize()
+    ) {
         Button(
             shape = RoundedCornerShape(30.dp),
             modifier = Modifier
@@ -34,7 +41,10 @@ fun FeedButton(
                 .height(30.dp)
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 4.dp),
-            onClick = { feedViewModel.onTriggerEvent(FeedViewEvent.FeedSelectedFood(feedViewState.feedNum + 1)) }
+            onClick = {
+                feedViewModel.onTriggerEvent(FeedViewEvent.FeedSelectedFood(feedViewState.feedNum + 1))
+                onCoinUpdate()
+            }
         ) {
             Text(text = stringResource(R.string.feed_button), fontFamily = fluffitWearFontFamily)
         }

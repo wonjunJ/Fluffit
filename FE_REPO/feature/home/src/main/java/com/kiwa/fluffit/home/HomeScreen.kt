@@ -1,6 +1,7 @@
 package com.kiwa.fluffit.home
 
 import android.os.Build.VERSION.SDK_INT
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import com.google.android.gms.wearable.Wearable
 import com.kiwa.fluffit.home.components.CoinDisplay
 import com.kiwa.fluffit.home.components.EvolutionDialog
 import com.kiwa.fluffit.home.components.FlupetImageButton
@@ -39,7 +41,7 @@ internal fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel<HomeViewModel>(),
     onNavigateToCollection: () -> Unit,
     onNavigateToRankingDialog: () -> Unit,
-    onNavigateToMyPage: () -> Unit
+    onNavigateToMyPage: () -> Unit,
 ) {
     val uiState: HomeViewState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -64,7 +66,8 @@ internal fun HomeRoute(
         onClickEvolutionButton = { viewModel.onTriggerEvent(HomeViewEvent.OnClickEvolutionButton) },
         onEndEvolutionAnimation = {
             viewModel.onTriggerEvent(HomeViewEvent.OnEndEvolutionAnimation)
-        }
+        },
+        onUpdateCoin = { viewModel.onTriggerEvent(HomeViewEvent.OnUpdateCoin) }
     )
 }
 
@@ -82,7 +85,8 @@ internal fun HomeScreen(
     onClickMyPage: () -> Unit,
     onDismissSnackBar: () -> Unit,
     onClickEvolutionButton: () -> Unit,
-    onEndEvolutionAnimation: () -> Unit
+    onEndEvolutionAnimation: () -> Unit,
+    onUpdateCoin: () -> Unit,
 ) {
     val context = LocalContext.current
     val imageLoader = ImageLoader.Builder(context).components {
@@ -92,6 +96,14 @@ internal fun HomeScreen(
             add(GifDecoder.Factory())
         }
     }.build()
+
+    Wearable.getMessageClient(context)
+        .addListener {
+            if (it.path == "coin") {
+                Log.d("확인", String(it.data))
+                onUpdateCoin()
+            }
+        }
 
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -156,7 +168,7 @@ private fun MainButtons(
     coin: Int,
     onClickCollectionButton: () -> Unit,
     onClickRankingButton: () -> Unit,
-    onClickMyPage: () -> Unit
+    onClickMyPage: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -199,7 +211,7 @@ private fun RankingButton(onClickRankingButton: () -> Unit) {
 private fun ObserveToastMessage(
     uiState: HomeViewState,
     snackBarHostState: SnackbarHostState,
-    onDismissSnackBar: () -> Unit
+    onDismissSnackBar: () -> Unit,
 ) {
     LaunchedEffect(key1 = uiState.message) {
         if (uiState.message.isNotEmpty()) {

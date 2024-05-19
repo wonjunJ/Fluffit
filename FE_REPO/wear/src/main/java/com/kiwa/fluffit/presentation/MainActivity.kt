@@ -52,7 +52,6 @@ import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Text
 import com.kiwa.fluffit.model.battle.GameUIModel
 import com.kiwa.fluffit.presentation.feed.ui.FeedButton
-import com.kiwa.fluffit.presentation.home.HomeViewModel
 import com.kiwa.fluffit.presentation.screens.BattleScreen
 import com.kiwa.fluffit.presentation.screens.CheckPhoneScreen
 import com.kiwa.fluffit.presentation.screens.ExerciseScreen
