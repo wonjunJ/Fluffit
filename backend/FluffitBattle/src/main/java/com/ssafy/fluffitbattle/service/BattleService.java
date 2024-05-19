@@ -240,7 +240,7 @@ public class BattleService {
             /* TODO
                 원래 타임아웃 80초!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              */
-            userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 20, TimeUnit.SECONDS);
+            userBattleLongRedisTemplate.opsForValue().set("User:" + userId, battleId, 30, TimeUnit.SECONDS);
             objectRedisTemplate.opsForHash().put(USER_BATTLE_KEY, userId, "Battle:" + battleId);
 
         } catch (Exception e) {
@@ -444,6 +444,7 @@ public class BattleService {
 
     private void notifyResults(Battle battle) {
         String winnerId = battle.getWinnerId();
+        log.info(battle.toString());
         notifyBattleResult(battle.getOrganizerId(), battle, battle.getOrganizerId().equals(winnerId));
         notifyBattleResult(battle.getParticipantId(), battle, battle.getParticipantId().equals(winnerId));
     }
