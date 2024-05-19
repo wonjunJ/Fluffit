@@ -96,8 +96,6 @@ dependencies {
     implementation(libs.okhttp.sse)
     implementation(libs.okhttpLogging)
 
-
     implementation("androidx.health:health-services-client:1.1.0-alpha02")
     implementation("com.google.android.horologist:horologist-compose-layout:0.5.26")
-    wearApp(project(":wear"))
 }
