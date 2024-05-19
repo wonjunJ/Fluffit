@@ -54,9 +54,9 @@ INSERT INTO flupet (`name`, `img_url`, `stage`) VALUES
                                                     ('코기', 'https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/dog_corgi.png,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/dog_corgi2.gif,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/dog_corgi_sleep.gif,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/dog_corgi_happy.gif,https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/corgi_run.gif', 3);
 
 INSERT INTO food_type (name, img_url, fullness_effect, health_effect, price, stock, description) VALUES
-                                                                                              ('기본 사료', 'https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/feed_bag.png', 40, 0, 3, 70, '기본 사료입니다.'),
-                                                                                              ('인스턴트 사료', 'https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/feed_bag.png', 30, -10, 1, 100, '인스턴트 사료입니다.'),
-                                                                                              ('고급 사료', 'https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/feed_bag.png', 60, 20, 5, 30, '고급 사료입니다.')
+                                                                                              ('기본 사료', 'https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/normal_food.png', 40, 0, 3, 70, '기본 사료입니다.'),
+                                                                                              ('인스턴트 사료', 'https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/instant_food.png', 30, -10, 1, 100, '인스턴트 사료입니다.'),
+                                                                                              ('고급 사료', 'https://my-fluffit-app-service-bucket.s3.ap-northeast-2.amazonaws.com/healthy_food.png', 60, 20, 5, 30, '고급 사료입니다.')
 
 -- ALTER TABLE `members` ADD CONSTRAINT `PK_MEMBERS` PRIMARY KEY (
 -- 	`id`

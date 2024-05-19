@@ -8,6 +8,7 @@ data class MainInfoDto(
     var flupetName: String,
     var exp: Int,
     var imageUrl: String,
+    var stage: Int,
     var birthDay: LocalDateTime,
     var nextFullnessUpdateTime: LocalDateTime,
     var nextHealthUpdateTime: LocalDateTime,
