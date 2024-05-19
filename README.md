@@ -32,8 +32,7 @@
 ## 주요 기술
 
 **Backend**
-```
-style="background-color: #F0F0F0;"
+<div style="background-color: #F0F0F0;">
 - java17
 - springboot 3.2.5
 - spring jpa
@@ -46,7 +45,7 @@ style="background-color: #F0F0F0;"
 - QueryDSL
 - rabitMQ
 - kafka
-```
+</div>
 **Frontend**
 
 
