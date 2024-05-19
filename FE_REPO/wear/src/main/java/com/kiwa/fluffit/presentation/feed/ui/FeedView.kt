@@ -25,7 +25,9 @@ fun FeedView(
     viewState: FeedViewState,
     viewModel: FeedViewModel,
 ) {
-    val image = painterResource(R.drawable.feed_bag)
+    val image1 = painterResource(R.drawable.normal_food)
+    val image2 = painterResource(R.drawable.instant_food)
+    val image3 = painterResource(R.drawable.healthy_food)
     if (viewState.foodList.isNotEmpty()) {
         CurvedLayout(
             anchorType = AnchorType.Center,
@@ -34,13 +36,13 @@ fun FeedView(
         ) {
             curvedRow() {
                 curvedComposable {
-                    FeedToggleButton(feedImage = image, buttonId = 0, viewModel)
+                    FeedToggleButton(feedImage = image1, buttonId = 0, viewModel)
                 }
                 curvedComposable {
-                    FeedToggleButton(feedImage = image, buttonId = 1, viewModel)
+                    FeedToggleButton(feedImage = image2, buttonId = 1, viewModel)
                 }
                 curvedComposable {
-                    FeedToggleButton(feedImage = image, buttonId = 2, viewModel)
+                    FeedToggleButton(feedImage = image3, buttonId = 2, viewModel)
                 }
             }
         }

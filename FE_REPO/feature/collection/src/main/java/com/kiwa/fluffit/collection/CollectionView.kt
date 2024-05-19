@@ -43,7 +43,7 @@ internal fun CollectionView(
                 .align(Alignment.Center)
                 .padding(top = 30.dp)
         ) {
-            for (i in 1..3 step (1)) {
+            for (i in 1..5 step (2)) {
                 Text(
                     modifier = Modifier
                         .weight(0.2f)
@@ -67,7 +67,7 @@ internal fun CollectionView(
                     CollectionFlupetCard(
                         modifier = Modifier.weight(1f),
                         collectionList,
-                        i + 3
+                        i + 1
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                 }
