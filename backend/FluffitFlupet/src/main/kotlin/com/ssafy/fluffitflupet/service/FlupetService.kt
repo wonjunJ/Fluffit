@@ -72,8 +72,8 @@ class FlupetService(
                 birthDay = dto.birthDay.toLocalDate().toString(),
                 age = "${ChronoUnit.DAYS.between(dto.birthDay, LocalDateTime.now())}일 ${(ChronoUnit.HOURS.between(dto.birthDay, LocalDateTime.now())) % 24}시간",
                 isEvolutionAvailable = evolveAvailable,
-                nextFullnessUpdateTime = if(dto.isDead) 0 else (dto.nextFullnessUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-                nextHealthUpdateTime = if(dto.isDead) 0 else (dto.nextHealthUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                nextFullnessUpdateTime = if(dto.isDead) 0 else (dto.nextFullnessUpdateTime.plusMinutes(10)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                nextHealthUpdateTime = if(dto.isDead) 0 else (dto.nextHealthUpdateTime.plusHours(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                 coin = coin.coin
             )
             return@coroutineScope response
@@ -132,7 +132,7 @@ class FlupetService(
         }
         return@coroutineScope FullResponse(
             fullness = if(mflupet.fullness <= 0) 0 else mflupet.fullness,
-            nextUpdateTime = (mflupet.fullnessUpdateTime!!.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            nextUpdateTime = (mflupet.fullnessUpdateTime!!.plusMinutes(10)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
             isEvolutionAvailable = evolveAvailable
         )
     }
@@ -175,7 +175,7 @@ class FlupetService(
         }
         return@coroutineScope HealthResponse(
             health = mflupet.health,
-            nextUpdateTime = (mflupet.healthUpdateTime!!.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            nextUpdateTime = (mflupet.healthUpdateTime!!.plusHours(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
             isEvolutionAvailable = evolveAvailable
         )
     }
@@ -211,7 +211,7 @@ class FlupetService(
             fullness = 100,
             health = 100,
             nextHealthUpdateTime = (LocalDateTime.now().plusHours(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            nextFullnessUpdateTime = (LocalDateTime.now().plusHours(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            nextFullnessUpdateTime = (LocalDateTime.now().plusMinutes(10)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         )
     }
 
@@ -284,7 +284,7 @@ class FlupetService(
             fullness = mflupetRst.fullness,
             health = mflupetRst.health,
             isEvolutionAvailable = false,
-            nextFullnessUpdateTime = (mflupetRst.fullnessUpdateTime!!.plusHours(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            nextFullnessUpdateTime = (mflupetRst.fullnessUpdateTime!!.plusMinutes(10)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
             nextHealthUpdateTime = (mflupetRst.healthUpdateTime!!.plusHours(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         )
     }

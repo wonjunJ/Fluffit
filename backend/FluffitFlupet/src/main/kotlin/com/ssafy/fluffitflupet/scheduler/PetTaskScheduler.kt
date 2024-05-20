@@ -36,7 +36,7 @@ class PetTaskScheduler(
     //var cron: String = env.getProperty("schedule.cron", "0 1 0 * * ?")
 
     //2시간마다 스케쥴링을 돈다(초기 딜레이를 얼마로 할지)
-    @Scheduled(fixedDelay = 1000 * 60L, initialDelay = 1000 * 60 * 2L)
+    @Scheduled(fixedDelay = 1000 * 60 * 10L, initialDelay = 1000 * 60 * 2L)
     fun run() {
         log.info("스케쥴링")
         memberFlupetRepository.findAllByIsDeadIsFalse()
