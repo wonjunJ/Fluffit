@@ -414,6 +414,7 @@ class FlupetService(
                 throw CustomBadRequestException(ErrorType.PAT_CNT_LIMIT)
             }
             mf.patCnt--
+            mf.exp += 1
             launch(Dispatchers.IO) { reactiveRedisTemplate.opsForValue().set("patTime: $userId", LocalDateTime.now().toString()).awaitSingle() }
             launch(Dispatchers.IO) { memberFlupetRepository.save(mf).awaitSingle() }
         }else{
@@ -422,6 +423,7 @@ class FlupetService(
                 throw CustomBadRequestException(ErrorType.INVALID_USERID)
             }
             mf.patCnt--
+            mf.exp += 1
             launch(Dispatchers.IO) { reactiveRedisTemplate.opsForValue().set("patTime: $userId", LocalDateTime.now().toString()).awaitSingle() }
             launch(Dispatchers.IO) { memberFlupetRepository.save(mf).awaitSingle() }
         }
