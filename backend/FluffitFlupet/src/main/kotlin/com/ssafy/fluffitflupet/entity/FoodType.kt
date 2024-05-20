@@ -12,6 +12,7 @@ data class FoodType(
     var fullnessEffect: Int,
     var healthEffect: Int,
     var price: Int,
+    var stock: Int, //남아있는 음식의 재고량
     var description: String
 ) {
 }
