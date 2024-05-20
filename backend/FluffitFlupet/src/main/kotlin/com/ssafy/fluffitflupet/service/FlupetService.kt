@@ -54,6 +54,16 @@ class FlupetService(
             response.coin = coin.coin
             return@coroutineScope response
         } else {
+            var evolveAvailable = false
+            if(dto.stage == 1){
+                if(dto.exp >= 100){
+                    evolveAvailable = true
+                }
+            }else if(dto.stage < (env.getProperty("total.stage")?.toInt() ?: 3)){
+                if(dto.exp >= 300){
+                    evolveAvailable = true
+                }
+            }
             val response = MainInfoResponse(
                 fullness = if(dto.isDead) 0 else dto.fullness,
                 health = if(dto.isDead) 0 else dto.health,
@@ -61,7 +71,7 @@ class FlupetService(
                 imageUrl = if(dto.isDead) listOf(env.getProperty("tombstone.img", "")) else dto.imageUrl.split(","),
                 birthDay = dto.birthDay.toLocalDate().toString(),
                 age = "${ChronoUnit.DAYS.between(dto.birthDay, LocalDateTime.now())}일 ${(ChronoUnit.HOURS.between(dto.birthDay, LocalDateTime.now())) % 24}시간",
-                isEvolutionAvailable = if(dto.exp == 100) true else false,
+                isEvolutionAvailable = evolveAvailable,
                 nextFullnessUpdateTime = if(dto.isDead) 0 else (dto.nextFullnessUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                 nextHealthUpdateTime = if(dto.isDead) 0 else (dto.nextHealthUpdateTime.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
                 coin = coin.coin
@@ -89,58 +99,84 @@ class FlupetService(
         }
     }
 
-    suspend fun getFullness(userId: String): FullResponse {
+    suspend fun getFullness(userId: String): FullResponse = coroutineScope {
         log.info("포만감 조회")
         val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         if(mflupet == null){
             throw CustomBadRequestException(ErrorType.INVALID_USERID)
         }
+        val petType = async(Dispatchers.IO){ flupetRepository.findById(mflupet.flupetId!!) }
         val beforeFull = mflupet.fullness
         withContext(Dispatchers.Default) { petTaskScheduler.updateFullness(mflupet) }
         if(mflupet.fullness <= 0){
             mflupet.isDead = true
             mflupet.endTime = LocalDateTime.now()
-        }
-        if(mflupet.fullness != beforeFull){
+            withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingle() }
+        }else if(mflupet.fullness != beforeFull){
             withContext(Dispatchers.Default){
                 mflupet.achaTime = achaCalculator.calAchaTime(mflupet.fullness, mflupet.health) ?: mflupet.achaTime
             }
+            withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingle() }
         }
-        withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingle() }
-        return FullResponse(
+        //withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingle() }
+        var evolveAvailable = false
+        val petTmp = petType.await()
+        if(petTmp!!.stage == 1){
+            if(mflupet.exp >= 100){
+                evolveAvailable = true
+            }
+        }else if(petTmp.stage < (env.getProperty("total.stage")?.toInt() ?: 3)){
+            if(mflupet.exp >= 300){
+                evolveAvailable = true
+            }
+        }
+        return@coroutineScope FullResponse(
             fullness = if(mflupet.fullness <= 0) 0 else mflupet.fullness,
             nextUpdateTime = (mflupet.fullnessUpdateTime!!.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            isEvolutionAvailable = if(mflupet.exp == 100) true else false
+            isEvolutionAvailable = evolveAvailable
         )
     }
 
-    suspend fun getHealth(userId: String): HealthResponse {
+    suspend fun getHealth(userId: String): HealthResponse = coroutineScope {
         //시간 측정용(임시)-운영시에는 주석 처리
-        val measuredTime = measureTimeMillis {
-            withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
-        }
-        log.info("측정된 시간은 " + measuredTime.toString())
+//        val measuredTime = measureTimeMillis {
+//            withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
+//        }
+//        log.info("측정된 시간은 " + measuredTime.toString())
 
         val mflupet = withContext(Dispatchers.IO){ memberFlupetRepository.findByMemberIdAndIsDeadIsFalse(userId).awaitSingleOrNull() }
         if(mflupet == null){
             throw CustomBadRequestException(ErrorType.INVALID_USERID)
         }
+        val petTypeAwait = async(Dispatchers.IO){ flupetRepository.findById(mflupet.flupetId!!) }
         val beforeHealth = mflupet.health
         withContext(Dispatchers.Default) { petTaskScheduler.updateHealth(mflupet) }
         if(mflupet.health <= 0){
             mflupet.isDead = true
             mflupet.endTime = LocalDateTime.now()
-        }
-        if(mflupet.health != beforeHealth){
+            withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingle() }
+        }else if(mflupet.health != beforeHealth){
             withContext(Dispatchers.Default){
                 mflupet.achaTime = achaCalculator.calAchaTime(mflupet.fullness, mflupet.health) ?: mflupet.achaTime
             }
+            withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingle() }
         }
-        withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingle() }
-        return HealthResponse(
+        //withContext(Dispatchers.IO){ memberFlupetRepository.save(mflupet).awaitSingle() }
+        var evolveAvailable = false
+        val petType = petTypeAwait.await()
+        if(petType!!.stage == 1){
+            if(mflupet.exp >= 100){
+                evolveAvailable = true
+            }
+        }else if(petType.stage < (env.getProperty("total.stage")?.toInt() ?: 3)){
+            if(mflupet.exp >= 300){
+                evolveAvailable = true
+            }
+        }
+        return@coroutineScope HealthResponse(
             health = mflupet.health,
             nextUpdateTime = (mflupet.healthUpdateTime!!.plusMinutes(2)).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            isEvolutionAvailable = if(mflupet.exp == 100) true else false
+            isEvolutionAvailable = evolveAvailable
         )
     }
 
@@ -219,12 +255,12 @@ class FlupetService(
         }
         //진화된 새로운 캐릭터(펫)을 지정해서 저장한다.
         launch(Dispatchers.IO) {
-            memberFlupetRepository.save(
+            val mftmp = memberFlupetRepository.save(
                 MemberFlupet(
                     flupetId = if(mypetRst.stage == 1) flist[0].id else evolveFlupet!!.id,
                     memberId = userId,
                     name = mflupetRst.name,
-                    exp = 0,
+                    exp = mflupetRst.exp,
                     steps = mflupetRst.steps,
                     createTime = mflupetRst.createTime,
                     fullness = mflupetRst.fullness,
@@ -235,6 +271,12 @@ class FlupetService(
                     healthUpdateTime = mflupetRst.healthUpdateTime
                 )
             ).awaitSingle()
+
+            //왜 @CreatedDate가 붙어있는 필드가 null이 아닐경우에도 할당한 값이 무시되고 현재 시간으로 설정이 되지??
+            mftmp.createTime = mflupetRst.createTime
+            mftmp.fullnessUpdateTime = mflupetRst.fullnessUpdateTime
+            mftmp.healthUpdateTime = mflupetRst.healthUpdateTime
+            memberFlupetRepository.save(mftmp).awaitSingle()
         }
         return@coroutineScope EvolveResponse(
             flupetName = mflupetRst.name,

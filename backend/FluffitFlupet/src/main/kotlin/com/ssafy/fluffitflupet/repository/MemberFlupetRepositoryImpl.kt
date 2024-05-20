@@ -34,6 +34,7 @@ class MemberFlupetRepositoryImpl(
                         MEMBER_FLUPET.NAME.`as`("flupetName"),
                         MEMBER_FLUPET.EXP.`as`("exp"),
                         FLUPET.IMG_URL.`as`("imageUrl"),
+                        FLUPET.STAGE,
                         MEMBER_FLUPET.CREATE_TIME.`as`("birthDay"),
                         MEMBER_FLUPET.FULLNESS_UPDATE_TIME.`as`("nextFullnessUpdateTime"),
                         MEMBER_FLUPET.HEALTH_UPDATE_TIME.`as`("nextHealthUpdateTime"),
