@@ -116,23 +116,23 @@
 
 - **랭킹 화면**
 
-![mobileRanking](./assets/Fluffit (1).png)
+![mobileRanking](./assets/Fluffit(1).png)
 
 - **도감 화면**
 
-![mobileCollection](./assets/Fluffit (2).png)
+![mobileCollection](./assets/Fluffit(2).png)
 
 - **플러펫 진화 화면**
 
-![mobileEvolve](./assets/Fluffit (3).png)
+![mobileEvolve](./assets/Fluffit(3).png)
 
 - **플러펫 히스토리 화면**
 
-![mobileHistory](./assets/Fluffit (4).png)
+![mobileHistory](./assets/Fluffit(4).png)
 
 - **플러펫 배틀 전적 화면**
 
-![mobileBattleRecord](./assets/Fluffit (5).png)
+![mobileBattleRecord](./assets/Fluffit(5).png)
 
 
 ### 워치 화면
