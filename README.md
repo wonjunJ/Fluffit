@@ -34,15 +34,20 @@
 
 ```
 - java17
+- Kotlin
 - springboot 3.2.5
 - spring jpa
-- spring gateway
-- spring eureka
-- spring config
+- spring r2dbc
+- spring cloud gateway
+- spring cloud eureka
+- spring cloud config
+- spring cloud bus
 - spring web
+- spring webflux
 - oauth2
 - intelliJ IDE
-- QueryDSL
+- Jooq
+- Coroutine
 - rabitMQ
 - kafka
 ```
