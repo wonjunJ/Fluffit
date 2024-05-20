@@ -1,0 +1,40 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Gradle build') {
+            steps {
+                dir('backend/FluffitEureka') {
+                    sh 'chmod +x ./gradlew'
+                    sh './gradlew clean build'
+                }
+            }
+        }
+
+        stage('Docker image build') {
+            steps {
+                dir('backend/FluffitEureka') {
+                    sh "docker stop eureka || true && docker rm eureka || true"
+                    sh 'docker rmi eureka || true'
+                    sh 'docker build -t eureka .'
+                }
+            }
+        }
+
+        stage('Docker container run') {
+            steps {
+                dir('backend/FluffitEureka') {
+                    sh 'docker run -d -p 8761:8761 --name eureka -e TZ=Asia/Seoul --network dev-net eureka'
+                }
+            }
+        }
+
+        stage('Cleanup dangling images') {
+            steps {
+                sh 'docker image prune -f'
+            }
+        }
+    }
+}
+
+
