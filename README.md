@@ -7,7 +7,7 @@
 
 ## 소개 영상
 
-- 
+- https://www.youtube.com/watch?v=i7rYnWb5ZMk
 ## 배경
 
 사람들에게 건강은 항상 최우선으로 거론될 정도로 아주 중요합니다. 하지만 바쁜 일상 속에서 건강 관리를 위해 꾸준히 노력하는 것은 쉽지 않고, 금방 포기하는 경우가 많습니다
@@ -49,7 +49,10 @@
 
 **Frontend**
 ```
-
+- Android Jetpack Compose
+- Wear OS
+- Hilt
+- Multimodule
 ```
 
 **DataBase**
