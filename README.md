@@ -106,5 +106,51 @@
 ## ERD
 ![ERD](./assets/ERD.jpg)
 
-## 주요 서비스 화면 
+# 주요 서비스 화면 
 
+### 모바일 화면
+
+- **메인 화면**
+
+![mobileMain](./assets/Fluffit.png)
+
+- **랭킹 화면**
+
+![mobileRanking](./assets/Fluffit (1).png)
+
+- **도감 화면**
+
+![mobileCollection](./assets/Fluffit (2).png)
+
+- **플러펫 진화 화면**
+
+![mobileEvolve](./assets/Fluffit (3).png)
+
+- **플러펫 히스토리 화면**
+
+![mobileHistory](./assets/Fluffit (4).png)
+
+- **플러펫 배틀 전적 화면**
+
+![mobileBattleRecord](./assets/Fluffit (5).png)
+
+
+### 워치 화면
+
+- **메인 화면**
+
+![watchMain](./assets/기본.gif)
+
+- **먹이 화면**
+
+![watchFeed](./assets/밥주기.png)
+
+- **운동 화면**
+
+![watchMain](./assets/운동하기.gif)
+
+- **게임 화면**
+
+![watchMain](./assets/돌깨기.gif)
+
+![watchMain](./assets/심박수.gif)
