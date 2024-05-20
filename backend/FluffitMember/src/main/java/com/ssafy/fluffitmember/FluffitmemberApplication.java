@@ -1,14 +1,13 @@
-package com.ssafy.gatewayservice;
+package com.ssafy.fluffitmember;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-//@EnableDiscoveryClient
-public class FluffitGatewayApplication {
+public class  FluffitmemberApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(FluffitGatewayApplication.class, args);
+		SpringApplication.run(FluffitmemberApplication.class, args);
 	}
 
 }
