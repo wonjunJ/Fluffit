@@ -1,16 +1,17 @@
-
 # Fluffit (플러핏)
 
 ![인트로페이지](/uploads/4fb96d83ad6482d69979839020e43331/인트로페이지.jpg)
 
-### 꾸준한 운동을 통해 성장하는 캐릭터 
+### 꾸준한 운동을 통해 성장하는 캐릭터
 
 ## 소개 영상
 
 - https://www.youtube.com/watch?v=i7rYnWb5ZMk
+
 ## 배경
 
 사람들에게 건강은 항상 최우선으로 거론될 정도로 아주 중요합니다. 하지만 바쁜 일상 속에서 건강 관리를 위해 꾸준히 노력하는 것은 쉽지 않고, 금방 포기하는 경우가 많습니다
+
 - 한국 성인의 3분의 1이 운동 부족으로 인해 건강 위험에 처해 있음
 - 운동은 건강에 필수적이지만, 반복적이고 지루한 활동으로 인해 지속하기 어려움
 
@@ -24,14 +25,15 @@
 |   인원    |           6명           |
 
 ## 팀원 역할 분배
-|   **Name**   |                정원준                 |                이준서                |                  최지수                   |               정수현                |                 이창곤                  |               여창영                |
-| :----------: | :-----------------------------------: | :----------------------------------: | :---------------------------------------: | :---------------------------------: | :-------------------------------------: | :---------------------------------: |
-| **Position** |          Backend           |          Backend           |           Backend          |        Frontend         |            Frontend            |         Frontend          |
 
+|   **Name**   | 정원준  | 이준서  | 최지수  |  정수현  |  이창곤  |  여창영  |
+| :----------: | :-----: | :-----: | :-----: | :------: | :------: | :------: |
+| **Position** | Backend | Backend | Backend | Frontend | Frontend | Frontend |
 
 ## 주요 기술
 
 **Backend**
+
 ```
 - java17
 - springboot 3.2.5
@@ -48,6 +50,7 @@
 ```
 
 **Frontend**
+
 ```
 - Android Jetpack Compose
 - Wear OS
@@ -56,12 +59,14 @@
 ```
 
 **DataBase**
+
 ```
 - mariaDB
 - Redis
 ```
 
 **Infra**
+
 ```
 - aws ec2
 - docker & docker compose
@@ -69,6 +74,7 @@
 ```
 
 ## 협업 툴
+
 ```
 - git
 - notion
@@ -101,12 +107,14 @@
 - 어떻게보다는 무엇을, 왜 변경했는지를 설명합니다.
 
 ## architecture
+
 ![architenture](./assets/architecture.png)
 
 ## ERD
+
 ![ERD](./assets/ERD.jpg)
 
-# 주요 서비스 화면 
+# 주요 서비스 화면
 
 ### 모바일 화면
 
@@ -116,24 +124,23 @@
 
 - **랭킹 화면**
 
-![mobileRanking](./assets/Fluffit(1).png)
+![mobileRanking](./assets/FluffitRanking.png)
 
 - **도감 화면**
 
-![mobileCollection](./assets/Fluffit(2).png)
+![mobileCollection](./assets/FluffitCollection.png)
 
 - **플러펫 진화 화면**
 
-![mobileEvolve](./assets/Fluffit(3).png)
+![mobileEvolve](./assets/FluffitEvolve.png)
 
 - **플러펫 히스토리 화면**
 
-![mobileHistory](./assets/Fluffit(4).png)
+![mobileHistory](./assets/FluffitHistory.png)
 
 - **플러펫 배틀 전적 화면**
 
-![mobileBattleRecord](./assets/Fluffit(5).png)
-
+![mobileBattleRecord](./assets/FluffitBattleRecord.png)
 
 ### 워치 화면
 
