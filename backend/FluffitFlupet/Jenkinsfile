@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    environment {
+        DB_URL = credentials('DB_URL')
+        DB_USER = credentials('DB_USER')
+        DB_PASSWORD = credentials('DB_PASSWORD')
+    }
+
+    stages {
+        stage('Gradle build') {
+            steps {
+                dir('backend/FluffitFlupet') {
+                    sh 'chmod +x ./gradlew'
+                    sh './gradlew clean build'
+                }
+            }
+        }
+
+        stage('Docker image build') {
+            steps {
+                dir('backend/FluffitFlupet') {
+                    sh "docker stop flupet || true && docker rm flupet || true"
+                    sh 'docker rmi flupet || true'
+                    sh 'docker build -t flupet .'
+                }
+            }
+        }
+
+        stage('Docker container run') {
+            steps {
+                dir('backend/FluffitFlupet') {
+                    sh 'docker run -d -e DB_URL=${DB_URL} -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} --name flupet -e TZ=Asia/Seoul --network dev-net flupet'
+                }
+            }
+        }
+
+        stage('Cleanup dangling images') {
+            steps {
+                sh 'docker image prune -f'
+            }
+        }
+    }
+}
+
+

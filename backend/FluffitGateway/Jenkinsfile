@@ -1,0 +1,44 @@
+
+pipeline {
+    agent any
+
+    environment {
+        JWT_SECRET = credentials('JWT_SECRET')
+    }
+
+    stages {
+        stage('Gradle build') {
+            steps {
+                dir('backend/FluffitGateway') {
+                    sh 'chmod +x ./gradlew'
+                    sh './gradlew clean build'
+                }
+            }
+        }
+
+        stage('Docker image build') {
+            steps {
+                dir('backend/FluffitGateway') {
+                    sh "docker stop gateway || true && docker rm gateway || true"
+                    sh 'docker rmi gateway || true'
+                    sh 'docker build -t gateway .'
+                }
+            }
+        }
+
+        stage('Docker container run') {
+            steps {
+                dir('backend/FluffitGateway') {
+                    sh 'docker run -d -e JWT_SECRET=${JWT_SECRET} -p 8000:8000 --name gateway -e TZ=Asia/Seoul --network dev-net gateway'
+                }
+            }
+        }
+
+        stage('Cleanup dangling images') {
+            steps {
+                sh 'docker image prune -f'
+            }
+        }
+    }
+}
+
