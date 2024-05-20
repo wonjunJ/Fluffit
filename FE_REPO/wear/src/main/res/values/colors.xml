@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="watchGreen">#FF70F150</color>
+    <color name="watchDarkGreen">#FF347923</color>
+    <color name="watchBlue">#FF64B5FF</color>
+    <color name="watchDarkBlue">#FF335E85</color>
+    <color name="watchRed">#FFEE5757</color>
+</resources>
