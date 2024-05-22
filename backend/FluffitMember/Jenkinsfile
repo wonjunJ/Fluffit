@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+    environment {
+        JWT_SECRET = credentials('JWT_SECRET')
+        HMAC_KEY = credentials('HMAC_KEY')
+    }
+
+    stages {
+        stage('Gradle build') {
+            steps {
+                dir('backend/FluffitMember') {
+                    sh 'chmod +x ./gradlew'
+                    sh './gradlew clean build'
+                }
+            }
+        }
+
+        stage('Docker image build') {
+            steps {
+                dir('backend/FluffitMember') {
+                    sh "docker stop member || true && docker rm member || true"
+                    sh 'docker rmi member || true'
+                    sh 'docker build -t member .'
+                }
+            }
+        }
+
+        stage('Docker container run') {
+            steps {
+                dir('backend/FluffitMember') {
+                    sh 'docker run -d -e JWT_SECRET=${JWT_SECRET} -e HMAC_KEY=${HMAC_KEY} --name member -e TZ=Asia/Seoul --network dev-net member'
+                }
+            }
+        }
+        stage('Cleanup dangling images') {
+            steps {
+                sh 'docker image prune -f'
+            }
+        }
+    }
+}

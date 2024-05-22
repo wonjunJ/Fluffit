@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    config:
+#      uri: https://config.fluffit.shop #local용
+      uri : http://config:8888
+      name: member-service
+  #Profiles을 사용한 Configuration 적용
+  #.yml 파일명은 user-service-dev로 설정
+#  profiles:
+#    active: dev
+
